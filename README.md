@@ -12,3 +12,4 @@ My collection of Windhawk mods:
 Future plans:
 
 - macOS-like window switcher
+- custom actions for Show Desktop taskbar button
