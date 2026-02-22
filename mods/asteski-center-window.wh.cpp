@@ -11,11 +11,11 @@
 // ==WindhawkModSettings==
 /*
 - centerWidth: ""
-    $name: Center Width
-    $description: Custom width (px) to apply when centering the window. Leave empty to keep original width.
+  $name: Center Width
+  $description: Custom width (px) to apply when centering the window. Leave empty to keep original width.
 - centerHeight: ""
-    $name: Center Height
-    $description: Custom height (px) to apply when centering the window. Leave empty to keep original height.
+  $name: Center Height
+  $description: Custom height (px) to apply when centering the window. Leave empty to keep original height.
 */
 // ==/WindhawkModSettings==
 
