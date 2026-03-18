@@ -2,7 +2,7 @@
 // @id              auto-dark-titlebar
 // @name            Auto Dark Titlebar
 // @description     Automatically enables/disables dark titlebars based on Windows theme mode
-// @version         1.0.0
+// @version         1.0.1
 // @author          Asteski
 // @github          https://github.com/Asteski
 // @include         *
@@ -148,8 +148,13 @@ BOOL IsWindowEligible(HWND hWnd) {
     return TRUE;
 }
 
-// Apply dark mode to a window
-VOID ApplyDarkMode(HWND hWnd, BOOL useDarkMode) {
+// Apply dark mode to a window.
+// forceRedraw: pass TRUE for already-visible windows (theme change / mod init) to repaint the
+// titlebar immediately. Pass FALSE for windows being newly created — the DWM attribute is set
+// before the first paint so no forced redraw is needed, and calling SetWindowPos re-entrantly
+// from inside CreateWindowEx can break apps with complex initialization (e.g. Windows Terminal
+// using XAML Islands, Task View drag state, etc.).
+VOID ApplyDarkMode(HWND hWnd, BOOL useDarkMode, BOOL forceRedraw) {
     if (!IsWindowEligible(hWnd))
         return;
         
@@ -158,9 +163,12 @@ VOID ApplyDarkMode(HWND hWnd, BOOL useDarkMode) {
         &value, sizeof(value));
     
     if (SUCCEEDED(hr)) {
-        // Force window to redraw titlebar
-        SetWindowPos(hWnd, nullptr, 0, 0, 0, 0, 
-            SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+        // Only force a non-client repaint for existing windows, and only when no mouse
+        // drag is active (avoids corrupting Task View virtual-desktop drag state).
+        if (forceRedraw && !(GetAsyncKeyState(VK_LBUTTON) & 0x8000)) {
+            SetWindowPos(hWnd, nullptr, 0, 0, 0, 0, 
+                SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+        }
         Wh_Log(L"Applied dark mode (%d) to window: %p", useDarkMode, hWnd);
     }
 }
@@ -177,7 +185,7 @@ VOID NewWindowShown(HWND hWnd) {
         return;
     
     Wh_Log(L"New window detected: %p, applying dark mode: %d", hWnd, g_isDarkMode);
-    ApplyDarkMode(hWnd, g_isDarkMode);
+    ApplyDarkMode(hWnd, g_isDarkMode, FALSE); // newly created — no forced redraw needed
 }
 
 // Enumerate callback for existing windows
@@ -195,7 +203,7 @@ BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
         dwProcessId != GetCurrentProcessId())
         return TRUE;
     
-    ApplyDarkMode(hWnd, useDarkMode);
+    ApplyDarkMode(hWnd, useDarkMode, TRUE); // existing window — force repaint
     return TRUE;
 }
 
