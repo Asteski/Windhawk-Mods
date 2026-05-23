@@ -1,6 +1,6 @@
 # windhawk-mods
 
-> [!CAUTION]
+> [!WARNING]
 > Please be aware that currently all mods are in beta, so may not function ideally or may cause issues.
 
 My collection of Windhawk mods:
