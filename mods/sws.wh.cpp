@@ -114,6 +114,12 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
           - top: Top (above header)
           - left: Left (before header)
           - right: Right (after header)
+        - thumbnailAlign: anchor
+          $name: Thumbnail Alignment
+          $description: How side thumbnails are aligned relative to header content.
+          $options:
+          - anchor: Anchor thumbnails adjacent to header (keep headers aligned)
+          - center: Center thumbnails inside each task cell
         - showThumbnails: true
           $name: Show Thumbnails
           $description: Show DWM live thumbnail previews of windows.
@@ -265,7 +271,7 @@ struct WindowEntry {
     SIZE effectiveSourceSize;  // Source size after cropping invisible frame
 };
 struct Settings {
-    WCHAR theme[32]; WCHAR colorScheme[32]; WCHAR cornerPreference[32]; WCHAR scrollWheelBehavior[32]; WCHAR taskListOrientation[32]; WCHAR headerContentOrientation[32]; WCHAR iconSize[32]; WCHAR backwardShortcut[32]; WCHAR thumbnailPosition[32];
+    WCHAR theme[32]; WCHAR colorScheme[32]; WCHAR cornerPreference[32]; WCHAR scrollWheelBehavior[32]; WCHAR taskListOrientation[32]; WCHAR headerContentOrientation[32]; WCHAR iconSize[32]; WCHAR backwardShortcut[32]; WCHAR thumbnailPosition[32]; WCHAR thumbnailAlign[16];
     WCHAR highlightStyle[32]; WCHAR virtualDesktopBehavior[32];
     WCHAR borderColorDark[16];
     WCHAR borderColorLight[16];
@@ -333,6 +339,7 @@ static bool ThumbnailIsTop() { return ThumbnailPositionIs(L"top"); }
 static bool ThumbnailIsLeft() { return ThumbnailPositionIs(L"left"); }
 static bool ThumbnailIsRight() { return ThumbnailPositionIs(L"right"); }
 static bool ThumbnailIsSide() { return ThumbnailIsLeft() || ThumbnailIsRight(); }
+static bool ThumbnailAlignIs(const WCHAR* v) { return wcscmp(g_settings.thumbnailAlign, v) == 0; }
 static bool HighlightHasFill() {
     return HighlightStyleIs(L"fillAndBorder") || HighlightStyleIs(L"fillOnly");
 }
@@ -928,7 +935,9 @@ static void RegisterThumbnailsEarly() {
                 // the window extends beyond screen edges to hide the frame.
                 // Skip for minimized windows: GetWindowRect/DWMWA_EXTENDED_FRAME_BOUNDS
                 // return garbage coords (-32000) for iconic windows, causing zoom.
-                if (!IsIconic(w.hWnd)) {
+                // ONLY apply manual crop for maximized windows (IsZoomed). Non-maximized 
+                // windows are natively handled by DWM (preserves rounded corners perfectly).
+                if (!IsIconic(w.hWnd) && IsZoomed(w.hWnd)) {
                     RECT wr = {0}, efb = {0};
                     GetWindowRect(w.hWnd, &wr);
                     if (SUCCEEDED(DwmGetWindowAttribute(w.hWnd, DWMWA_EXTENDED_FRAME_BOUNDS, &efb, sizeof(efb)))) {
@@ -1167,9 +1176,29 @@ static void ComputeLayout(HMONITOR hMon) {
                 if (sidePlacement) {
                     int contentH = std::max(actualThumbH, rowTitleH);
                     thumbY = curY + (contentH - actualThumbH) / 2;
-                    if (ThumbnailIsRight()) {
-                        thumbX = curX + width - thumbWidth;
+                    // Anchor header content to a consistent inset inside the cell,
+                    // then place the thumbnail adjacent to the header so headers
+                    // remain aligned even when thumbnail widths vary.
+                    int divider = padDivider;
+                    int headerLeft = w.rcCell.left + padLeft;
+                    int headerRight = w.rcCell.right - padLeft;
+                    if (ThumbnailAlignIs(L"center")) {
+                        // Center thumbnail inside the cell
+                        thumbX = curX + (width - thumbWidth) / 2;
+                    } else {
+                        if (ThumbnailIsRight()) {
+                            // place thumbnail so its left edge is just after headerRight + divider
+                            int desiredThumbLeft = headerRight + divider;
+                            thumbX = desiredThumbLeft;
+                        } else {
+                            // ThumbnailIsLeft(): place thumbnail so its right edge is just before headerLeft - divider
+                            int desiredThumbRight = headerLeft - divider;
+                            thumbX = desiredThumbRight - thumbWidth;
+                        }
                     }
+                    // Ensure thumbnail is visible within the computed cell area
+                    if (thumbX < curX) thumbX = curX;
+                    if (thumbX + thumbWidth > curX + width) thumbX = curX + width - thumbWidth;
                 } else if (!StretchThumbsToTaskWidth() && width > thumbWidth) {
                     thumbX += (width - thumbWidth) / 2;
                 }
@@ -1297,10 +1326,11 @@ static void ComputeLayout(HMONITOR hMon) {
                 curY = initialTop + masterPad;
                 curX = curX + curColMaxW + rightInc;
                 curColMaxW = 0;
-                if (curX + width + rightInc - initialLeft > maxW - masterPad) {
-                    truncateRemaining(idx);
-                    break;
-                }
+            }
+
+            if (curX + width + rightInc - initialLeft > maxW - masterPad && idx > 0) {
+                truncateRemaining(idx);
+                break;
             }
 
             w.rcCell.left   = curX - initialLeft + elemPadLeft;
@@ -1325,9 +1355,23 @@ static void ComputeLayout(HMONITOR hMon) {
                 if (sidePlacement) {
                     int contentH = std::max(actualThumbH, rowTitleH);
                     thumbY = curY + (contentH - actualThumbH) / 2;
-                    if (ThumbnailIsRight()) {
-                        thumbX = curX + width - thumbWidth;
+                    int divider = padDivider;
+                    int headerLeft = w.rcCell.left + padLeft;
+                    int headerRight = w.rcCell.right - padLeft;
+                    if (ThumbnailAlignIs(L"center")) {
+                        thumbX = curX + (width - thumbWidth) / 2;
+                    } else {
+                        if (ThumbnailIsRight()) {
+                            int desiredThumbLeft = headerRight + divider;
+                            thumbX = desiredThumbLeft;
+                        } else {
+                            int desiredThumbRight = headerLeft - divider;
+                            thumbX = desiredThumbRight - thumbWidth;
+                        }
                     }
+                    // Ensure thumbnail is visible within the computed cell area
+                    if (thumbX < curX) thumbX = curX;
+                    if (thumbX + thumbWidth > curX + width) thumbX = curX + width - thumbWidth;
                 } else if (!StretchThumbsToTaskWidth() && width > thumbWidth) {
                     thumbX += (width - thumbWidth) / 2;
                 }
@@ -2024,18 +2068,22 @@ static void RevealPendingSwitcher() {
 }
 
 static void ShowSwitcher(bool sticky) {
-    UnregisterThumbnails(); BuildWindowList();
-    if (g_windows.empty()) return;
-    g_isDarkMode = ShouldUseDarkMode(); g_isSticky = sticky;
     POINT pt; GetCursorPos(&pt);
     HMONITOR hMon = g_settings.primaryMonitorOnly ?
         MonitorFromPoint({0,0}, MONITOR_DEFAULTTOPRIMARY) :
         MonitorFromPoint(pt, MONITOR_DEFAULTTOPRIMARY);
+
     g_hCurrentMonitor = hMon;
-    if (g_settings.perMonitorWindows && !g_showAllMonitors) {
-        UnregisterThumbnails(); BuildWindowList();
-        if (g_windows.empty()) return;
-    }
+    UnregisterThumbnails(); BuildWindowList();
+    if (g_windows.empty()) return;
+
+    g_isDarkMode = ShouldUseDarkMode(); g_isSticky = sticky;
+
+    g_layoutStartIndex = 0; // Always start from the first window on initial show
+    g_selectedIndex = (g_windows.size() > 1) ? 1 : 0;
+    g_hoverIndex = -1;
+    g_isCloseHovered = false;
+
     RegisterThumbnailsEarly();
     ComputeLayout(hMon);
     if (g_winW <= 0 || g_winH <= 0) return;
@@ -2098,11 +2146,6 @@ static void ShowSwitcher(bool sticky) {
         cx + g_winW,
         cy + g_winH
     };
-
-    g_layoutStartIndex = 0; // Always start from the first window on initial show
-    g_selectedIndex = (g_windows.size() > 1) ? 1 : 0;
-    g_hoverIndex = -1;
-    g_isCloseHovered = false;
 
     CancelPendingShow();
 
