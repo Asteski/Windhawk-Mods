@@ -1078,6 +1078,11 @@ static void BuildWindowList() {
             WCHAR appName[256] = {0};
             GetAppName(e.hWnd, appName, ARRAYSIZE(appName));
             if (!appName[0]) continue;
+            // UWP apps share the "Application Frame Host" executable, whose
+            // FileDescription is useless as an app name; use the window title instead.
+            if (_wcsicmp(appName, L"Application Frame Host") == 0 && e.title[0]) {
+                wcscpy_s(appName, e.title);
+            }
             if (wcscmp(g_settings.showTitles, L"appName") == 0) {
                 wcscpy_s(e.title, appName);
             } else {  // appNameWindowTitle
