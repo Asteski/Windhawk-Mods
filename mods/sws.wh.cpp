@@ -133,9 +133,9 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
           $description: Size of the header icon.
           $options:
           - small: Small (16x16)
-          - large: Large (32x32)
-          - xlarge: Extra Large (48x48)
-          - xxlarge: Huge (64x64)
+          - large: Medium (32x32)
+          - xlarge: Large (48x48)
+          - xxlarge: Extra Large (64x64)
         - showTitle: true
           $name: Show Title Label
         - showIcon: true
