@@ -132,8 +132,10 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
           $name: Icon Size
           $description: Size of the header icon.
           $options:
-          - small: Small
-          - large: Large
+          - small: Small (16x16)
+          - large: Large (32x32)
+          - xlarge: Extra Large (48x48)
+          - xxlarge: Huge (64x64)
         - showTitle: true
           $name: Show Title Label
         - showIcon: true
@@ -421,11 +423,14 @@ static bool StretchThumbsToTaskWidth() {
 static bool HeaderIsVertical() {
     return HeaderOrientationIs(L"vertical");
 }
+static int GetHeaderIconSizeBase() {
+    if (IconSizeIs(L"xxlarge")) return 64;
+    if (IconSizeIs(L"xlarge")) return 48;
+    if (IconSizeIs(L"large")) return 32;
+    return SWS_ICON_SIZE;
+}
 static int GetHeaderIconSizePx() {
-    if (IconSizeIs(L"large")) {
-        return MulDiv(32, g_dpiX, 96);
-    }
-    return MulDiv(SWS_ICON_SIZE, g_dpiX, 96);
+    return MulDiv(GetHeaderIconSizeBase(), g_dpiX, 96);
 }
 static int GetHeaderTitleHeightPx() {
     return MulDiv(18, g_dpiY, 96);
@@ -620,10 +625,47 @@ static bool IsAltTabWindow(HWND h) {
 
 static HICON TryGetUwpIconFromExplorer(HWND hWnd, int desiredSizePx);
 
+// Cache of crisp icons extracted from exe files at a specific pixel size.
+// Owned here (DestroyIcon at unload); keyed by "<exePath>_<sizePx>".
+static std::map<std::wstring, HICON> g_exeIconCache;
+
+// WM_GETICON returns a fixed (usually 32px) icon that looks blurry when scaled
+// up to 48/64. PrivateExtractIconsW pulls the best-matching frame from the
+// exe's icon resource at the exact requested size for a crisp result.
+static HICON TryGetCrispExeIcon(HWND hWnd, int desiredSizePx) {
+    DWORD pid = 0;
+    GetWindowThreadProcessId(hWnd, &pid);
+    if (!pid) return NULL;
+    HANDLE hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+    if (!hProc) return NULL;
+    WCHAR exePath[MAX_PATH] = {0};
+    DWORD size = MAX_PATH;
+    BOOL ok = QueryFullProcessImageNameW(hProc, 0, exePath, &size);
+    CloseHandle(hProc);
+    if (!ok || !exePath[0]) return NULL;
+
+    std::wstring key = std::wstring(exePath) + L"_" + std::to_wstring(desiredSizePx);
+    auto it = g_exeIconCache.find(key);
+    if (it != g_exeIconCache.end()) return it->second;
+
+    HICON hIcon = NULL;
+    if (PrivateExtractIconsW(exePath, 0, desiredSizePx, desiredSizePx,
+                             &hIcon, NULL, 1, 0) == 1 && hIcon) {
+        g_exeIconCache[key] = hIcon;
+        return hIcon;
+    }
+    return NULL;
+}
+
 static HICON LoadWindowIcon(HWND hWnd) {
     HICON hIcon = NULL;
     if (g_IsShellFrameWindow && g_IsShellFrameWindow(hWnd)) {
         hIcon = TryGetUwpIconFromExplorer(hWnd, GetHeaderIconSizePx());
+    }
+    // For the larger sizes, a crisp full-resolution exe icon beats the
+    // upscaled WM_GETICON result.
+    if (!hIcon && GetHeaderIconSizeBase() > 32) {
+        hIcon = TryGetCrispExeIcon(hWnd, GetHeaderIconSizePx());
     }
     if (!hIcon) SendMessageTimeoutW(hWnd, WM_GETICON, ICON_BIG, 0, SMTO_ABORTIFHUNG | SMTO_BLOCK, 100, (DWORD_PTR*)&hIcon);
     if (!hIcon) SendMessageTimeoutW(hWnd, WM_GETICON, ICON_SMALL2, 0, SMTO_ABORTIFHUNG | SMTO_BLOCK, 100, (DWORD_PTR*)&hIcon);
@@ -3248,7 +3290,9 @@ static void LoadSettings() {
     v = Wh_GetStringSetting(L"Appearance.HeaderContent.iconSize");
     wcscpy_s(g_settings.iconSize, v ? v : L"small"); Wh_FreeStringSetting(v);
     if (wcscmp(g_settings.iconSize, L"small") != 0 &&
-        wcscmp(g_settings.iconSize, L"large") != 0) {
+        wcscmp(g_settings.iconSize, L"large") != 0 &&
+        wcscmp(g_settings.iconSize, L"xlarge") != 0 &&
+        wcscmp(g_settings.iconSize, L"xxlarge") != 0) {
         wcscpy_s(g_settings.iconSize, L"small");
     }
     v = Wh_GetStringSetting(L"Appearance.Thumbnails.thumbnailPosition");
@@ -3785,6 +3829,10 @@ void Wh_ModUninit() {
             if (pair.second) DestroyIcon(pair.second);
         }
         g_uwpIconCache.clear();
+        for (auto& pair : g_exeIconCache) {
+            if (pair.second) DestroyIcon(pair.second);
+        }
+        g_exeIconCache.clear();
 
         if (g_isExplorer && IsMainExplorer()) {
             if (!GetSystemMetrics(SM_SHUTTINGDOWN)) {
