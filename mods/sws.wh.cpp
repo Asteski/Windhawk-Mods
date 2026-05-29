@@ -23,6 +23,7 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
 - Keyboard navigation (Tab/Shift+Tab/Shift/Backtick, Arrow keys, Enter, Esc)
 - Mouse click to select, scroll wheel to cycle from anywhere
 - Virtual Desktop Support (Show windows across multiple virtual desktops)
+- Group windows by application (macOS Cmd+Tab style, one entry per app)
 - Win+Alt+Tab override to display windows from all monitors when using Per-Monitor mode
 - Alt+Ctrl+Tab sticky mode
 - Theme support (None/Backdrop Acrylic) with fully customizable background opacity
@@ -220,6 +221,9 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       $options:
       - currentOnly: Show windows from current virtual desktop only
       - allDesktops: Show windows from all virtual desktops
+    - showApplications: false
+      $name: Group Windows by Application
+      $description: Show one entry per application instead of one per window, similar to macOS Cmd+Tab. Selecting an application switches to its most recently used window.
   $name: Accessibility
 - ExcludedWindows:
   - - Method: title
@@ -322,6 +326,7 @@ struct Settings {
     int maxHeightPercent; int showDelay;
     bool useAccentColor; bool perMonitorWindows; bool taskRoundedCorners; bool reverseScrollDirection;
     bool centerTaskContent;
+    bool showApplications;
 };
 
 static std::vector<std::wstring> g_excludeTitlePatterns;
@@ -956,6 +961,31 @@ static HICON TryGetUwpIconFromExplorer(HWND hWnd, int desiredSizePx) {
     return NULL;
 }
 
+// Identity key used to group windows by application. UWP/app-frame-host windows
+// all share a single host process, so keying them by executable would merge
+// unrelated apps; those are keyed per-window to avoid over-grouping.
+static void GetWindowGroupKey(HWND hWnd, WCHAR* out, size_t cch) {
+    out[0] = 0;
+    if (g_IsShellFrameWindow && g_IsShellFrameWindow(hWnd)) {
+        swprintf_s(out, cch, L"hwnd:%p", (void*)hWnd);
+        return;
+    }
+    DWORD pid = 0;
+    GetWindowThreadProcessId(hWnd, &pid);
+    if (pid) {
+        HANDLE hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+        if (hProc) {
+            WCHAR exePath[MAX_PATH] = {0};
+            DWORD size = MAX_PATH;
+            if (QueryFullProcessImageNameW(hProc, 0, exePath, &size)) {
+                wcsncpy_s(out, cch, exePath, _TRUNCATE);
+            }
+            CloseHandle(hProc);
+        }
+    }
+    if (!out[0]) swprintf_s(out, cch, L"hwnd:%p", (void*)hWnd);
+}
+
 static void BuildWindowList() {
     for (auto& w : g_windows) {
         for (const auto& kv : w.hThumbs) { if (kv.second) DwmUnregisterThumbnail(kv.second); }
@@ -963,6 +993,24 @@ static void BuildWindowList() {
     }
     g_windows.clear();
     EnumWindows(EnumWindowsProc, (LPARAM)&g_windows);
+    // App grouping: keep one entry per application. EnumWindows yields windows in
+    // Z-order (top to bottom), so the first window seen for each app is its most
+    // recently used one, which becomes the representative entry.
+    if (g_settings.showApplications) {
+        std::vector<WindowEntry> grouped;
+        grouped.reserve(g_windows.size());
+        std::vector<std::wstring> seenKeys;
+        for (auto& w : g_windows) {
+            WCHAR key[MAX_PATH];
+            GetWindowGroupKey(w.hWnd, key, ARRAYSIZE(key));
+            bool dup = false;
+            for (const auto& s : seenKeys) { if (s == key) { dup = true; break; } }
+            if (dup) continue;
+            seenKeys.emplace_back(key);
+            grouped.push_back(w);
+        }
+        g_windows = std::move(grouped);
+    }
     std::stable_sort(g_windows.begin(), g_windows.end(), [](const WindowEntry& a, const WindowEntry& b) {
         return IsIconic(a.hWnd) < IsIconic(b.hWnd);
     });
@@ -3005,7 +3053,7 @@ static void LoadSettings() {
     v = Wh_GetStringSetting(L"Appearance.Corners.cornerPreference");
     wcscpy_s(g_settings.cornerPreference, v ? v : L"round"); Wh_FreeStringSetting(v);
     g_settings.taskRoundedCorners = Wh_GetIntSetting(L"Appearance.Corners.taskRoundedCorners");
-    v = Wh_GetStringSetting(L"Miscellaneous.scrollWheelBehavior");
+    v = Wh_GetStringSetting(L"Accessibility.scrollWheelBehavior");
     wcscpy_s(g_settings.scrollWheelBehavior, v ? v : L"never"); Wh_FreeStringSetting(v);
     v = Wh_GetStringSetting(L"Appearance.Orientation.taskListOrientation");
     wcscpy_s(g_settings.taskListOrientation, v ? v : L"horizontal"); Wh_FreeStringSetting(v);
@@ -3036,7 +3084,7 @@ static void LoadSettings() {
         wcscmp(g_settings.thumbnailAlignment, L"right") != 0) {
         wcscpy_s(g_settings.thumbnailAlignment, L"left");
     }
-    v = Wh_GetStringSetting(L"Miscellaneous.backwardShortcut");
+    v = Wh_GetStringSetting(L"Accessibility.backwardShortcut");
     if (v) {
         wcscpy_s(g_settings.backwardShortcut, v);
         Wh_FreeStringSetting(v);
@@ -3060,7 +3108,7 @@ static void LoadSettings() {
         wcscpy_s(g_settings.highlightStyle, L"border");
     }
 
-    v = Wh_GetStringSetting(L"Miscellaneous.virtualDesktopBehavior");
+    v = Wh_GetStringSetting(L"Accessibility.virtualDesktopBehavior");
     wcscpy_s(g_settings.virtualDesktopBehavior, v ? v : L"currentOnly");
     Wh_FreeStringSetting(v);
     if (wcscmp(g_settings.virtualDesktopBehavior, L"currentOnly") != 0 &&
@@ -3087,11 +3135,12 @@ static void LoadSettings() {
     g_settings.maxHeightPercent = Wh_GetIntSetting(L"Dimensions.maxHeightPercent");
     if (g_settings.maxHeightPercent <= 0 || g_settings.maxHeightPercent > 100) g_settings.maxHeightPercent = 80;
 
-    g_settings.showDelay = Wh_GetIntSetting(L"Miscellaneous.showDelay");
+    g_settings.showDelay = Wh_GetIntSetting(L"Accessibility.showDelay");
     if (g_settings.showDelay < 0) g_settings.showDelay = 0;
     g_settings.useAccentColor = Wh_GetIntSetting(L"Style.useAccentColor");
-    g_settings.perMonitorWindows = Wh_GetIntSetting(L"Miscellaneous.perMonitorWindows");
-    g_settings.reverseScrollDirection = Wh_GetIntSetting(L"Miscellaneous.reverseScrollDirection");
+    g_settings.perMonitorWindows = Wh_GetIntSetting(L"Accessibility.perMonitorWindows");
+    g_settings.reverseScrollDirection = Wh_GetIntSetting(L"Accessibility.reverseScrollDirection");
+    g_settings.showApplications = Wh_GetIntSetting(L"Accessibility.showApplications");
     g_settings.centerTaskContent = Wh_GetIntSetting(L"Appearance.HeaderContent.centerTaskContent");
 
 
@@ -3116,13 +3165,13 @@ static void LoadSettings() {
     v = Wh_GetStringSetting(L"Appearance.Font.fontStyle");
     wcscpy_s(g_settings.fontStyle, v ? v : L"regular"); Wh_FreeStringSetting(v);
 
-    v = Wh_GetStringSetting(L"Miscellaneous.switcherDisplayBehavior");
+    v = Wh_GetStringSetting(L"Accessibility.switcherDisplayBehavior");
     wcscpy_s(g_settings.switcherDisplayBehavior, v ? v : L"cursorMonitor"); Wh_FreeStringSetting(v);
 
     g_excludeTitlePatterns.clear();
     g_excludeExePatterns.clear();
     for (int i = 0; ; i++) {
-        PCWSTR method = Wh_GetStringSetting(L"Miscellaneous.ExcludedWindows[%d].Method", i);
+        PCWSTR method = Wh_GetStringSetting(L"ExcludedWindows[%d].Method", i);
         bool done = !method || !*method;
         
         if (done) {
@@ -3130,7 +3179,7 @@ static void LoadSettings() {
             break;
         }
         
-        PCWSTR value = Wh_GetStringSetting(L"Miscellaneous.ExcludedWindows[%d].Value", i);
+        PCWSTR value = Wh_GetStringSetting(L"ExcludedWindows[%d].Value", i);
         if (value && *value) {
             std::wstring valStr(value);
             size_t start = 0;
