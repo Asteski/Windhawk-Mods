@@ -133,9 +133,9 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
           $description: Size of the header icon.
           $options:
           - small: Small (16x16)
-          - large: Medium (32x32)
-          - xlarge: Large (48x48)
-          - xxlarge: Extra Large (64x64)
+          - medium: Medium (32x32)
+          - large: Large (48x48)
+          - xlarge: Extra Large (64x64)
         - showTitle: true
           $name: Show Title Label
         - showIcon: true
@@ -191,6 +191,21 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       $name: Stretch Thumbnails to Task Width
       $description: When enabled, custom row width also changes thumbnail width. Disable to keep thumbnail aspect sizing while row width controls only task tile width.
   $name: Dimensions
+- Grouping:
+    - showApplications: false
+      $name: Group Windows by Application
+      $description: Show one entry per application instead of one per window, similar to macOS Cmd+Tab. Selecting an application switches to its most recently used window. Tap Ctrl while an application is selected to expand it and show all of its windows as thumbnails.
+    - showTitles: windowTitle
+      $name: Show Titles
+      $description: Which title text to display for each entry. Only applies when "Group Windows by Application" is enabled.
+      $options:
+      - windowTitle: Window Title
+      - appName: Application Name
+      - appNameWindowTitle: Application Name - Window Title
+    - restoreAllWindows: false
+      $name: Restore All Windows
+      $description: When switching to an application, restore all of its minimized windows to their previous state. Only applies when "Group Windows by Application" is enabled. Tip - to act on a single window instead, tap Ctrl while the application is selected to show all of its windows and pick one.
+  $name: Grouping
 - Accessibility:
     - showDelay: 0
       $name: Show Delay (ms)
@@ -224,19 +239,6 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       $options:
       - currentOnly: Show windows from current virtual desktop only
       - allDesktops: Show windows from all virtual desktops
-    - showApplications: false
-      $name: Group Windows by Application
-      $description: Show one entry per application instead of one per window, similar to macOS Cmd+Tab. Selecting an application switches to its most recently used window.
-    - showTitles: windowTitle
-      $name: Show Titles
-      $description: Which title text to display for each entry. Only applies when "Group Windows by Application" is enabled.
-      $options:
-      - windowTitle: Window Title
-      - appName: Application Name
-      - appNameWindowTitle: Application Name - Window Title
-    - restoreAllWindows: false
-      $name: Restore All Windows
-      $description: When switching to an application, restore all of its minimized windows to their previous state. Only applies when "Group Windows by Application" is enabled.
   $name: Accessibility
 - ExcludedWindows:
   - - Method: title
@@ -424,9 +426,9 @@ static bool HeaderIsVertical() {
     return HeaderOrientationIs(L"vertical");
 }
 static int GetHeaderIconSizeBase() {
-    if (IconSizeIs(L"xxlarge")) return 64;
-    if (IconSizeIs(L"xlarge")) return 48;
-    if (IconSizeIs(L"large")) return 32;
+    if (IconSizeIs(L"xlarge")) return 64;
+    if (IconSizeIs(L"large")) return 48;
+    if (IconSizeIs(L"medium")) return 32;
     return SWS_ICON_SIZE;
 }
 static int GetHeaderIconSizePx() {
@@ -3290,9 +3292,9 @@ static void LoadSettings() {
     v = Wh_GetStringSetting(L"Appearance.HeaderContent.iconSize");
     wcscpy_s(g_settings.iconSize, v ? v : L"small"); Wh_FreeStringSetting(v);
     if (wcscmp(g_settings.iconSize, L"small") != 0 &&
+        wcscmp(g_settings.iconSize, L"medium") != 0 &&
         wcscmp(g_settings.iconSize, L"large") != 0 &&
-        wcscmp(g_settings.iconSize, L"xlarge") != 0 &&
-        wcscmp(g_settings.iconSize, L"xxlarge") != 0) {
+        wcscmp(g_settings.iconSize, L"xlarge") != 0) {
         wcscpy_s(g_settings.iconSize, L"small");
     }
     v = Wh_GetStringSetting(L"Appearance.Thumbnails.thumbnailPosition");
@@ -3366,9 +3368,9 @@ static void LoadSettings() {
     g_settings.useAccentColor = Wh_GetIntSetting(L"Style.useAccentColor");
     g_settings.perMonitorWindows = Wh_GetIntSetting(L"Accessibility.perMonitorWindows");
     g_settings.reverseScrollDirection = Wh_GetIntSetting(L"Accessibility.reverseScrollDirection");
-    g_settings.showApplications = Wh_GetIntSetting(L"Accessibility.showApplications");
-    g_settings.restoreAllWindows = Wh_GetIntSetting(L"Accessibility.restoreAllWindows");
-    v = Wh_GetStringSetting(L"Accessibility.showTitles");
+    g_settings.showApplications = Wh_GetIntSetting(L"Grouping.showApplications");
+    g_settings.restoreAllWindows = Wh_GetIntSetting(L"Grouping.restoreAllWindows");
+    v = Wh_GetStringSetting(L"Grouping.showTitles");
     wcscpy_s(g_settings.showTitles, v ? v : L"windowTitle"); Wh_FreeStringSetting(v);
     if (wcscmp(g_settings.showTitles, L"windowTitle") != 0 &&
         wcscmp(g_settings.showTitles, L"appName") != 0 &&
