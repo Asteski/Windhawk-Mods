@@ -7,7 +7,7 @@
 // @github          https://github.com/Louis047
 // @include         windhawk.exe
 // @include         explorer.exe
-// @compilerOptions -ldwmapi -luxtheme -lgdi32 -lshlwapi -loleaut32 -lole32 -lcomctl32 -lgdiplus
+// @compilerOptions -ldwmapi -luxtheme -lgdi32 -lshlwapi -loleaut32 -lole32 -lcomctl32 -lgdiplus -lversion
 // ==/WindhawkMod==
 
 // ==WindhawkModReadme==
@@ -224,6 +224,16 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
     - showApplications: false
       $name: Group Windows by Application
       $description: Show one entry per application instead of one per window, similar to macOS Cmd+Tab. Selecting an application switches to its most recently used window.
+    - showTitles: windowTitle
+      $name: Show Titles
+      $description: Which title text to display for each entry. Only applies when "Group Windows by Application" is enabled.
+      $options:
+      - windowTitle: Window Title
+      - appName: Application Name
+      - appNameWindowTitle: Application Name - Window Title
+    - maximizeAllWindows: false
+      $name: Maximize All Windows
+      $description: When switching to an application, maximize all of its windows. Only applies when "Group Windows by Application" is enabled.
   $name: Accessibility
 - ExcludedWindows:
   - - Method: title
@@ -307,6 +317,7 @@ struct WindowEntry {
     SIZE sourceSize;           // Raw DWM surface size
     RECT rcSourceCrop;         // Source crop rect for DWM_TNP_RECTSOURCE
     SIZE effectiveSourceSize;  // Source size after cropping invisible frame
+    std::vector<HWND> groupWindows;  // All app windows when grouping by application
 };
 struct Settings {
     WCHAR theme[32]; WCHAR colorScheme[32]; WCHAR cornerPreference[32]; WCHAR scrollWheelBehavior[32]; WCHAR taskListOrientation[32]; WCHAR headerContentOrientation[32]; WCHAR iconSize[32]; WCHAR backwardShortcut[32]; WCHAR thumbnailPosition[32]; WCHAR thumbnailAlignment[32]; WCHAR switcherDisplayBehavior[32];
@@ -327,6 +338,8 @@ struct Settings {
     bool useAccentColor; bool perMonitorWindows; bool taskRoundedCorners; bool reverseScrollDirection;
     bool centerTaskContent;
     bool showApplications;
+    WCHAR showTitles[32];
+    bool maximizeAllWindows;
 };
 
 static std::vector<std::wstring> g_excludeTitlePatterns;
@@ -986,6 +999,51 @@ static void GetWindowGroupKey(HWND hWnd, WCHAR* out, size_t cch) {
     if (!out[0]) swprintf_s(out, cch, L"hwnd:%p", (void*)hWnd);
 }
 
+// Human-readable application name for a window, taken from the executable's
+// FileDescription version-info field (e.g. "Google Chrome"), falling back to
+// the executable file name without extension.
+static void GetAppName(HWND hWnd, WCHAR* out, size_t cch) {
+    out[0] = 0;
+    DWORD pid = 0;
+    GetWindowThreadProcessId(hWnd, &pid);
+    if (!pid) return;
+    HANDLE hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+    if (!hProc) return;
+    WCHAR exePath[MAX_PATH] = {0};
+    DWORD size = MAX_PATH;
+    bool gotPath = QueryFullProcessImageNameW(hProc, 0, exePath, &size);
+    CloseHandle(hProc);
+    if (!gotPath) return;
+
+    DWORD handle = 0;
+    DWORD verSize = GetFileVersionInfoSizeW(exePath, &handle);
+    if (verSize) {
+        std::vector<BYTE> buf(verSize);
+        if (GetFileVersionInfoW(exePath, handle, verSize, buf.data())) {
+            struct LangAndCodePage { WORD wLanguage; WORD wCodePage; } *translate = nullptr;
+            UINT cbTranslate = 0;
+            if (VerQueryValueW(buf.data(), L"\\VarFileInfo\\Translation",
+                               (LPVOID*)&translate, &cbTranslate) &&
+                cbTranslate >= sizeof(LangAndCodePage)) {
+                WCHAR subBlock[64];
+                swprintf_s(subBlock, ARRAYSIZE(subBlock),
+                           L"\\StringFileInfo\\%04x%04x\\FileDescription",
+                           translate[0].wLanguage, translate[0].wCodePage);
+                LPWSTR desc = nullptr;
+                UINT descLen = 0;
+                if (VerQueryValueW(buf.data(), subBlock, (LPVOID*)&desc, &descLen) &&
+                    desc && desc[0]) {
+                    wcsncpy_s(out, cch, desc, _TRUNCATE);
+                }
+            }
+        }
+    }
+    if (!out[0]) {
+        wcsncpy_s(out, cch, PathFindFileNameW(exePath), _TRUNCATE);
+        PathRemoveExtensionW(out);
+    }
+}
+
 static void BuildWindowList() {
     for (auto& w : g_windows) {
         for (const auto& kv : w.hThumbs) { if (kv.second) DwmUnregisterThumbnail(kv.second); }
@@ -999,15 +1057,39 @@ static void BuildWindowList() {
     if (g_settings.showApplications) {
         std::vector<WindowEntry> grouped;
         grouped.reserve(g_windows.size());
-        std::vector<std::wstring> seenKeys;
+        std::vector<std::wstring> seenKeys;  // parallel to grouped
         for (auto& w : g_windows) {
             WCHAR key[MAX_PATH];
             GetWindowGroupKey(w.hWnd, key, ARRAYSIZE(key));
-            bool dup = false;
-            for (const auto& s : seenKeys) { if (s == key) { dup = true; break; } }
-            if (dup) continue;
+            int found = -1;
+            for (size_t i = 0; i < seenKeys.size(); i++) {
+                if (seenKeys[i] == key) { found = (int)i; break; }
+            }
+            if (found >= 0) {
+                grouped[found].groupWindows.push_back(w.hWnd);
+                continue;
+            }
             seenKeys.emplace_back(key);
-            grouped.push_back(w);
+            w.groupWindows.assign(1, w.hWnd);
+            grouped.push_back(std::move(w));
+        }
+        for (auto& e : grouped) {
+            if (wcscmp(g_settings.showTitles, L"windowTitle") == 0) continue;
+            WCHAR appName[256] = {0};
+            GetAppName(e.hWnd, appName, ARRAYSIZE(appName));
+            if (!appName[0]) continue;
+            if (wcscmp(g_settings.showTitles, L"appName") == 0) {
+                wcscpy_s(e.title, appName);
+            } else {  // appNameWindowTitle
+                if (e.title[0]) {
+                    WCHAR combined[256];
+                    _snwprintf_s(combined, ARRAYSIZE(combined), _TRUNCATE,
+                                 L"%s - %s", appName, e.title);
+                    wcscpy_s(e.title, combined);
+                } else {
+                    wcscpy_s(e.title, appName);
+                }
+            }
         }
         g_windows = std::move(grouped);
     }
@@ -2425,11 +2507,19 @@ static void HideSwitcher() {
 static void SwitchToSelected() {
     if (g_selectedIndex < 0 || g_selectedIndex >= (int)g_windows.size()) { HideSwitcher(); return; }
     HWND hT = g_windows[g_selectedIndex].hWnd;
+    std::vector<HWND> groupWindows;
+    if (g_settings.showApplications && g_settings.maximizeAllWindows) {
+        groupWindows = g_windows[g_selectedIndex].groupWindows;
+    }
     HideSwitcher();
+    for (HWND hw : groupWindows) {
+        if (IsWindow(hw) && hw != hT) ShowWindow(hw, SW_MAXIMIZE);
+    }
     if (IsWindow(hT)) {
         HWND hP = GetLastActivePopup(hT);
         HWND hF = IsWindowVisible(hP) ? hP : hT;
-        if (IsIconic(hF)) ShowWindow(hF, SW_RESTORE);
+        if (!groupWindows.empty()) ShowWindow(hF, SW_MAXIMIZE);
+        else if (IsIconic(hF)) ShowWindow(hF, SW_RESTORE);
         SwitchToThisWindow(hF, TRUE);
     }
 }
@@ -3141,6 +3231,14 @@ static void LoadSettings() {
     g_settings.perMonitorWindows = Wh_GetIntSetting(L"Accessibility.perMonitorWindows");
     g_settings.reverseScrollDirection = Wh_GetIntSetting(L"Accessibility.reverseScrollDirection");
     g_settings.showApplications = Wh_GetIntSetting(L"Accessibility.showApplications");
+    g_settings.maximizeAllWindows = Wh_GetIntSetting(L"Accessibility.maximizeAllWindows");
+    v = Wh_GetStringSetting(L"Accessibility.showTitles");
+    wcscpy_s(g_settings.showTitles, v ? v : L"windowTitle"); Wh_FreeStringSetting(v);
+    if (wcscmp(g_settings.showTitles, L"windowTitle") != 0 &&
+        wcscmp(g_settings.showTitles, L"appName") != 0 &&
+        wcscmp(g_settings.showTitles, L"appNameWindowTitle") != 0) {
+        wcscpy_s(g_settings.showTitles, L"windowTitle");
+    }
     g_settings.centerTaskContent = Wh_GetIntSetting(L"Appearance.HeaderContent.centerTaskContent");
 
 
