@@ -24,6 +24,7 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
 - Mouse click to select, scroll wheel to cycle from anywhere
 - Virtual Desktop Support (Show windows across multiple virtual desktops)
 - Group windows by application (macOS Cmd+Tab style, one entry per app)
+- Drill into an app's windows with a Ctrl tap to pick a specific window (Esc backs out)
 - Win+Alt+Tab override to display windows from all monitors when using Per-Monitor mode
 - Alt+Ctrl+Tab sticky mode
 - Theme support (None/Backdrop Acrylic) with fully customizable background opacity
@@ -355,6 +356,13 @@ static std::vector<WindowEntry> g_windows;
 static int g_selectedIndex = 0, g_hoverIndex = -1;
 static HWND g_hoverWnd = NULL;
 static int g_layoutStartIndex = 0; // EP-style: first window index visible in the layout
+// App drill-in: when grouping by application, Ctrl drills into the selected app's
+// windows. The grouped app list is stashed here so it can be restored on exit.
+static bool g_drilledIn = false;
+static std::vector<WindowEntry> g_savedAppList;
+static int g_savedSelectedIndex = 0;
+static int g_savedLayoutStartIndex = 0;
+static bool g_consumeEscUp = false;
 static bool g_isVisible = false, g_isSticky = false, g_isDarkMode = false;
 static HFONT g_hFont = NULL;
 static HTHEME g_hTheme = NULL;
@@ -612,6 +620,20 @@ static bool IsAltTabWindow(HWND h) {
 
 static HICON TryGetUwpIconFromExplorer(HWND hWnd, int desiredSizePx);
 
+static HICON LoadWindowIcon(HWND hWnd) {
+    HICON hIcon = NULL;
+    if (g_IsShellFrameWindow && g_IsShellFrameWindow(hWnd)) {
+        hIcon = TryGetUwpIconFromExplorer(hWnd, GetHeaderIconSizePx());
+    }
+    if (!hIcon) SendMessageTimeoutW(hWnd, WM_GETICON, ICON_BIG, 0, SMTO_ABORTIFHUNG | SMTO_BLOCK, 100, (DWORD_PTR*)&hIcon);
+    if (!hIcon) SendMessageTimeoutW(hWnd, WM_GETICON, ICON_SMALL2, 0, SMTO_ABORTIFHUNG | SMTO_BLOCK, 100, (DWORD_PTR*)&hIcon);
+    if (!hIcon) SendMessageTimeoutW(hWnd, WM_GETICON, ICON_SMALL, 0, SMTO_ABORTIFHUNG | SMTO_BLOCK, 100, (DWORD_PTR*)&hIcon);
+    if (!hIcon) hIcon = (HICON)GetClassLongPtrW(hWnd, GCLP_HICON);
+    if (!hIcon) hIcon = (HICON)GetClassLongPtrW(hWnd, GCLP_HICONSM);
+    if (!hIcon) hIcon = LoadIconW(NULL, IDI_APPLICATION);
+    return hIcon;
+}
+
 static BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
     auto* list = reinterpret_cast<std::vector<WindowEntry>*>(lParam);
     if (hWnd == g_hSwitcher) return TRUE;
@@ -659,23 +681,7 @@ static BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
     }
     if (excluded) return TRUE;
 
-    e.hIcon = NULL;
-    
-    bool isUwp = false;
-    if (g_IsShellFrameWindow && g_IsShellFrameWindow(hWnd)) {
-        isUwp = true;
-    }
-    
-    if (isUwp) {
-        e.hIcon = TryGetUwpIconFromExplorer(hWnd, GetHeaderIconSizePx());
-    }
-    
-    if (!e.hIcon) SendMessageTimeoutW(hWnd, WM_GETICON, ICON_BIG, 0, SMTO_ABORTIFHUNG | SMTO_BLOCK, 100, (DWORD_PTR*)&e.hIcon);
-    if (!e.hIcon) SendMessageTimeoutW(hWnd, WM_GETICON, ICON_SMALL2, 0, SMTO_ABORTIFHUNG | SMTO_BLOCK, 100, (DWORD_PTR*)&e.hIcon);
-    if (!e.hIcon) SendMessageTimeoutW(hWnd, WM_GETICON, ICON_SMALL, 0, SMTO_ABORTIFHUNG | SMTO_BLOCK, 100, (DWORD_PTR*)&e.hIcon);
-    if (!e.hIcon) e.hIcon = (HICON)GetClassLongPtrW(hWnd, GCLP_HICON);
-    if (!e.hIcon) e.hIcon = (HICON)GetClassLongPtrW(hWnd, GCLP_HICONSM);
-    if (!e.hIcon) e.hIcon = LoadIconW(NULL, IDI_APPLICATION);
+    e.hIcon = LoadWindowIcon(hWnd);
     list->push_back(e);
     return TRUE;
 }
@@ -2418,6 +2424,9 @@ static void ShowSwitcher(bool sticky) {
     g_isDarkMode = ShouldUseDarkMode(); g_isSticky = sticky;
 
     g_layoutStartIndex = 0; // Always start from the first window on initial show
+    g_drilledIn = false;
+    g_savedAppList.clear();
+    g_consumeEscUp = false;
     g_selectedIndex = (g_windows.size() > 1) ? 1 : 0;
     g_hoverIndex = -1;
     g_hoverWnd = NULL;
@@ -2507,6 +2516,9 @@ static void HideSwitcher() {
         g_hMouseHook = NULL;
     }
     g_isSticky = false;
+    g_drilledIn = false;
+    g_savedAppList.clear();
+    g_consumeEscUp = false;
 }
 
 static void SwitchToSelected() {
@@ -2566,6 +2578,67 @@ static void RecomputeAndReposition() {
         SetWindowPos(g_hCloseBtnWnd, HWND_TOPMOST, cx, cy, g_winW, g_winH, SWP_NOACTIVATE);
     }
     RegisterThumbnails();
+}
+
+// Drill into the selected application's windows: stash the grouped app list and
+// replace g_windows with one entry per window of that app.
+static void EnterAppGroup() {
+    if (!g_settings.showApplications || g_drilledIn) return;
+    if (g_selectedIndex < 0 || g_selectedIndex >= (int)g_windows.size()) return;
+    std::vector<HWND> members = g_windows[g_selectedIndex].groupWindows;
+    if (members.size() <= 1) return;  // nothing to expand
+
+    UnregisterThumbnails();  // release app-list thumbnails before stashing
+    g_savedAppList = std::move(g_windows);
+    g_savedSelectedIndex = g_selectedIndex;
+    g_savedLayoutStartIndex = g_layoutStartIndex;
+
+    g_windows.clear();
+    for (HWND hw : members) {
+        if (!IsWindow(hw)) continue;
+        WindowEntry e = {};
+        e.hWnd = hw;
+        InternalGetWindowText(hw, e.title, 256);
+        if (!e.title[0]) GetWindowTextW(hw, e.title, 256);
+        e.hIcon = LoadWindowIcon(hw);
+        g_windows.push_back(std::move(e));
+    }
+    if (g_windows.empty()) {  // every window closed in the meantime; abort
+        g_windows = std::move(g_savedAppList);
+        RecomputeAndReposition();
+        return;
+    }
+    g_drilledIn = true;
+    g_selectedIndex = 0;
+    g_layoutStartIndex = 0;
+    g_hoverIndex = -1;
+    g_hoverWnd = NULL;
+    g_isCloseHovered = false;
+    RecomputeAndReposition();
+    PaintSwitcher();
+}
+
+// Leave the drilled-in window view and restore the grouped application list.
+static void ExitAppGroup() {
+    if (!g_drilledIn) return;
+    UnregisterThumbnails();  // release drilled-window thumbnails
+    g_windows = std::move(g_savedAppList);
+    g_savedAppList.clear();
+    g_selectedIndex = g_savedSelectedIndex;
+    g_layoutStartIndex = g_savedLayoutStartIndex;
+    if (g_selectedIndex >= (int)g_windows.size()) g_selectedIndex = (int)g_windows.size() - 1;
+    if (g_selectedIndex < 0) g_selectedIndex = 0;
+    g_drilledIn = false;
+    g_hoverIndex = -1;
+    g_hoverWnd = NULL;
+    g_isCloseHovered = false;
+    RecomputeAndReposition();
+    PaintSwitcher();
+}
+
+static void ToggleAppDrill() {
+    if (g_drilledIn) ExitAppGroup();
+    else EnterAppGroup();
 }
 
 // Linear navigation: Tab, Shift+Tab, Left, Right, Hotkeys, Scroll
@@ -2890,7 +2963,11 @@ static LRESULT CALLBACK SwitcherWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
             SwitchToSelected();
             return 0;
         }
-        if (wParam == VK_ESCAPE && g_isVisible) { HideSwitcher(); return 0; }
+        if (wParam == VK_ESCAPE && g_isVisible) {
+            if (g_consumeEscUp) { g_consumeEscUp = false; return 0; }
+            HideSwitcher();
+            return 0;
+        }
         if (wParam == VK_RETURN && g_isVisible) { SwitchToSelected(); return 0; }
         break;
     case WM_SYSKEYUP:
@@ -2909,6 +2986,13 @@ static LRESULT CALLBACK SwitcherWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
         break;
     case WM_SYSKEYDOWN: case WM_KEYDOWN:
         if (g_isVisible) {
+            // Ctrl tap: drill into / out of the selected application's windows.
+            if ((wParam == VK_CONTROL || wParam == VK_LCONTROL || wParam == VK_RCONTROL)
+                && g_settings.showApplications) {
+                bool isRepeat = (lParam & 0x40000000) != 0;
+                if (!isRepeat) ToggleAppDrill();
+                return 0;
+            }
             // Block Alt+Shift+Tab from reaching the system if setting is enabled
             if (UseAltShiftBackward() && wParam == VK_TAB) {
                 bool altDown = (GetKeyState(VK_MENU) & 0x8000) != 0;
@@ -2945,7 +3029,11 @@ static LRESULT CALLBACK SwitcherWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
                 if (wParam == VK_LEFT) { CycleDirectional(-1); return 0; }
                 if (wParam == VK_RIGHT) { CycleDirectional(1); return 0; }
             }
-            if (wParam == VK_ESCAPE) { HideSwitcher(); return 0; }
+            if (wParam == VK_ESCAPE) {
+                if (g_drilledIn) { ExitAppGroup(); g_consumeEscUp = true; }
+                else HideSwitcher();
+                return 0;
+            }
             if (wParam == VK_RETURN || wParam == VK_SPACE) { SwitchToSelected(); return 0; }
         }
         break;
