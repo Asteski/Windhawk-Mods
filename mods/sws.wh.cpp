@@ -60,15 +60,15 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
 /*
 - Style:
     - theme: none
-      $name: Theme
-      $description: Visual theme for the switcher background.
+      $name: Style
+      $description: Visual theme style for the switcher background.
       $options:
-      - none: None (transparent)
+      - none: None (Transparent)
       - backdrop: Acrylic (Windows 10+)
       - mica: Mica Blur (Windows 11 only)
     - opacity: 100
       $name: Background Opacity
-      $description: Background opacity percentage (0-100), applies to None theme.
+      $description: Background opacity percentage (0-100), applies to None and Acrylic themes. Set value to '80' for Acrylic to see the effect.
     - colorScheme: system
       $name: Color Scheme
       $options:
@@ -83,15 +83,15 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       - fillAndBorder: Background fill and border
       - fillOnly: Background fill only
     - borderColorDark: "#FFFFFF"
-      $name: Border Color (Dark Mode)
+      $name: Dark Mode Border Color
       $description: Border color in HEX format for dark mode.
     - borderColorLight: "#000000"
-      $name: Border Color (Light Mode)
+      $name: Light Mode Border Color
       $description: Border color in HEX format for light mode.
     - useAccentColor: false
-      $name: Accent Color for Borders and Background Fill
-      $description: Use Windows accent color for selection and hover borders.
-  $name: Theme Style
+      $name: Use Accent Color for Borders and Background Fill
+      $description: Use Windows accent color for selection and hover borders. 
+  $name: Theme
 - Appearance:
     - Corners:
         - cornerPreference: none
@@ -108,7 +108,7 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
     - Thumbnails:
         - thumbnailPosition: bottom
           $name: Thumbnail Position
-          $description: Place the thumbnail below or above the header row.
+          $description: Change the thumbnail position.
           $options:
           - bottom: Bottom
           - top: Top
@@ -154,6 +154,23 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
           - horizontal: Horizontal
           - vertical: Vertical
       $name: Orientation
+    - Font:
+        - fontFamily: Segoe UI
+          $name: Font Family
+          $description: Font used for window titles (e.g., Segoe UI, Tahoma).
+        - fontSize: 9
+          $name: Font Size
+          $description: Size of the font in points.
+        - fontStyle: regular
+          $name: Font Style
+          $options:
+          - light: Light
+          - regular: Regular
+          - semibold: Semi-Bold
+          - bold: Bold
+          - italic: Italic
+          - boldItalic: Bold Italic
+      $name: Font
   $name: Appearance
 - Dimensions:
     - rowHeight: 230
@@ -170,7 +187,7 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       $name: Stretch Thumbnails to Task Width
       $description: When enabled, custom row width also changes thumbnail width. Disable to keep thumbnail aspect sizing while row width controls only task tile width.
   $name: Dimensions
-- Miscellaneous:
+- Accessibility:
     - showDelay: 0
       $name: Show Delay (ms)
       $description: Delay in milliseconds before showing the switcher (0 = instant).
@@ -180,6 +197,8 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       - never: Never
       - always: Always
       - stickyOnly: Only in sticky mode
+    - reverseScrollDirection: false
+      $name: Reverse Scroll Direction
     - backwardShortcut: altShiftTab
       $name: Backward Shortcut
       $description: Shortcut used to move backward in the switcher.
@@ -187,19 +206,34 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       - altShiftTab: Alt+Shift+Tab (default)
       - altShift: Alt+Shift
       - altBacktick: Alt+Backtick
-    - reverseScrollDirection: false
-      $name: Reverse Scroll Direction
-    - primaryMonitorOnly: false
-      $name: Always Display Switcher on Primary Monitor
+    - switcherDisplayBehavior: cursorMonitor
+      $name: Switcher Display Behavior
+      $options:
+      - primaryOnly: Primary Monitor Only
+      - allMonitors: All Monitors
+      - cursorMonitor: Monitor Based on Cursor Location
     - perMonitorWindows: false
-      $name: Display Windows Only From the Monitor Containing the Cursor
+      $name: Display Windows Only from the Monitor Containing the Cursor
     - virtualDesktopBehavior: currentOnly
       $name: Virtual Desktop Behavior
       $description: Choose which virtual desktops to show windows from.
       $options:
       - currentOnly: Show windows from current virtual desktop only
       - allDesktops: Show windows from all virtual desktops
-  $name: Miscellaneous
+  $name: Accessibility
+- ExcludedWindows:
+  - - Method: title
+      $name: Exclusion Method
+      $description: Exclude by window title or executable name
+      $options:
+      - title: Window Title
+      - exe: Executable Name
+    - Value: ""
+      $name: Pattern
+      $description: "The pattern to exclude (wildcards supported: * matches any characters, ? matches one). Separate multiple entries with a comma. Example: *chrome*, msedge.exe"
+  $name: Excluded Windows
+  $description: Exclude specific windows from appearing in the switcher.
+
 */
 // ==/WindhawkModSettings==
 
@@ -207,7 +241,6 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
 #include <windows.h>
 #include <dwmapi.h>
 #include <uxtheme.h>
-#include <vssym32.h>
 #include <shellapi.h>
 #include <shlobj.h>
 #include <shlwapi.h>
@@ -240,7 +273,6 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
 #define SWS_ROW_TITLE_HEIGHT    30  // Height of icon+title row
 #define SWS_MAX_TILE_ASPECT     2.0 // Max thumbnail width = thumbH * this
 #define SWS_CONTOUR_SIZE        2
-#define SWS_HIGHLIGHT_SIZE      2
 #define SWS_HOTKEY_ALTTAB           1
 #define SWS_HOTKEY_ALTSHIFTTAB      2
 #define SWS_HOTKEY_ALTCTRLTAB       3
@@ -257,6 +289,7 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
 #define SWS_TEXT_DARK         RGB(255, 255, 255)
 #define SWS_TEXT_LIGHT        RGB(0, 0, 0)
 #define SWS_SHOW_DELAY_TIMER_ID 101
+#define SWS_ALT_POLL_TIMER_ID   102
 
 typedef BOOL (WINAPI *IsShellWindow_t)(HWND);
 typedef HWND (WINAPI *GhostWindowFromHungWindow_t)(HWND);
@@ -265,17 +298,19 @@ struct WINDOWCOMPOSITIONATTRIBDATA { DWORD dwAttrib; PVOID pvData; SIZE_T cbData
 typedef BOOL(WINAPI *SetWindowCompositionAttribute_t)(HWND, WINDOWCOMPOSITIONATTRIBDATA*);
 
 struct WindowEntry {
-    HWND hWnd; HICON hIcon; WCHAR title[256]; HTHUMBNAIL hThumb;
-    RECT rcCell; RECT rcThumb; RECT rcThumbActual; RECT rcThumbSlot;
+    HWND hWnd; HICON hIcon; WCHAR title[256]; std::map<HWND, HTHUMBNAIL> hThumbs;
+    RECT rcCell; RECT rcThumbActual; RECT rcThumbSlot;
     SIZE sourceSize;           // Raw DWM surface size
     RECT rcSourceCrop;         // Source crop rect for DWM_TNP_RECTSOURCE
     SIZE effectiveSourceSize;  // Source size after cropping invisible frame
 };
 struct Settings {
-    WCHAR theme[32]; WCHAR colorScheme[32]; WCHAR cornerPreference[32]; WCHAR scrollWheelBehavior[32]; WCHAR taskListOrientation[32]; WCHAR headerContentOrientation[32]; WCHAR iconSize[32]; WCHAR backwardShortcut[32]; WCHAR thumbnailPosition[32]; WCHAR thumbnailAlignment[32];
+    WCHAR theme[32]; WCHAR colorScheme[32]; WCHAR cornerPreference[32]; WCHAR scrollWheelBehavior[32]; WCHAR taskListOrientation[32]; WCHAR headerContentOrientation[32]; WCHAR iconSize[32]; WCHAR backwardShortcut[32]; WCHAR thumbnailPosition[32]; WCHAR thumbnailAlignment[32]; WCHAR switcherDisplayBehavior[32];
     WCHAR highlightStyle[32]; WCHAR virtualDesktopBehavior[32];
     WCHAR borderColorDark[16];
     WCHAR borderColorLight[16];
+    WCHAR fontFamily[64]; WCHAR fontStyle[32];
+    int fontSize;
     int opacity;
     int rowHeight;
     int rowWidth;
@@ -285,9 +320,13 @@ struct Settings {
     bool showIcon;
     int maxWidthPercent;
     int maxHeightPercent; int showDelay;
-    bool useAccentColor; bool primaryMonitorOnly; bool perMonitorWindows; bool taskRoundedCorners; bool reverseScrollDirection;
+    bool useAccentColor; bool perMonitorWindows; bool taskRoundedCorners; bool reverseScrollDirection;
     bool centerTaskContent;
 };
+
+static std::vector<std::wstring> g_excludeTitlePatterns;
+static std::vector<std::wstring> g_excludeExePatterns;
+static std::vector<HWND> g_hMirrorSwitchers;
 
 static HWND g_hSwitcher = NULL;
 static HWND g_hCloseBtnWnd = NULL;
@@ -296,6 +335,7 @@ static bool g_showAllMonitors = false;
 static HHOOK g_hMouseHook = NULL;
 static std::vector<WindowEntry> g_windows;
 static int g_selectedIndex = 0, g_hoverIndex = -1;
+static HWND g_hoverWnd = NULL;
 static int g_layoutStartIndex = 0; // EP-style: first window index visible in the layout
 static bool g_isVisible = false, g_isSticky = false, g_isDarkMode = false;
 static HFONT g_hFont = NULL;
@@ -331,7 +371,6 @@ static bool HeaderOrientationIs(const WCHAR* v) { return wcscmp(g_settings.heade
 static bool IconSizeIs(const WCHAR* v) { return wcscmp(g_settings.iconSize, v) == 0; }
 static bool BackwardShortcutIs(const WCHAR* v) { return wcscmp(g_settings.backwardShortcut, v) == 0; }
 static bool ThumbnailPositionIs(const WCHAR* v) { return wcscmp(g_settings.thumbnailPosition, v) == 0; }
-static bool ThumbnailAlignmentIs(const WCHAR* v) { return wcscmp(g_settings.thumbnailAlignment, v) == 0; }
 static bool HighlightStyleIs(const WCHAR* v) { return wcscmp(g_settings.highlightStyle, v) == 0; }
 static bool UseAltShiftTabBackward() { return BackwardShortcutIs(L"altShiftTab"); }
 static bool UseAltShiftBackward() { return BackwardShortcutIs(L"altShift"); }
@@ -341,7 +380,7 @@ static bool ThumbnailIsTop() { return ThumbnailPositionIs(L"top"); }
 static bool ThumbnailIsLeft() { return ThumbnailPositionIs(L"left"); }
 static bool ThumbnailIsRight() { return ThumbnailPositionIs(L"right"); }
 static bool ThumbnailIsSide() { return ThumbnailIsLeft() || ThumbnailIsRight(); }
-static bool ThumbnailAlignLeft() { return ThumbnailAlignmentIs(L"left"); }
+static bool ThumbnailAlignmentIs(const WCHAR* v) { return wcscmp(g_settings.thumbnailAlignment, v) == 0; }
 static bool ThumbnailAlignCentered() { return ThumbnailAlignmentIs(L"centered"); }
 static bool ThumbnailAlignRight() { return ThumbnailAlignmentIs(L"right"); }
 static bool HighlightHasFill() {
@@ -569,13 +608,39 @@ static BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam) {
             } else return TRUE;
         } else return TRUE;
     }
-    if (g_settings.perMonitorWindows && !g_showAllMonitors && g_hCurrentMonitor) {
+    bool isPrimaryOnly = (wcscmp(g_settings.switcherDisplayBehavior, L"primaryOnly") == 0);
+    if (g_settings.perMonitorWindows && !g_showAllMonitors && g_hCurrentMonitor && !isPrimaryOnly) {
         if (MonitorFromWindow(hWnd, MONITOR_DEFAULTTONULL) != g_hCurrentMonitor) return TRUE;
     }
     WindowEntry e = {};
     e.hWnd = hWnd;
     InternalGetWindowText(hWnd, e.title, 256);
     if (!e.title[0]) GetWindowTextW(hWnd, e.title, 256);
+    
+    bool excluded = false;
+    for (const auto& pat : g_excludeTitlePatterns) {
+        if (PathMatchSpecW(e.title, pat.c_str())) { excluded = true; break; }
+    }
+    if (!excluded && !g_excludeExePatterns.empty()) {
+        DWORD pid = 0;
+        GetWindowThreadProcessId(hWnd, &pid);
+        if (pid) {
+            HANDLE hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+            if (hProc) {
+                WCHAR exePath[MAX_PATH] = {0};
+                DWORD size = MAX_PATH;
+                if (QueryFullProcessImageNameW(hProc, 0, exePath, &size)) {
+                    WCHAR* filename = PathFindFileNameW(exePath);
+                    for (const auto& pat : g_excludeExePatterns) {
+                        if (PathMatchSpecW(filename, pat.c_str())) { excluded = true; break; }
+                    }
+                }
+                CloseHandle(hProc);
+            }
+        }
+    }
+    if (excluded) return TRUE;
+
     e.hIcon = NULL;
     
     bool isUwp = false;
@@ -685,17 +750,7 @@ static HICON ResolveIconFromAumid(const WCHAR* aumid, int desiredSizePx) {
             }
         }
     }
-    // Additional fallback for Windows 10: try resolving from process executable
-    if (!hIcon) {
-        Wh_Log(L"ResolveIconFromAumid: Falling back to process exe icon");
-        // Attempt to parse AUMID for package family or exe; if not, try to find process owning the app
-        // A caller should pass a window handle context; as a best-effort here we try to locate any process
-        // associated with the AUMID by enumerating package family is complex; instead this fallback
-        // will be used by callers that have a HWND and can call TryGetUwpIconFromExplorer first. Here
-        // provide a helper-like attempt using shell APIs if possible.
-        // No-op in this function since we don't have HWND; real fallback is implemented where callers
-        // have HWND context (see TryGetUwpIconFromExplorer usage).
-    }
+
     return hIcon;
 }
 
@@ -902,9 +957,15 @@ static HICON TryGetUwpIconFromExplorer(HWND hWnd, int desiredSizePx) {
 }
 
 static void BuildWindowList() {
-    for (auto& w : g_windows) if (w.hThumb) { DwmUnregisterThumbnail(w.hThumb); w.hThumb = NULL; }
+    for (auto& w : g_windows) {
+        for (const auto& kv : w.hThumbs) { if (kv.second) DwmUnregisterThumbnail(kv.second); }
+        w.hThumbs.clear();
+    }
     g_windows.clear();
     EnumWindows(EnumWindowsProc, (LPARAM)&g_windows);
+    std::stable_sort(g_windows.begin(), g_windows.end(), [](const WindowEntry& a, const WindowEntry& b) {
+        return IsIconic(a.hWnd) < IsIconic(b.hWnd);
+    });
 }
 
 // Layout + Thumbnails
@@ -922,50 +983,77 @@ static HFONT CreateScaledFont(int dpiY) {
         SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
     }
     LOGFONTW lf = ncm.lfMessageFont;
-    lf.lfWeight = FW_NORMAL;
+    if (g_settings.fontFamily[0] != L'\0') {
+        wcsncpy_s(lf.lfFaceName, g_settings.fontFamily, _TRUNCATE);
+    }
+    lf.lfHeight = -MulDiv(g_settings.fontSize, dpiY, 72);
+    if (wcscmp(g_settings.fontStyle, L"light") == 0) {
+        lf.lfWeight = FW_LIGHT;
+    } else if (wcscmp(g_settings.fontStyle, L"semibold") == 0) {
+        lf.lfWeight = FW_SEMIBOLD;
+    } else if (wcscmp(g_settings.fontStyle, L"bold") == 0 || wcscmp(g_settings.fontStyle, L"boldItalic") == 0) {
+        lf.lfWeight = FW_BOLD;
+    } else {
+        lf.lfWeight = FW_NORMAL;
+    }
+    lf.lfItalic = (wcscmp(g_settings.fontStyle, L"italic") == 0 || wcscmp(g_settings.fontStyle, L"boldItalic") == 0) ? TRUE : FALSE;
+    lf.lfQuality = CLEARTYPE_QUALITY;
     return CreateFontIndirectW(&lf);
 }
 
 static void RegisterThumbnailsEarly() {
     if (!g_settings.showThumbnails || !g_hSwitcher) return;
     for (auto& w : g_windows) {
-        if (!w.hThumb) {
-            if (SUCCEEDED(DwmRegisterThumbnail(g_hSwitcher, w.hWnd, &w.hThumb))) {
-                SIZE src = {0}; DwmQueryThumbnailSourceSize(w.hThumb, &src);
+        if (!w.hThumbs.count(g_hSwitcher)) {
+            HTHUMBNAIL hT = NULL;
+            if (SUCCEEDED(DwmRegisterThumbnail(g_hSwitcher, w.hWnd, &hT))) {
+                w.hThumbs[g_hSwitcher] = hT;
+                SIZE src = {0}; DwmQueryThumbnailSourceSize(hT, &src);
                 w.sourceSize = src;
+            }
+        }
+        for (HWND m : g_hMirrorSwitchers) {
+            if (!w.hThumbs.count(m)) {
+                HTHUMBNAIL hT = NULL;
+                if (SUCCEEDED(DwmRegisterThumbnail(m, w.hWnd, &hT))) w.hThumbs[m] = hT;
+            }
+        }
+        SIZE src = w.sourceSize;
 
-                // Compute invisible frame crop using DWMWA_EXTENDED_FRAME_BOUNDS
-                // This fixes thumbnail displacement for maximized windows where
-                // the window extends beyond screen edges to hide the frame.
-                // Skip for minimized windows: GetWindowRect/DWMWA_EXTENDED_FRAME_BOUNDS
-                // return garbage coords (-32000) for iconic windows, causing zoom.
-                // ONLY apply manual crop for maximized windows (IsZoomed). Non-maximized 
-                // windows are natively handled by DWM (preserves rounded corners perfectly).
-                if (!IsIconic(w.hWnd) && IsZoomed(w.hWnd)) {
-                    RECT wr = {0}, efb = {0};
-                    GetWindowRect(w.hWnd, &wr);
-                    if (SUCCEEDED(DwmGetWindowAttribute(w.hWnd, DWMWA_EXTENDED_FRAME_BOUNDS, &efb, sizeof(efb)))) {
-                        int wrW = wr.right - wr.left, wrH = wr.bottom - wr.top;
-                        if (wrW > 0 && wrH > 0 && src.cx > 0 && src.cy > 0) {
-                            double sx = (double)src.cx / wrW;
-                            double sy = (double)src.cy / wrH;
-                            int ml = (int)((efb.left - wr.left) * sx);
-                            int mt = (int)((efb.top - wr.top) * sy);
-                            int mr = (int)((wr.right - efb.right) * sx);
-                            int mb = (int)((wr.bottom - efb.bottom) * sy);
-                            if (ml < 0) ml = 0; if (mt < 0) mt = 0;
-                            if (mr < 0) mr = 0; if (mb < 0) mb = 0;
-                            w.rcSourceCrop = { ml, mt, src.cx - mr, src.cy - mb };
-                            w.effectiveSourceSize = { src.cx - ml - mr, src.cy - mt - mb };
-                            if (w.effectiveSourceSize.cx <= 0 || w.effectiveSourceSize.cy <= 0) {
-                                w.effectiveSourceSize = src;
-                                w.rcSourceCrop = { 0, 0, src.cx, src.cy };
-                            }
-                        } else {
-                            w.effectiveSourceSize = src;
-                            w.rcSourceCrop = { 0, 0, src.cx, src.cy };
-                        }
-                    } else {
+        // Compute invisible frame crop using DWMWA_EXTENDED_FRAME_BOUNDS.
+        // This fixes thumbnail displacement for maximized windows where
+        // the window extends beyond screen edges to hide the frame.
+        // Only apply for actively maximized windows (not minimized).
+        // Minimized windows use DWM's low-res cached thumbnail where
+        // frame borders are negligible; cropping them causes aspect ratio
+        // distortion that makes the thumbnail overflow its destination.
+        // Non-maximized windows are natively handled by DWM.
+        if (IsZoomed(w.hWnd) && !IsIconic(w.hWnd)) {
+            RECT wr = {0}, efb = {0};
+            GetWindowRect(w.hWnd, &wr);
+            if (SUCCEEDED(DwmGetWindowAttribute(w.hWnd, DWMWA_EXTENDED_FRAME_BOUNDS, &efb, sizeof(efb)))) {
+                int wrW = wr.right - wr.left, wrH = wr.bottom - wr.top;
+                int efbW = efb.right - efb.left, efbH = efb.bottom - efb.top;
+                if (wrW > 0 && wrH > 0 && efbW > 0 && efbH > 0 && src.cx > 0 && src.cy > 0) {
+                    int ml = 0, mt = 0, mr = 0, mb = 0;
+                    double diffEfb = ((double)src.cx / efbW) - ((double)src.cy / efbH);
+                    if (diffEfb < 0) diffEfb = -diffEfb;
+                    double diffWr = ((double)src.cx / wrW) - ((double)src.cy / wrH);
+                    if (diffWr < 0) diffWr = -diffWr;
+                    
+                    if (diffEfb >= diffWr) {
+                        double sx = (double)src.cx / wrW;
+                        double sy = (double)src.cy / wrH;
+                        ml = (int)((efb.left - wr.left) * sx);
+                        mt = (int)((efb.top - wr.top) * sy);
+                        mr = (int)((wr.right - efb.right) * sx);
+                        mb = (int)((wr.bottom - efb.bottom) * sy);
+                    }
+                    if (ml < 0) ml = 0; if (mt < 0) mt = 0;
+                    if (mr < 0) mr = 0; if (mb < 0) mb = 0;
+                    w.rcSourceCrop = { ml, mt, src.cx - mr, src.cy - mb };
+                    w.effectiveSourceSize = { src.cx - ml - mr, src.cy - mt - mb };
+                    if (w.effectiveSourceSize.cx <= 0 || w.effectiveSourceSize.cy <= 0) {
                         w.effectiveSourceSize = src;
                         w.rcSourceCrop = { 0, 0, src.cx, src.cy };
                     }
@@ -974,10 +1062,12 @@ static void RegisterThumbnailsEarly() {
                     w.rcSourceCrop = { 0, 0, src.cx, src.cy };
                 }
             } else {
-                w.sourceSize = {0, 0};
-                w.effectiveSourceSize = {0, 0};
-                w.rcSourceCrop = {0, 0, 0, 0};
+                w.effectiveSourceSize = src;
+                w.rcSourceCrop = { 0, 0, src.cx, src.cy };
             }
+        } else {
+            w.effectiveSourceSize = src;
+            w.rcSourceCrop = { 0, 0, src.cx, src.cy };
         }
     }
 }
@@ -1072,12 +1162,11 @@ static void ComputeLayout(HMONITOR hMon) {
             g_windows[ji].sourceSize = {0, 0};
             g_windows[ji].rcCell = {0, 0, 0, 0};
             g_windows[ji].rcThumbActual = {0, 0, 0, 0};
-            g_windows[ji].rcThumb = {0, 0, 0, 0};
             g_windows[ji].rcThumbSlot = {0, 0, 0, 0};
-            if (g_windows[ji].hThumb) {
-                DwmUnregisterThumbnail(g_windows[ji].hThumb);
-                g_windows[ji].hThumb = NULL;
+            for (const auto& kv : g_windows[ji].hThumbs) {
+                if (kv.second) DwmUnregisterThumbnail(kv.second);
             }
+            g_windows[ji].hThumbs.clear();
         }
         placedCount = startIdx;
     };
@@ -1135,10 +1224,13 @@ static void ComputeLayout(HMONITOR hMon) {
                 if (sidePlacement) {
                     int headerExtra = (rowTitleH > 0) ? (sideHeaderWidth + padDivider) : 0;
                     if (g_settings.rowWidth > 0) {
-                        int minWidth = sideThumbSlotW + headerExtra;
-                        if (width < minWidth) width = minWidth;
+                        int maxThumbW = width - headerExtra;
+                        if (maxThumbW > 0 && thumbWidth > maxThumbW) {
+                            actualThumbH = (int)((double)maxThumbW * actualThumbH / thumbWidth);
+                            thumbWidth = maxThumbW;
+                        }
                     } else {
-                        width = sideThumbSlotW + headerExtra;
+                        width = thumbWidth + headerExtra;
                     }
                 }
             } else {
@@ -1214,7 +1306,6 @@ static void ComputeLayout(HMONITOR hMon) {
                     thumbX += (width - thumbWidth) / 2;
                 }
                 w.rcThumbActual = { thumbX, thumbY, thumbX + thumbWidth, thumbY + actualThumbH };
-                w.rcThumb = w.rcThumbActual;
                 w.rcThumbSlot = { slotX, thumbY, slotX + slotW, thumbY + actualThumbH };
             }
 
@@ -1245,8 +1336,6 @@ static void ComputeLayout(HMONITOR hMon) {
                     g_windows[j].rcCell.right += diff;
                     g_windows[j].rcThumbActual.left += diff;
                     g_windows[j].rcThumbActual.right += diff;
-                    g_windows[j].rcThumb.left += diff;
-                    g_windows[j].rcThumb.right += diff;
                     g_windows[j].rcThumbSlot.left += diff;
                     g_windows[j].rcThumbSlot.right += diff;
                 }
@@ -1386,7 +1475,6 @@ static void ComputeLayout(HMONITOR hMon) {
                     thumbX += (width - thumbWidth) / 2;
                 }
                 w.rcThumbActual = { thumbX, thumbY, thumbX + thumbWidth, thumbY + actualThumbH };
-                w.rcThumb = w.rcThumbActual;
                 w.rcThumbSlot = { slotX, thumbY, slotX + slotW, thumbY + actualThumbH };
             }
 
@@ -1423,8 +1511,6 @@ static void ComputeLayout(HMONITOR hMon) {
                     g_windows[j].rcCell.bottom += diff;
                     g_windows[j].rcThumbActual.top += diff;
                     g_windows[j].rcThumbActual.bottom += diff;
-                    g_windows[j].rcThumb.top += diff;
-                    g_windows[j].rcThumb.bottom += diff;
                     g_windows[j].rcThumbSlot.top += diff;
                     g_windows[j].rcThumbSlot.bottom += diff;
                 }
@@ -1438,13 +1524,24 @@ static void ComputeLayout(HMONITOR hMon) {
 static void RegisterThumbnails() {
     if (!g_settings.showThumbnails || !g_hSwitcher) return;
     for (auto& w : g_windows) {
-        if (!w.hThumb) {
-            if (SUCCEEDED(DwmRegisterThumbnail(g_hSwitcher, w.hWnd, &w.hThumb))) {
-                SIZE src = {0}; DwmQueryThumbnailSourceSize(w.hThumb, &src);
+        if (!w.hThumbs.count(g_hSwitcher)) {
+            HTHUMBNAIL hT = NULL;
+            if (SUCCEEDED(DwmRegisterThumbnail(g_hSwitcher, w.hWnd, &hT))) {
+                w.hThumbs[g_hSwitcher] = hT;
+                SIZE src = {0}; DwmQueryThumbnailSourceSize(hT, &src);
                 w.sourceSize = src;
             }
         }
-        if (w.hThumb) {
+        for (HWND m : g_hMirrorSwitchers) {
+            if (!w.hThumbs.count(m)) {
+                HTHUMBNAIL hT = NULL;
+                if (SUCCEEDED(DwmRegisterThumbnail(m, w.hWnd, &hT))) w.hThumbs[m] = hT;
+            }
+        }
+        
+        for (const auto& kv : w.hThumbs) {
+            HTHUMBNAIL hThumb = kv.second;
+            if (!hThumb) continue;
             // Skip truncated windows with zero destination rect
             if (w.rcThumbActual.left == 0 && w.rcThumbActual.right == 0 &&
                 w.rcThumbActual.top == 0 && w.rcThumbActual.bottom == 0) continue;
@@ -1462,12 +1559,17 @@ static void RegisterThumbnails() {
                 p.dwFlags |= DWM_TNP_RECTSOURCE;
                 p.rcSource = w.rcSourceCrop;
             }
-            DwmUpdateThumbnailProperties(w.hThumb, &p);
+            DwmUpdateThumbnailProperties(hThumb, &p);
         }
     }
 }
 static void UnregisterThumbnails() {
-    for (auto& w : g_windows) if (w.hThumb) { DwmUnregisterThumbnail(w.hThumb); w.hThumb = NULL; }
+    for (auto& w : g_windows) {
+        for (const auto& kv : w.hThumbs) {
+            if (kv.second) DwmUnregisterThumbnail(kv.second);
+        }
+        w.hThumbs.clear();
+    }
 }
 
 
@@ -1545,18 +1647,12 @@ static void MaskRectCorners(HDC hdc, const RECT& rc, int radiusPx) {
     graphics.FillPath(&brush, &cutBl);
 }
 
-// Draw a sharp rectangular contour using StretchDIBits (EP's _DrawContour approach)
+// Draw a rectangular contour around a rect.
 // direction: 1 = inner (shrinks inward), -1 = outer (grows outward)
+// Uses GDI+ rounded path for inner contours when cornerRadius > 0, FrameRect otherwise.
 static void DrawContour(HDC hdc, RECT rc, int contourSize, int direction) {
     COLORREF c = GetContourColor();
     BYTE r = GetRValue(c), g = GetGValue(c), b = GetBValue(c);
-    BITMAPINFO bi = {};
-    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    bi.bmiHeader.biWidth = 1; bi.bmiHeader.biHeight = 1;
-    bi.bmiHeader.biPlanes = 1; bi.bmiHeader.biBitCount = 32; bi.bmiHeader.biCompression = BI_RGB;
-    RGBQUAD px = { b, g, r, 0xFF };
-
-    int t = direction * (contourSize * g_dpiX / 96);
 
     int cornerRadius = GetTaskUiCornerRadiusPx();
     if (cornerRadius > 0 && direction > 0) {
@@ -1592,19 +1688,25 @@ static void DrawContour(HDC hdc, RECT rc, int contourSize, int direction) {
         return;
     }
 
+    HBRUSH hBrush = CreateSolidBrush(RGB(r, g, b));
     if (direction < 0) {
-        // Outer contour (EP: SWS_CONTOUR_OUTER)
-        StretchDIBits(hdc, rc.left + t, rc.top, -t, rc.bottom - rc.top, 0, 0, 1, 1, &px, &bi, DIB_RGB_COLORS, SRCCOPY);
-        StretchDIBits(hdc, rc.right, rc.top, -t, rc.bottom - rc.top, 0, 0, 1, 1, &px, &bi, DIB_RGB_COLORS, SRCCOPY);
-        StretchDIBits(hdc, rc.left + t, rc.top + t, (rc.right - rc.left) - t * 2, -t, 0, 0, 1, 1, &px, &bi, DIB_RGB_COLORS, SRCCOPY);
-        StretchDIBits(hdc, rc.left + t, rc.bottom, (rc.right - rc.left) - t * 2, -t, 0, 0, 1, 1, &px, &bi, DIB_RGB_COLORS, SRCCOPY);
+        // Outer contour: DWM composites thumbnails on top of GDI and renders
+        // inclusively at rcDestination's right/bottom edges. Inflate by i+2
+        // so FrameRect's border pixels land 1px beyond DWM's last column/row.
+        for (int i = 0; i < contourSize; i++) {
+            RECT r_rect = rc;
+            InflateRect(&r_rect, i + 2, i + 2);
+            FrameRect(hdc, &r_rect, hBrush);
+        }
     } else {
-        // Inner contour (EP: SWS_CONTOUR_INNER)
-        StretchDIBits(hdc, rc.left, rc.top, t, rc.bottom - rc.top, 0, 0, 1, 1, &px, &bi, DIB_RGB_COLORS, SRCCOPY);
-        StretchDIBits(hdc, rc.right - t, rc.top, t, rc.bottom - rc.top, 0, 0, 1, 1, &px, &bi, DIB_RGB_COLORS, SRCCOPY);
-        StretchDIBits(hdc, rc.left, rc.top, rc.right - rc.left, t, 0, 0, 1, 1, &px, &bi, DIB_RGB_COLORS, SRCCOPY);
-        StretchDIBits(hdc, rc.left, rc.bottom - t, rc.right - rc.left, t, 0, 0, 1, 1, &px, &bi, DIB_RGB_COLORS, SRCCOPY);
+        // Inner contour
+        for (int i = 0; i < contourSize; i++) {
+            RECT r_rect = rc;
+            InflateRect(&r_rect, -i, -i);
+            FrameRect(hdc, &r_rect, hBrush);
+        }
     }
+    DeleteObject(hBrush);
 }
 
 static void DrawSelectionFill(HDC hdc, RECT rc) {
@@ -1711,7 +1813,7 @@ static int GetHeaderTopForEntry(const WindowEntry& e) {
 }
 
 // Shared drawing routine for both layered and buffered paint paths
-static void DrawSwitcherContent(HDC hdc, bool fillBg) {
+static void DrawSwitcherContent(HDC hdc, bool fillBg, HWND hWnd) {
     RECT rcClient; GetClientRect(g_hSwitcher, &rcClient);
     int w = rcClient.right, h = rcClient.bottom;
 
@@ -1754,7 +1856,7 @@ static void DrawSwitcherContent(HDC hdc, bool fillBg) {
         }
 
         // Hover thumbnail border: outer contour on rcThumbActual (EP draws both independently)
-        if (i == g_hoverIndex && g_settings.showThumbnails) {
+        if (i == g_hoverIndex && g_hoverWnd == hWnd && g_settings.showThumbnails) {
             DrawContour(hdc, e.rcThumbActual, 1, -1);
         }
 
@@ -1772,7 +1874,7 @@ static void DrawSwitcherContent(HDC hdc, bool fillBg) {
         bool isIconOnly = !g_settings.showThumbnails && !g_settings.showTitle && g_settings.showIcon;
         if (!HeaderIsVertical()) {
             if (!isIconOnly && !(g_settings.showThumbnails && ThumbnailIsSide())) {
-                btnReserve = ((g_settings.centerTaskContent) || i == g_hoverIndex)
+                btnReserve = ((g_settings.centerTaskContent) || (i == g_hoverIndex && g_hoverWnd == hWnd))
                          ? closeBtnReserve
                          : 0;
             }
@@ -1859,7 +1961,7 @@ static void DrawSwitcherContent(HDC hdc, bool fillBg) {
 
 static bool IsWindowTruncated(int idx);
 
-static void DrawSwitcherOverlay(HDC hdc) {
+static void DrawSwitcherOverlay(HDC hdc, HWND hWnd) {
     if (g_windows.empty()) return;
 
     int rowTitleH = GetHeaderRowHeightPx();
@@ -1870,7 +1972,7 @@ static void DrawSwitcherOverlay(HDC hdc) {
         if (IsWindowTruncated(i)) continue;
 
         // Close button (positioned at top-right of the cell, in title area)
-        if (i == g_hoverIndex) {
+        if (i == g_hoverIndex && g_hoverWnd == hWnd) {
             int btnSz = DpiScale(24, g_dpiX);
             int bx, by;
             if (rowTitleH == 0 || (g_settings.showThumbnails && ThumbnailIsSide())) {
@@ -1962,7 +2064,7 @@ static void PaintSwitcherOverlay() {
     HBITMAP hBmp = CreateDIBSection(hdcMem, &bmi, DIB_RGB_COLORS, &bits, NULL, 0);
     HBITMAP hOld = (HBITMAP)SelectObject(hdcMem, hBmp);
 
-    DrawSwitcherOverlay(hdcMem);
+    DrawSwitcherOverlay(hdcMem, g_hSwitcher);
 
     POINT ptSrc = {0,0}; SIZE sz = {w, h};
     BLENDFUNCTION bf = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
@@ -1986,10 +2088,18 @@ static void PaintSwitcher() {
         void* bits = NULL;
         HBITMAP hBmp = CreateDIBSection(hdcMem, &bmi, DIB_RGB_COLORS, &bits, NULL, 0);
         HBITMAP hOld = (HBITMAP)SelectObject(hdcMem, hBmp);
-        DrawSwitcherContent(hdcMem, true);
+        DrawSwitcherContent(hdcMem, true, g_hSwitcher);
         POINT ptSrc = {0,0}; SIZE sz = {w, h};
         BLENDFUNCTION bf = {AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
         UpdateLayeredWindow(g_hSwitcher, hdcScreen, NULL, &sz, hdcMem, &ptSrc, 0, &bf, ULW_ALPHA);
+        for (HWND hMirror : g_hMirrorSwitchers) {
+            if (IsWindow(hMirror)) {
+                DrawSwitcherContent(hdcMem, true, hMirror);
+                HDC hdcMirrorScreen = GetDC(hMirror);
+                UpdateLayeredWindow(hMirror, hdcMirrorScreen, NULL, &sz, hdcMem, &ptSrc, 0, &bf, ULW_ALPHA);
+                ReleaseDC(hMirror, hdcMirrorScreen);
+            }
+        }
         SelectObject(hdcMem, hOld); DeleteObject(hBmp); DeleteDC(hdcMem);
         ReleaseDC(g_hSwitcher, hdcScreen);
         PaintSwitcherOverlay();
@@ -1997,20 +2107,17 @@ static void PaintSwitcher() {
         // Acrylic: trigger WM_PAINT via InvalidateRect
         InvalidateRect(g_hSwitcher, NULL, TRUE);
         UpdateWindow(g_hSwitcher);
+        for (HWND hMirror : g_hMirrorSwitchers) {
+            if (IsWindow(hMirror)) {
+                InvalidateRect(hMirror, NULL, TRUE);
+                UpdateWindow(hMirror);
+            }
+        }
         PaintSwitcherOverlay();
     }
 }
 
 // Switcher Show / Hide / Switch
-
-static void ResetDwmAttributes() {
-    // Reset acrylic
-    if (g_SetWindowCompositionAttribute) {
-        ACCENT_POLICY a = {}; a.AccentState = 0;
-        WINDOWCOMPOSITIONATTRIBDATA d = {19, &a, sizeof(a)};
-        g_SetWindowCompositionAttribute(g_hSwitcher, &d);
-    }
-}
 
 static void GetOffscreenDelayPosition(int* x, int* y) {
     // Put the 1x1 window just outside the virtual screen bounds.
@@ -2083,13 +2190,91 @@ static void RevealPendingSwitcher() {
 
     RegisterThumbnails();
     PaintSwitcher();
+
+    if (!g_isSticky) {
+        SetTimer(g_hSwitcher, SWS_ALT_POLL_TIMER_ID, 50, NULL);
+    }
+}
+
+static void ApplyThemeToWindow(HWND hWnd) {
+    if (g_SetWindowCompositionAttribute) {
+        ACCENT_POLICY a = {}; a.AccentState = 0;
+        WINDOWCOMPOSITIONATTRIBDATA d = {19, &a, sizeof(a)};
+        g_SetWindowCompositionAttribute(hWnd, &d);
+    }
+    MARGINS marGlassInset = ThemeIs(L"mica") ? MARGINS{-1, -1, -1, -1} : MARGINS{0, 0, 0, 0};
+    DwmExtendFrameIntoClientArea(hWnd, &marGlassInset);
+
+    LONG_PTR exs = GetWindowLongPtrW(hWnd, GWL_EXSTYLE);
+    if (ThemeIs(L"none")) {
+        SetWindowLongPtrW(hWnd, GWL_EXSTYLE, exs | WS_EX_LAYERED);
+    } else {
+        SetWindowLongPtrW(hWnd, GWL_EXSTYLE, exs & ~WS_EX_LAYERED);
+        BOOL dark = g_isDarkMode;
+        DwmSetWindowAttribute(hWnd, 20, &dark, sizeof(dark));
+        if (ThemeIs(L"mica")) {
+            if (hWnd == g_hSwitcher) {
+                // Native Mica for the primary active window
+                int micaVal = 2; // DWMSBT_MAINWINDOW
+                HRESULT hr = DwmSetWindowAttribute(hWnd, 38, &micaVal, sizeof(micaVal));
+                if (FAILED(hr)) {
+                    int oldMicaVal = 1;
+                    hr = DwmSetWindowAttribute(hWnd, 1029, &oldMicaVal, sizeof(oldMicaVal));
+                }
+                if (FAILED(hr)) {
+                    SetWindowLongPtrW(hWnd, GWL_EXSTYLE, GetWindowLongPtrW(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+                }
+            } else if (g_SetWindowCompositionAttribute) {
+                // Unfocused mirror windows drop to solid grey with native Mica.
+                // We use SetWindowCompositionAttribute (Acrylic Blur) to force a translucent effect.
+                DWORD blur = 200; // Fixed opacity (~78%) to closely simulate Mica blur
+                COLORREF bg = g_isDarkMode ? SWS_BG_DARK : SWS_BG_LIGHT;
+                ACCENT_POLICY accent = {};
+                accent.AccentState = 4 /* ACCENT_ENABLE_ACRYLICBLURBEHIND */;
+                accent.AccentFlags = 0;
+                accent.GradientColor = (blur << 24) | (bg & 0x00FFFFFF);
+                WINDOWCOMPOSITIONATTRIBDATA data = {19, &accent, sizeof(accent)};
+                g_SetWindowCompositionAttribute(hWnd, &data);
+            }
+        }
+        if (ThemeIs(L"backdrop") && g_SetWindowCompositionAttribute) {
+            DWORD blur = (DWORD)((g_settings.opacity / 100.0) * 255);
+            COLORREF bg = g_isDarkMode ? SWS_BG_DARK : SWS_BG_LIGHT;
+            ACCENT_POLICY accent = {};
+            accent.AccentState = 4 /* ACCENT_ENABLE_ACRYLICBLURBEHIND */;
+            accent.AccentFlags = 0;
+            accent.GradientColor = (blur << 24) | (bg & 0x00FFFFFF);
+            WINDOWCOMPOSITIONATTRIBDATA data = {19, &accent, sizeof(accent)};
+            g_SetWindowCompositionAttribute(hWnd, &data);
+        }
+        SetClassLongPtrW(hWnd, GCLP_HBRBACKGROUND, (LONG_PTR)GetStockObject(BLACK_BRUSH));
+    }
+    INT cp = GetCornerPref();
+    DwmSetWindowAttribute(hWnd, 33, &cp, sizeof(cp));
+}
+
+static BOOL WINAPI MirrorEnumProc(HMONITOR hM, HDC, LPRECT, LPARAM) {
+    if (hM != g_hCurrentMonitor) {
+        MONITORINFO mInfo = { sizeof(mInfo) };
+        GetMonitorInfoW(hM, &mInfo);
+        int mx = (mInfo.rcWork.left + mInfo.rcWork.right - g_winW) / 2;
+        int my = (mInfo.rcWork.top + mInfo.rcWork.bottom - g_winH) / 2;
+        HWND hMirror = CreateWindowExW(WS_EX_TOOLWINDOW | WS_EX_TOPMOST, SWS_CLASSNAME, L"", WS_POPUP | WS_THICKFRAME | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, mx, my, g_winW, g_winH, g_hSwitcher, NULL, GetModuleHandle(NULL), NULL);
+        if (hMirror) {
+            ApplyThemeToWindow(hMirror);
+            g_hMirrorSwitchers.push_back(hMirror);
+            SetWindowPos(hMirror, HWND_TOPMOST, mx, my, g_winW, g_winH, SWP_NOACTIVATE);
+            ShowWindow(hMirror, SW_SHOWNA);
+        }
+    }
+    return TRUE;
 }
 
 static void ShowSwitcher(bool sticky) {
     POINT pt; GetCursorPos(&pt);
-    HMONITOR hMon = g_settings.primaryMonitorOnly ?
-        MonitorFromPoint({0,0}, MONITOR_DEFAULTTOPRIMARY) :
-        MonitorFromPoint(pt, MONITOR_DEFAULTTOPRIMARY);
+    HMONITOR hMon = (wcscmp(g_settings.switcherDisplayBehavior, L"primaryOnly") == 0) ?
+                    MonitorFromWindow(GetDesktopWindow(), MONITOR_DEFAULTTOPRIMARY) :
+                    MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);
 
     g_hCurrentMonitor = hMon;
     UnregisterThumbnails(); BuildWindowList();
@@ -2100,6 +2285,7 @@ static void ShowSwitcher(bool sticky) {
     g_layoutStartIndex = 0; // Always start from the first window on initial show
     g_selectedIndex = (g_windows.size() > 1) ? 1 : 0;
     g_hoverIndex = -1;
+    g_hoverWnd = NULL;
     g_isCloseHovered = false;
 
     RegisterThumbnailsEarly();
@@ -2114,49 +2300,7 @@ static void ShowSwitcher(bool sticky) {
     int cx = (mi.rcWork.left + mi.rcWork.right - g_winW) / 2;
     int cy = (mi.rcWork.top + mi.rcWork.bottom - g_winH) / 2;
 
-    // Always reset DWM attributes first to avoid leftovers
-    ResetDwmAttributes();
-
-    // Apply theme (EP: sws_WindowSwitcher.c lines 510-570)
-    // Step 1: Reset DWM frame and blur state (EP lines 510-524)
-    MARGINS marGlassInset = ThemeIs(L"mica") ? MARGINS{-1, -1, -1, -1} : MARGINS{0, 0, 0, 0};
-    DwmExtendFrameIntoClientArea(g_hSwitcher, &marGlassInset);
-
-    LONG_PTR exs = GetWindowLongPtrW(g_hSwitcher, GWL_EXSTYLE);
-    if (ThemeIs(L"none")) {
-        SetWindowLongPtrW(g_hSwitcher, GWL_EXSTYLE, exs | WS_EX_LAYERED);
-    } else {
-        SetWindowLongPtrW(g_hSwitcher, GWL_EXSTYLE, exs & ~WS_EX_LAYERED);
-        BOOL dark = g_isDarkMode;
-        DwmSetWindowAttribute(g_hSwitcher, 20, &dark, sizeof(dark));
-        if (ThemeIs(L"mica")) {
-            int micaVal = 2; // DWMSBT_MAINWINDOW
-            HRESULT hr = DwmSetWindowAttribute(g_hSwitcher, 38, &micaVal, sizeof(micaVal));
-            if (FAILED(hr) && ThemeIs(L"mica")) {
-                // Try old undocumented DWMWA_MICA_EFFECT (1029)
-                int oldMicaVal = 1;
-                hr = DwmSetWindowAttribute(g_hSwitcher, 1029, &oldMicaVal, sizeof(oldMicaVal));
-            }
-            if (FAILED(hr)) {
-                // Fallback to none
-                SetWindowLongPtrW(g_hSwitcher, GWL_EXSTYLE, GetWindowLongPtrW(g_hSwitcher, GWL_EXSTYLE) | WS_EX_LAYERED);
-            }
-        }
-        if (ThemeIs(L"backdrop") && g_SetWindowCompositionAttribute) {
-            DWORD blur = (DWORD)((g_settings.opacity / 100.0) * 255);
-            COLORREF bg = g_isDarkMode ? SWS_BG_DARK : SWS_BG_LIGHT;
-            ACCENT_POLICY accent = {};
-            accent.AccentState = 4 /* ACCENT_ENABLE_ACRYLICBLURBEHIND */;
-            accent.AccentFlags = 0;
-            accent.GradientColor = (blur << 24) | (bg & 0x00FFFFFF);
-            WINDOWCOMPOSITIONATTRIBDATA data = {19, &accent, sizeof(accent)};
-            g_SetWindowCompositionAttribute(g_hSwitcher, &data);
-        }
-        SetClassLongPtrW(g_hSwitcher, GCLP_HBRBACKGROUND, (LONG_PTR)GetStockObject(BLACK_BRUSH));
-    }
-
-    INT cp = GetCornerPref();
-    DwmSetWindowAttribute(g_hSwitcher, 33, &cp, sizeof(cp));
+    ApplyThemeToWindow(g_hSwitcher);
 
     g_pendingSwitcherRect = {
         cx,
@@ -2191,13 +2335,27 @@ static void ShowSwitcher(bool sticky) {
         ShowWindow(g_hCloseBtnWnd, SW_SHOWNA);
     }
 
+    if (wcscmp(g_settings.switcherDisplayBehavior, L"allMonitors") == 0 || g_showAllMonitors) {
+        EnumDisplayMonitors(NULL, NULL, MirrorEnumProc, 0);
+    }
+
     RegisterThumbnails();
     PaintSwitcher();
+
+    if (!sticky) {
+        SetTimer(g_hSwitcher, SWS_ALT_POLL_TIMER_ID, 50, NULL);
+    }
 }
 
 static void HideSwitcher() {
     g_showAllMonitors = false;
     CancelPendingShow();
+    if (g_hSwitcher) KillTimer(g_hSwitcher, SWS_ALT_POLL_TIMER_ID);
+
+    for (HWND hMirror : g_hMirrorSwitchers) {
+        if (IsWindow(hMirror)) DestroyWindow(hMirror);
+    }
+    g_hMirrorSwitchers.clear();
 
     UnregisterThumbnails();
     if (g_hSwitcher) {
@@ -2456,7 +2614,7 @@ static int HitTest(int x, int y) {
 static int HitTestThumb(int x, int y) {
     if (!g_settings.showThumbnails) return -1;
     for (int i = 0; i < (int)g_windows.size(); i++) {
-        RECT r = g_windows[i].rcThumb;
+        RECT r = g_windows[i].rcThumbActual;
         if (x >= r.left && x < r.right && y >= r.top && y < r.bottom) return i;
     }
     return -1;
@@ -2471,6 +2629,10 @@ static LRESULT CALLBACK SwitcherWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
     if (uMsg == WM_NCCALCSIZE && wParam == TRUE) {
         return 0; // Remove standard frame for WS_OVERLAPPED
     }
+    if (uMsg == WM_NCACTIVATE) {
+        // Force DWM to keep the active visual state (Mica/Backdrop) even when unfocused
+        return DefWindowProcW(hWnd, uMsg, TRUE, lParam);
+    }
 
     if (uMsg == WM_TIMER) {
         if (wParam == SWS_HOTKEY_RETRY_TIMER_ID) {
@@ -2480,6 +2642,14 @@ static LRESULT CALLBACK SwitcherWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 
         if (wParam == SWS_SHOW_DELAY_TIMER_ID) {
             RevealPendingSwitcher();
+            return 0;
+        }
+
+        if (wParam == SWS_ALT_POLL_TIMER_ID) {
+            if (!g_isSticky && (GetAsyncKeyState(VK_MENU) & 0x8000) == 0) {
+                KillTimer(hWnd, SWS_ALT_POLL_TIMER_ID);
+                SwitchToSelected();
+            }
             return 0;
         }
     }
@@ -2553,7 +2723,7 @@ static LRESULT CALLBACK SwitcherWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
         HDC hdcBuf = NULL;
         HPAINTBUFFER hBP = BeginBufferedPaint(hdc, &rc, BPBF_TOPDOWNDIB, &params, &hdcBuf);
         if (hBP) {
-            DrawSwitcherContent(hdcBuf, false);
+            DrawSwitcherContent(hdcBuf, false, hWnd);
             // Do NOT call BufferedPaintSetAlpha here — it would force all pixels
             // to opaque (alpha=255), blocking the acrylic blur from showing through.
             // BPPF_ERASE already cleared the buffer to RGBA(0,0,0,0) = transparent.
@@ -2710,6 +2880,7 @@ static LRESULT CALLBACK SwitcherWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
         
         if (idx != g_hoverIndex || closeHovered != g_isCloseHovered) {
             g_hoverIndex = idx;
+            g_hoverWnd = hWnd;
             g_isCloseHovered = closeHovered;
             PaintSwitcher();
         }
@@ -2738,6 +2909,7 @@ static LRESULT CALLBACK SwitcherWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
                     }
                     RegisterThumbnails();
                     g_hoverIndex = -1;
+                    g_hoverWnd = NULL;
                     g_isCloseHovered = false;
                     PaintSwitcher();
                 }
@@ -2918,7 +3090,6 @@ static void LoadSettings() {
     g_settings.showDelay = Wh_GetIntSetting(L"Miscellaneous.showDelay");
     if (g_settings.showDelay < 0) g_settings.showDelay = 0;
     g_settings.useAccentColor = Wh_GetIntSetting(L"Style.useAccentColor");
-    g_settings.primaryMonitorOnly = Wh_GetIntSetting(L"Miscellaneous.primaryMonitorOnly");
     g_settings.perMonitorWindows = Wh_GetIntSetting(L"Miscellaneous.perMonitorWindows");
     g_settings.reverseScrollDirection = Wh_GetIntSetting(L"Miscellaneous.reverseScrollDirection");
     g_settings.centerTaskContent = Wh_GetIntSetting(L"Appearance.HeaderContent.centerTaskContent");
@@ -2936,6 +3107,57 @@ static void LoadSettings() {
         wcscpy_s(g_settings.borderColorLight, L"#000000");
     }
 
+    v = Wh_GetStringSetting(L"Appearance.Font.fontFamily");
+    wcscpy_s(g_settings.fontFamily, v ? v : L"Segoe UI"); Wh_FreeStringSetting(v);
+    
+    g_settings.fontSize = Wh_GetIntSetting(L"Appearance.Font.fontSize");
+    if (g_settings.fontSize <= 0) g_settings.fontSize = 9;
+
+    v = Wh_GetStringSetting(L"Appearance.Font.fontStyle");
+    wcscpy_s(g_settings.fontStyle, v ? v : L"regular"); Wh_FreeStringSetting(v);
+
+    v = Wh_GetStringSetting(L"Miscellaneous.switcherDisplayBehavior");
+    wcscpy_s(g_settings.switcherDisplayBehavior, v ? v : L"cursorMonitor"); Wh_FreeStringSetting(v);
+
+    g_excludeTitlePatterns.clear();
+    g_excludeExePatterns.clear();
+    for (int i = 0; ; i++) {
+        PCWSTR method = Wh_GetStringSetting(L"Miscellaneous.ExcludedWindows[%d].Method", i);
+        bool done = !method || !*method;
+        
+        if (done) {
+            if (method) Wh_FreeStringSetting(method);
+            break;
+        }
+        
+        PCWSTR value = Wh_GetStringSetting(L"Miscellaneous.ExcludedWindows[%d].Value", i);
+        if (value && *value) {
+            std::wstring valStr(value);
+            size_t start = 0;
+            while (start < valStr.length()) {
+                size_t end = valStr.find(L',', start);
+                if (end == std::wstring::npos) end = valStr.length();
+                
+                std::wstring token = valStr.substr(start, end - start);
+                size_t first = token.find_first_not_of(L" \t");
+                if (first != std::wstring::npos) {
+                    token = token.substr(first);
+                    size_t last = token.find_last_not_of(L" \t");
+                    token = token.substr(0, last + 1);
+                    
+                    if (wcscmp(method, L"title") == 0) {
+                        g_excludeTitlePatterns.push_back(token);
+                    } else if (wcscmp(method, L"exe") == 0) {
+                        g_excludeExePatterns.push_back(token);
+                    }
+                }
+                start = end + 1;
+            }
+        }
+        
+        Wh_FreeStringSetting(method);
+        if (value) Wh_FreeStringSetting(value);
+    }
 }
 
 
@@ -2981,9 +3203,9 @@ static DWORD WINAPI SwitcherThread(LPVOID lpParam) {
     wc.style = CS_DBLCLKS;
     RegisterClassExW(&wc);
 
-    // Use WS_OVERLAPPED instead of WS_POPUP. Windows 11 DWM (Mica/Acrylic) has
-    // much better support for standard top-level windows. We remove the frame via WM_NCCALCSIZE.
-    DWORD dwStyle = WS_OVERLAPPED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+    // Use WS_POPUP | WS_THICKFRAME to get DWM rounded corners and shadows, 
+    // without the system caption buttons. We remove the frame via WM_NCCALCSIZE.
+    DWORD dwStyle = WS_POPUP | WS_THICKFRAME | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
     DWORD exStyle = WS_EX_TOOLWINDOW | WS_EX_TOPMOST | WS_EX_LAYERED;
     g_hSwitcher = CreateWindowExW(exStyle, SWS_CLASSNAME, L"",
         dwStyle, 0, 0, 0, 0, NULL, NULL, GetModuleHandleW(NULL), NULL);
