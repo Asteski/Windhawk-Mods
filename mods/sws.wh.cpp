@@ -231,9 +231,9 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       - windowTitle: Window Title
       - appName: Application Name
       - appNameWindowTitle: Application Name - Window Title
-    - maximizeAllWindows: false
-      $name: Maximize All Windows
-      $description: When switching to an application, maximize all of its windows. Only applies when "Group Windows by Application" is enabled.
+    - restoreAllWindows: false
+      $name: Restore All Windows
+      $description: When switching to an application, restore all of its minimized windows to their previous state. Only applies when "Group Windows by Application" is enabled.
   $name: Accessibility
 - ExcludedWindows:
   - - Method: title
@@ -339,7 +339,7 @@ struct Settings {
     bool centerTaskContent;
     bool showApplications;
     WCHAR showTitles[32];
-    bool maximizeAllWindows;
+    bool restoreAllWindows;
 };
 
 static std::vector<std::wstring> g_excludeTitlePatterns;
@@ -2508,18 +2508,17 @@ static void SwitchToSelected() {
     if (g_selectedIndex < 0 || g_selectedIndex >= (int)g_windows.size()) { HideSwitcher(); return; }
     HWND hT = g_windows[g_selectedIndex].hWnd;
     std::vector<HWND> groupWindows;
-    if (g_settings.showApplications && g_settings.maximizeAllWindows) {
+    if (g_settings.showApplications && g_settings.restoreAllWindows) {
         groupWindows = g_windows[g_selectedIndex].groupWindows;
     }
     HideSwitcher();
     for (HWND hw : groupWindows) {
-        if (IsWindow(hw) && hw != hT) ShowWindow(hw, SW_MAXIMIZE);
+        if (IsWindow(hw) && hw != hT && IsIconic(hw)) ShowWindow(hw, SW_RESTORE);
     }
     if (IsWindow(hT)) {
         HWND hP = GetLastActivePopup(hT);
         HWND hF = IsWindowVisible(hP) ? hP : hT;
-        if (!groupWindows.empty()) ShowWindow(hF, SW_MAXIMIZE);
-        else if (IsIconic(hF)) ShowWindow(hF, SW_RESTORE);
+        if (IsIconic(hF)) ShowWindow(hF, SW_RESTORE);
         SwitchToThisWindow(hF, TRUE);
     }
 }
@@ -3231,7 +3230,7 @@ static void LoadSettings() {
     g_settings.perMonitorWindows = Wh_GetIntSetting(L"Accessibility.perMonitorWindows");
     g_settings.reverseScrollDirection = Wh_GetIntSetting(L"Accessibility.reverseScrollDirection");
     g_settings.showApplications = Wh_GetIntSetting(L"Accessibility.showApplications");
-    g_settings.maximizeAllWindows = Wh_GetIntSetting(L"Accessibility.maximizeAllWindows");
+    g_settings.restoreAllWindows = Wh_GetIntSetting(L"Accessibility.restoreAllWindows");
     v = Wh_GetStringSetting(L"Accessibility.showTitles");
     wcscpy_s(g_settings.showTitles, v ? v : L"windowTitle"); Wh_FreeStringSetting(v);
     if (wcscmp(g_settings.showTitles, L"windowTitle") != 0 &&
