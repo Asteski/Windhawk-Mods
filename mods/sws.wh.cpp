@@ -2417,10 +2417,7 @@ static void DrawSwitcherOverlay(HDC hdc, HWND hWnd) {
         // Even for the transparent theme, DWM on Windows 11 does not clip the thumbnail to the layered window's alpha channel.
         if (g_settings.showThumbnails && cornerRadius > 0) {
             COLORREF maskColor = GetBgColor();
-            // Mica Blur has no solid background, so painting the highlight fill
-            // color into the thumbnail corner mask leaves an unwanted colored
-            // background below the thumbnail. Keep the neutral mask color there.
-            if (i == g_selectedIndex && HighlightHasFill() && !ThemeIs(L"mica")) {
+            if (i == g_selectedIndex && HighlightHasFill()) {
                 maskColor = GetHighlightFillColor();
             }
             MaskRectCorners(hdc, e.rcThumbActual, cornerRadius, true, maskColor);
