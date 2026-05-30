@@ -3107,6 +3107,33 @@ static int HitTestThumb(int x, int y) {
 
 static void SWS_RegisterHotkeys();
 
+// Close the window for the entry at idx (graceful WM_CLOSE, same as the close
+// button), remove it from the list and relayout. Shared by the close button,
+// middle-click and the Q key.
+static void CloseSwitcherEntry(int idx) {
+    if (idx < 0 || idx >= (int)g_windows.size()) return;
+    PostMessage(g_windows[idx].hWnd, WM_CLOSE, 0, 0);
+    g_windows.erase(g_windows.begin() + idx);
+    if (g_windows.empty()) { HideSwitcher(); return; }
+    if (g_selectedIndex >= (int)g_windows.size()) g_selectedIndex = (int)g_windows.size() - 1;
+    UnregisterThumbnails();
+    RegisterThumbnailsEarly();
+    ComputeLayout(g_hCurrentMonitor);
+    // Resize and re-center the window to match new layout
+    MONITORINFO rmi = { sizeof(rmi) }; GetMonitorInfoW(g_hCurrentMonitor, &rmi);
+    int cx, cy;
+    GetSwitcherPosition(rmi.rcWork, &cx, &cy);
+    SetWindowPos(g_hSwitcher, HWND_TOPMOST, cx, cy, g_winW, g_winH, SWP_NOACTIVATE);
+    if (g_hCloseBtnWnd) {
+        SetWindowPos(g_hCloseBtnWnd, HWND_TOPMOST, cx, cy, g_winW, g_winH, SWP_NOACTIVATE);
+    }
+    RegisterThumbnails();
+    g_hoverIndex = -1;
+    g_hoverWnd = NULL;
+    g_isCloseHovered = false;
+    PaintSwitcher();
+}
+
 static LRESULT CALLBACK SwitcherWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (uMsg == WM_NCCALCSIZE && wParam == TRUE) {
         return 0; // Remove standard frame for WS_OVERLAPPED
@@ -3302,6 +3329,11 @@ static LRESULT CALLBACK SwitcherWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
                 return 0;
             }
             if (wParam == VK_RETURN || wParam == VK_SPACE) { SwitchToSelected(); return 0; }
+            if (wParam == 'Q') {
+                bool isRepeat = (lParam & 0x40000000) != 0;
+                if (!isRepeat) CloseSwitcherEntry(g_selectedIndex);
+                return 0;
+            }
         }
         break;
     // (Removed duplicate combined case for WM_SYSKEYUP and WM_KEYUP)
@@ -3388,32 +3420,21 @@ static LRESULT CALLBACK SwitcherWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
         int idx = HitTest(x, y);
         if (idx >= 0) {
             if (g_isCloseHovered && idx == g_hoverIndex) {
-                PostMessage(g_windows[idx].hWnd, WM_CLOSE, 0, 0);
-                g_windows.erase(g_windows.begin() + idx);
-                if (g_windows.empty()) { HideSwitcher(); }
-                else {
-                    if (g_selectedIndex >= (int)g_windows.size()) g_selectedIndex = (int)g_windows.size() - 1;
-                    UnregisterThumbnails();
-                    RegisterThumbnailsEarly();
-                    ComputeLayout(g_hCurrentMonitor);
-                    // Resize and re-center the window to match new layout
-                    MONITORINFO rmi = { sizeof(rmi) }; GetMonitorInfoW(g_hCurrentMonitor, &rmi);
-                    int cx, cy;
-                    GetSwitcherPosition(rmi.rcWork, &cx, &cy);
-                    SetWindowPos(g_hSwitcher, HWND_TOPMOST, cx, cy, g_winW, g_winH, SWP_NOACTIVATE);
-                    if (g_hCloseBtnWnd) {
-                        SetWindowPos(g_hCloseBtnWnd, HWND_TOPMOST, cx, cy, g_winW, g_winH, SWP_NOACTIVATE);
-                    }
-                    RegisterThumbnails();
-                    g_hoverIndex = -1;
-                    g_hoverWnd = NULL;
-                    g_isCloseHovered = false;
-                    PaintSwitcher();
-                }
+                CloseSwitcherEntry(idx);
             } else {
-                g_selectedIndex = idx; 
+                g_selectedIndex = idx;
                 SwitchToSelected();
             }
+        }
+        return 0;
+    }
+    case WM_MBUTTONUP: {
+        // Middle-click ends (closes) the task under the cursor.
+        if (g_isVisible) {
+            int x = GET_X_LPARAM(lParam), y = GET_Y_LPARAM(lParam);
+            int idx = g_settings.showThumbnails ? HitTestThumb(x, y) : HitTest(x, y);
+            if (idx < 0) idx = HitTest(x, y);
+            if (idx >= 0) CloseSwitcherEntry(idx);
         }
         return 0;
     }
