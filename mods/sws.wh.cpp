@@ -2498,10 +2498,11 @@ static void DrawSwitcherOverlay(HDC hdc, HWND hWnd) {
                 }
             }
 
-            // Draw X with GDI+ for smooth diagonal lines only
+            // Draw X with GDI+ for smooth diagonal lines only.
+            // Always white, regardless of the (custom/accent) border color.
             Gdiplus::Graphics graphics(hdc);
             graphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
-            COLORREF xc = g_isCloseHovered ? RGB(255, 255, 255) : GetContourColor();
+            COLORREF xc = RGB(255, 255, 255);
             Gdiplus::Pen xPen(Gdiplus::Color(255, GetRValue(xc), GetGValue(xc), GetBValue(xc)), 1.5f * g_dpiX / 96.0f);
             int p = (btnSz == DpiScale(16, g_dpiX)) ? DpiScale(4, g_dpiX) : DpiScale(7, g_dpiX);
             graphics.DrawLine(&xPen, bx + p, by + p, bx + btnSz - p, by + btnSz - p);
