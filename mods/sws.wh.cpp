@@ -150,9 +150,6 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       $name: Light Mode
   $name: Theme
 - Appearance:
-    - hideMinimizedWindows: false
-      $name: Hide Minimized Windows
-      $description: Hide minimized windows from the switcher. When "Group Windows by Application" is enabled, an application is only hidden if all of its windows are minimized.
     - Corners:
         - cornerPreference: round
           $name: Corner Preference
@@ -328,6 +325,9 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       $options:
       - currentOnly: Show windows from current virtual desktop only
       - allDesktops: Show windows from all virtual desktops
+    - hideMinimizedWindows: false
+      $name: Hide Minimized Windows
+      $description: Hide minimized windows from the switcher. When "Group Windows by Application" is enabled, an application is only hidden if all of its windows are minimized.
   $name: Accessibility
 - ExcludedWindows:
     - excludeByTitle: ""
@@ -3748,7 +3748,7 @@ static void LoadSettings() {
     g_settings.reverseScrollDirection = Wh_GetIntSetting(L"Accessibility.reverseScrollDirection");
     g_settings.showApplications = Wh_GetIntSetting(L"Grouping.showApplications");
     g_settings.restoreAllWindows = Wh_GetIntSetting(L"Grouping.restoreAllWindows");
-    g_settings.hideMinimizedWindows = Wh_GetIntSetting(L"Appearance.hideMinimizedWindows");
+    g_settings.hideMinimizedWindows = Wh_GetIntSetting(L"Accessibility.hideMinimizedWindows");
     v = Wh_GetStringSetting(L"Grouping.showTitles");
     wcscpy_s(g_settings.showTitles, v ? v : L"windowTitle"); Wh_FreeStringSetting(v);
     if (wcscmp(g_settings.showTitles, L"windowTitle") != 0 &&
