@@ -280,6 +280,9 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
     - stretchThumbnailsToTaskWidth: true
       $name: Stretch Thumbnails to Task Width
       $description: When enabled, custom row width also changes thumbnail width. Disable to keep thumbnail aspect sizing while row width controls only task tile width.
+    - autoFitTasks: false
+      $name: Shrink Tasks to Fit
+      $description: Automatically shrink task tiles (thumbnails and icons) in discrete steps as the number of visible windows grows, so more tasks stay visible without being pushed off-screen. Your Row Height and Icon Size act as the maximum size.
   $name: Dimensions
 - Grouping:
     - showApplications: false
@@ -365,6 +368,9 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
 
 #define SWS_CLASSNAME       L"WindhawkSWS_Switcher"
 #define SWS_ICON_SIZE       16
+// Lower bound (pre-DPI px) for the auto-fit "Shrink tasks to fit" row height so
+// thumbnails never collapse to an unusable size.
+#define SWS_AUTOFIT_MIN_ROWHEIGHT 90
 // EP-style nested padding layers (before DPI scaling)
 #define SWS_MASTER_PADDING      20  // Outer margin of the entire switcher window
 #define SWS_ELEMENT_PAD_TOP     5   // Vertical margin between cell border and content
@@ -431,6 +437,7 @@ struct Settings {
     bool showTitle;
     bool showIcon;
     int maxWidthPercent;
+    bool autoFitTasks;
     int maxHeightPercent; int showDelay;
     bool perMonitorWindows; bool taskRoundedCorners; bool reverseScrollDirection;
     bool centerTaskContent;
@@ -468,6 +475,10 @@ static HFONT g_hFont = NULL;
 static HTHEME g_hTheme = NULL;
 static UINT g_shellHookMsg = 0;
 static int g_dpiX = 96, g_dpiY = 96;
+// Auto-fit ("Shrink tasks to fit") scale percentage applied to row/thumbnail
+// height and icon size. 100 = no shrink. Recomputed in ComputeLayout from the
+// visible task count when the setting is enabled.
+static int g_autoFitScalePct = 100;
 static int g_winW = 0, g_winH = 0;
 static bool g_hotkeysRegistered = false;
 static HMONITOR g_hCurrentMonitor = NULL;
@@ -529,8 +540,28 @@ static int GetHeaderIconSizeBase() {
     if (IconSizeIs(L"medium")) return 32;
     return SWS_ICON_SIZE;
 }
+// Discrete shrink steps for the "Shrink tasks to fit" option, keyed off the
+// number of visible tasks. Coarse but predictable; tune thresholds freely.
+static int ComputeAutoFitScalePct(int taskCount) {
+    if (!g_settings.autoFitTasks) return 100;
+    if (taskCount <= 8)  return 100;
+    if (taskCount <= 14) return 80;
+    if (taskCount <= 22) return 65;
+    if (taskCount <= 32) return 50;
+    return 40;
+}
+// Apply the current auto-fit scale to a pixel value (no-op when not shrinking).
+static int ScaleAutoFit(int px) {
+    return g_autoFitScalePct == 100 ? px : px * g_autoFitScalePct / 100;
+}
 static int GetHeaderIconSizePx() {
-    return MulDiv(GetHeaderIconSizeBase(), g_dpiX, 96);
+    int px = MulDiv(GetHeaderIconSizeBase(), g_dpiX, 96);
+    if (g_autoFitScalePct != 100) {
+        px = ScaleAutoFit(px);
+        int floorPx = MulDiv(SWS_ICON_SIZE, g_dpiX, 96);
+        if (px < floorPx) px = floorPx;
+    }
+    return px;
 }
 static int GetHeaderTitleHeightPx() {
     return MulDiv(18, g_dpiY, 96);
@@ -1400,6 +1431,11 @@ static void ComputeLayout(HMONITOR hMon) {
     int n = (int)g_windows.size();
     if (n == 0) { g_winW = 0; g_winH = 0; return; }
 
+    // "Shrink tasks to fit": pick a discrete scale from the task count. Must be
+    // set before any GetHeaderIconSizePx()/GetHeaderRowHeightPx() call below so
+    // icon and row sizes pick it up.
+    g_autoFitScalePct = ComputeAutoFitScalePct(n);
+
     // DPI-scale all EP padding constants
     int masterPad    = DpiScale(SWS_MASTER_PADDING, dpiX);
     int elemPadTop   = DpiScale(SWS_ELEMENT_PAD_TOP, dpiY);
@@ -1416,6 +1452,11 @@ static void ComputeLayout(HMONITOR hMon) {
     // EP: cbThumbnailAvailableHeight = cbRowHeight - cbRowTitleHeight - cbTopPadding - 2 * cbBottomPadding
     // All values are DPI-scaled at this point (matching EP lines 826-844)
     int scaledRowH = DpiScale(g_settings.rowHeight, dpiY);
+    if (g_autoFitScalePct != 100) {
+        scaledRowH = ScaleAutoFit(scaledRowH);
+        int floorH = DpiScale(SWS_AUTOFIT_MIN_ROWHEIGHT, dpiY);
+        if (scaledRowH < floorH) scaledRowH = floorH;
+    }
     bool sidePlacement = ThumbnailIsSide() && g_settings.showThumbnails;
     int thumbH = 0;
     if (g_settings.showThumbnails) {
@@ -1423,7 +1464,7 @@ static void ComputeLayout(HMONITOR hMon) {
         if (thumbH < 0) thumbH = 0;
     }
     // EP: cbMaxTileWidth = cbRowHeight * MAX_TILE_WIDTH (computed before DPI, then scaled)
-    int maxTileW = DpiScale((int)(g_settings.rowHeight * SWS_MAX_TILE_ASPECT), dpiX);
+    int maxTileW = ScaleAutoFit(DpiScale((int)(g_settings.rowHeight * SWS_MAX_TILE_ASPECT), dpiX));
 
     // EP helper equivalents:
     // initialLeft  = elemPadLeft + padLeft
@@ -1522,7 +1563,7 @@ static void ComputeLayout(HMONITOR hMon) {
 
                 width = thumbWidth;
                 if (g_settings.rowWidth > 0) {
-                    width = DpiScale(g_settings.rowWidth, dpiX);
+                    width = ScaleAutoFit(DpiScale(g_settings.rowWidth, dpiX));
                     if (StretchThumbsToTaskWidth() && !sidePlacement) {
                         thumbWidth = sidePlacement ? std::max(0, width - ((rowTitleH > 0) ? (sideHeaderWidth + padDivider) : 0)) : width;
                         if (thumbWidth <= 0) thumbWidth = DpiScale(16, dpiX);
@@ -1560,7 +1601,7 @@ static void ComputeLayout(HMONITOR hMon) {
             }
 
             if (!g_settings.showThumbnails && g_settings.rowWidth > 0) {
-                width = DpiScale(g_settings.rowWidth, dpiX);
+                width = ScaleAutoFit(DpiScale(g_settings.rowWidth, dpiX));
                 thumbWidth = width;
             }
 
@@ -1695,7 +1736,7 @@ static void ComputeLayout(HMONITOR hMon) {
 
                 width = thumbWidth;
                 if (g_settings.rowWidth > 0) {
-                    width = DpiScale(g_settings.rowWidth, dpiX);
+                    width = ScaleAutoFit(DpiScale(g_settings.rowWidth, dpiX));
                     if (StretchThumbsToTaskWidth() && !sidePlacement) {
                         thumbWidth = sidePlacement ? std::max(0, width - ((rowTitleH > 0) ? (sideHeaderWidth + padDivider) : 0)) : width;
                         if (thumbWidth <= 0) thumbWidth = DpiScale(16, dpiX);
@@ -1730,7 +1771,7 @@ static void ComputeLayout(HMONITOR hMon) {
             }
 
             if (!g_settings.showThumbnails && g_settings.rowWidth > 0) {
-                width = DpiScale(g_settings.rowWidth, dpiX);
+                width = ScaleAutoFit(DpiScale(g_settings.rowWidth, dpiX));
                 thumbWidth = width;
             }
 
@@ -3603,6 +3644,7 @@ static void LoadSettings() {
     g_settings.rowWidth = Wh_GetIntSetting(L"Dimensions.rowWidth");
     if (g_settings.rowWidth < 0) g_settings.rowWidth = 0;
     g_settings.stretchThumbnailsToTaskWidth = Wh_GetIntSetting(L"Dimensions.stretchThumbnailsToTaskWidth");
+    g_settings.autoFitTasks = Wh_GetIntSetting(L"Dimensions.autoFitTasks");
     g_settings.showThumbnails = Wh_GetIntSetting(L"Appearance.Thumbnails.showThumbnails");
     g_settings.showHoverBorder = Wh_GetIntSetting(L"Appearance.Thumbnails.showHoverBorder");
     g_settings.showTitle = Wh_GetIntSetting(L"Appearance.HeaderContent.showTitle");
