@@ -164,7 +164,10 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
           $description: Corner radius in pixels, used when Corner Preference is set to Custom. Applies to task borders, close buttons, and thumbnails.
         - taskRoundedCorners: false
           $name: Round Task Borders and Close Button
-          $description: Apply small rounded corners to the selected task border and close button.
+          $description: Apply rounded corners to the selected task border and close button.
+        - roundThumbnailCorners: false
+          $name: Round Thumbnail Corners
+          $description: Round the corners of window thumbnails. Uses the radius from Corner Preference (or Custom Corner Radius when set to Custom). Independent from "Round Task Borders and Close Button".
       $name: Corners
     - Thumbnails:
         - thumbnailPosition: bottom
@@ -438,7 +441,7 @@ struct Settings {
     int maxWidthPercent;
     bool autoFitTasks;
     int maxHeightPercent; int showDelay;
-    bool perMonitorWindows; bool taskRoundedCorners; bool reverseScrollDirection;
+    bool perMonitorWindows; bool taskRoundedCorners; bool roundThumbnailCorners; bool reverseScrollDirection;
     bool centerTaskContent;
     bool showApplications;
     WCHAR showTitles[32];
@@ -595,6 +598,18 @@ static bool UseTaskRoundedCorners() {
 
 static int GetTaskUiCornerRadiusPx() {
     if (!UseTaskRoundedCorners()) {
+        return 0;
+    }
+    if (wcscmp(g_settings.cornerPreference, L"custom") == 0) {
+        return MulDiv(g_settings.customCornerRadius, g_dpiX, 96);
+    }
+    return MulDiv(4, g_dpiX, 96);
+}
+
+// Thumbnail corner rounding is controlled independently from the task border /
+// close button rounding, but shares the same radius from Corner Preference.
+static int GetThumbnailCornerRadiusPx() {
+    if (!g_settings.roundThumbnailCorners) {
         return 0;
     }
     if (wcscmp(g_settings.cornerPreference, L"custom") == 0) {
@@ -2280,7 +2295,7 @@ static void DrawSwitcherContent(HDC hdc, bool fillBg, HWND hWnd) {
     int padLeft    = DpiScale(SWS_PAD_LEFT, g_dpiX);
     int rowTitleH  = GetHeaderRowHeightPx();
     int iconSz     = GetHeaderIconSizePx();
-    int cornerRadius = GetTaskUiCornerRadiusPx();
+    int cornerRadius = GetThumbnailCornerRadiusPx();
 
     for (int i = 0; i < (int)g_windows.size(); i++) {
         auto& e = g_windows[i];
@@ -2406,7 +2421,7 @@ static void DrawSwitcherOverlay(HDC hdc, HWND hWnd) {
     if (g_windows.empty()) return;
 
     int rowTitleH = GetHeaderRowHeightPx();
-    int cornerRadius = GetTaskUiCornerRadiusPx();
+    int cornerRadius = GetThumbnailCornerRadiusPx();
 
     for (int idx = 0; idx < (int)g_windows.size(); idx++) {
         int i = (g_layoutStartIndex + idx) % g_windows.size();
@@ -3617,6 +3632,7 @@ static void LoadSettings() {
     if (g_settings.customCornerRadius < 0) g_settings.customCornerRadius = 0;
     if (g_settings.customCornerRadius > 32) g_settings.customCornerRadius = 32;
     g_settings.taskRoundedCorners = Wh_GetIntSetting(L"Appearance.Corners.taskRoundedCorners");
+    g_settings.roundThumbnailCorners = Wh_GetIntSetting(L"Appearance.Corners.roundThumbnailCorners");
     v = Wh_GetStringSetting(L"Accessibility.scrollWheelBehavior");
     wcscpy_s(g_settings.scrollWheelBehavior, v ? v : L"never"); Wh_FreeStringSetting(v);
     v = Wh_GetStringSetting(L"Appearance.Orientation.taskListOrientation");
