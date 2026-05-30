@@ -74,17 +74,17 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       - system: Follow system setting
       - light: Light
       - dark: Dark
+    - highlightStyle: border
+      $name: Task Highlight Style
+      $description: Style used for the selected task row/tile. Applies to both light and dark themes.
+      $options:
+      - border: Border only
+      - fillAndBorder: Background fill and border
+      - fillOnly: Background fill only
+    - opacity: 100
+      $name: Background Opacity
+      $description: Background opacity percentage (0-100), applies to None and Acrylic themes for both light and dark themes. Set value to '80' for Acrylic to see the effect.
     - DarkMode:
-        - highlightStyle: border
-          $name: Task Highlight Style
-          $description: Style used for the selected task row/tile.
-          $options:
-          - border: Border only
-          - fillAndBorder: Background fill and border
-          - fillOnly: Background fill only
-        - opacity: 100
-          $name: Background Opacity
-          $description: Background opacity percentage (0-100), applies to None and Acrylic themes. Set value to '80' for Acrylic to see the effect.
         - borderColorMode: default
           $name: Border Color
           $description: Color source for the selected/hovered task border in dark mode.
@@ -117,16 +117,6 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
           $description: HEX color value, used when Switcher Background Color is set to Custom.
       $name: Dark Mode
     - LightMode:
-        - highlightStyle: border
-          $name: Task Highlight Style
-          $description: Style used for the selected task row/tile.
-          $options:
-          - border: Border only
-          - fillAndBorder: Background fill and border
-          - fillOnly: Background fill only
-        - opacity: 100
-          $name: Background Opacity
-          $description: Background opacity percentage (0-100), applies to None and Acrylic themes. Set value to '80' for Acrylic to see the effect.
         - borderColorMode: default
           $name: Border Color
           $description: Color source for the selected/hovered task border in light mode.
@@ -342,6 +332,15 @@ Additional improvements made by [Asteski](https://github.com/Asteski).
       $description: "Executable name patterns to exclude, separated by ';' (wildcards supported: * matches any characters, ? matches one). Example: notepad.exe;chrome.exe"
   $name: Excluded Windows
   $description: Exclude specific windows from appearing in the switcher.
+- customIcons:
+  - - process: ""
+      $name: Process Name
+      $description: "Executable name to match (wildcards supported: * matches any characters, ? matches one). Example: chrome.exe or *code.exe"
+    - iconPath: ""
+      $name: Icon Path
+      $description: "Full path to an icon source (.ico, .exe or .dll); the first icon in the file is used. Example: C:\\Icons\\myapp.ico"
+  $name: Custom Icons
+  $description: Assign custom icons to tasks based on their executable name. The first matching rule wins.
 
 */
 // ==/WindhawkModSettings==
@@ -420,12 +419,12 @@ struct WindowEntry {
 struct Settings {
     WCHAR theme[32]; WCHAR colorScheme[32]; WCHAR cornerPreference[32]; WCHAR scrollWheelBehavior[32]; WCHAR taskListOrientation[32]; WCHAR headerContentOrientation[32]; WCHAR iconSize[32]; WCHAR backwardShortcut[32]; WCHAR thumbnailPosition[32]; WCHAR thumbnailAlignment[32]; WCHAR switcherDisplayBehavior[32];
     WCHAR virtualDesktopBehavior[32];
+    // Global theme settings (apply to both light and dark)
+    WCHAR highlightStyle[32]; int opacity;
     // Dark Mode color settings
-    WCHAR highlightStyleDark[32]; int opacityDark;
     WCHAR borderColorModeDark[16]; WCHAR highlightFillColorModeDark[16]; WCHAR bgColorModeDark[16];
     WCHAR customBorderColorDark[16]; WCHAR customHighlightFillColorDark[16]; WCHAR customBgColorDark[16];
     // Light Mode color settings
-    WCHAR highlightStyleLight[32]; int opacityLight;
     WCHAR borderColorModeLight[16]; WCHAR highlightFillColorModeLight[16]; WCHAR bgColorModeLight[16];
     WCHAR customBorderColorLight[16]; WCHAR customHighlightFillColorLight[16]; WCHAR customBgColorLight[16];
     WCHAR fontFamily[64]; WCHAR fontStyle[32];
@@ -509,7 +508,7 @@ static bool IconSizeIs(const WCHAR* v) { return wcscmp(g_settings.iconSize, v) =
 static bool BackwardShortcutIs(const WCHAR* v) { return wcscmp(g_settings.backwardShortcut, v) == 0; }
 static bool ThumbnailPositionIs(const WCHAR* v) { return wcscmp(g_settings.thumbnailPosition, v) == 0; }
 static bool HighlightStyleIs(const WCHAR* v) {
-    return wcscmp(g_isDarkMode ? g_settings.highlightStyleDark : g_settings.highlightStyleLight, v) == 0;
+    return wcscmp(g_settings.highlightStyle, v) == 0;
 }
 static bool UseAltShiftTabBackward() { return BackwardShortcutIs(L"altShiftTab"); }
 static bool UseAltShiftBackward() { return BackwardShortcutIs(L"altShift"); }
@@ -817,8 +816,58 @@ static HICON TryGetCrispExeIcon(HWND hWnd, int desiredSizePx) {
     return NULL;
 }
 
-static HICON LoadWindowIcon(HWND hWnd) {
+// === Custom per-process icons ===
+
+struct CustomIconRule {
+    std::wstring pattern;   // executable name pattern; wildcards * and ? supported
+    std::wstring iconPath;  // .ico / .exe / .dll to extract the icon from
+};
+static std::vector<CustomIconRule> g_customIcons;
+// Owned cache of icons loaded from custom paths; keyed by "<path>_<sizePx>".
+static std::map<std::wstring, HICON> g_customIconCache;
+
+static HICON LoadCustomIconFromPath(const std::wstring& path, int sizePx) {
+    if (path.empty() || sizePx <= 0) return NULL;
+    std::wstring key = path + L"_" + std::to_wstring(sizePx);
+    auto it = g_customIconCache.find(key);
+    if (it != g_customIconCache.end()) return it->second;
     HICON hIcon = NULL;
+    if (PrivateExtractIconsW(path.c_str(), 0, sizePx, sizePx,
+                             &hIcon, NULL, 1, 0) == 1 && hIcon) {
+        g_customIconCache[key] = hIcon;
+        return hIcon;
+    }
+    return NULL;
+}
+
+// If the window's executable name matches a user-defined rule, return its
+// custom icon. The first matching rule wins; this overrides all other sources.
+static HICON TryGetCustomIcon(HWND hWnd, int sizePx) {
+    if (g_customIcons.empty()) return NULL;
+    DWORD pid = 0;
+    GetWindowThreadProcessId(hWnd, &pid);
+    if (!pid) return NULL;
+    HANDLE hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+    if (!hProc) return NULL;
+    WCHAR exePath[MAX_PATH] = {0};
+    DWORD size = MAX_PATH;
+    BOOL ok = QueryFullProcessImageNameW(hProc, 0, exePath, &size);
+    CloseHandle(hProc);
+    if (!ok || !exePath[0]) return NULL;
+    WCHAR* fileName = PathFindFileNameW(exePath);
+    for (const auto& rule : g_customIcons) {
+        if (PathMatchSpecW(fileName, rule.pattern.c_str())) {
+            HICON h = LoadCustomIconFromPath(rule.iconPath, sizePx);
+            if (h) return h;
+        }
+    }
+    return NULL;
+}
+
+static HICON LoadWindowIcon(HWND hWnd) {
+    // User-assigned custom icon takes priority over everything else.
+    HICON hIcon = TryGetCustomIcon(hWnd, GetHeaderIconSizePx());
+    if (hIcon) return hIcon;
     if (g_IsShellFrameWindow && g_IsShellFrameWindow(hWnd)) {
         hIcon = TryGetUwpIconFromExplorer(hWnd, GetHeaderIconSizePx());
     }
@@ -2213,7 +2262,7 @@ static void DrawSwitcherContent(HDC hdc, bool fillBg, HWND hWnd) {
     int w = rcClient.right, h = rcClient.bottom;
 
     if (fillBg) {
-        BYTE bgA = (BYTE)((g_isDarkMode ? g_settings.opacityDark : g_settings.opacityLight) * 255 / 100);
+        BYTE bgA = (BYTE)(g_settings.opacity * 255 / 100);
         if (bgA == 0) bgA = 1; // Prevent full transparency click-through
         COLORREF bgC = GetBgColor();
         BYTE bgR = GetRValue(bgC), bgG = GetGValue(bgC), bgB = GetBValue(bgC);
@@ -2661,7 +2710,7 @@ static void ApplyThemeToWindow(HWND hWnd) {
             }
         }
         if (ThemeIs(L"backdrop") && g_SetWindowCompositionAttribute) {
-            DWORD blur = (DWORD)(((g_isDarkMode ? g_settings.opacityDark : g_settings.opacityLight) / 100.0) * 255);
+            DWORD blur = (DWORD)((g_settings.opacity / 100.0) * 255);
             COLORREF bg = GetBgColor();
             ACCENT_POLICY accent = {};
             accent.AccentState = 4 /* ACCENT_ENABLE_ACRYLICBLURBEHIND */;
@@ -3673,18 +3722,19 @@ static void LoadSettings() {
     g_settings.centerTaskContent = Wh_GetIntSetting(L"Appearance.HeaderContent.centerTaskContent");
 
 
-    // Dark Mode color settings
-    v = Wh_GetStringSetting(L"Style.DarkMode.highlightStyle");
-    wcscpy_s(g_settings.highlightStyleDark, v ? v : L"border"); Wh_FreeStringSetting(v);
-    if (wcscmp(g_settings.highlightStyleDark, L"border") != 0 &&
-        wcscmp(g_settings.highlightStyleDark, L"fillAndBorder") != 0 &&
-        wcscmp(g_settings.highlightStyleDark, L"fillOnly") != 0) {
-        wcscpy_s(g_settings.highlightStyleDark, L"border");
+    // Global theme settings (apply to both light and dark)
+    v = Wh_GetStringSetting(L"Style.highlightStyle");
+    wcscpy_s(g_settings.highlightStyle, v ? v : L"border"); Wh_FreeStringSetting(v);
+    if (wcscmp(g_settings.highlightStyle, L"border") != 0 &&
+        wcscmp(g_settings.highlightStyle, L"fillAndBorder") != 0 &&
+        wcscmp(g_settings.highlightStyle, L"fillOnly") != 0) {
+        wcscpy_s(g_settings.highlightStyle, L"border");
     }
-    g_settings.opacityDark = Wh_GetIntSetting(L"Style.DarkMode.opacity");
-    if (g_settings.opacityDark < 0) g_settings.opacityDark = 0;
-    if (g_settings.opacityDark > 100) g_settings.opacityDark = 100;
+    g_settings.opacity = Wh_GetIntSetting(L"Style.opacity");
+    if (g_settings.opacity < 0) g_settings.opacity = 0;
+    if (g_settings.opacity > 100) g_settings.opacity = 100;
 
+    // Dark Mode color settings
     v = Wh_GetStringSetting(L"Style.DarkMode.borderColorMode");
     wcscpy_s(g_settings.borderColorModeDark, v ? v : L"default"); Wh_FreeStringSetting(v);
     v = Wh_GetStringSetting(L"Style.DarkMode.highlightFillColorMode");
@@ -3699,17 +3749,6 @@ static void LoadSettings() {
     wcscpy_s(g_settings.customBgColorDark, v ? v : L"#202020"); Wh_FreeStringSetting(v);
 
     // Light Mode color settings
-    v = Wh_GetStringSetting(L"Style.LightMode.highlightStyle");
-    wcscpy_s(g_settings.highlightStyleLight, v ? v : L"border"); Wh_FreeStringSetting(v);
-    if (wcscmp(g_settings.highlightStyleLight, L"border") != 0 &&
-        wcscmp(g_settings.highlightStyleLight, L"fillAndBorder") != 0 &&
-        wcscmp(g_settings.highlightStyleLight, L"fillOnly") != 0) {
-        wcscpy_s(g_settings.highlightStyleLight, L"border");
-    }
-    g_settings.opacityLight = Wh_GetIntSetting(L"Style.LightMode.opacity");
-    if (g_settings.opacityLight < 0) g_settings.opacityLight = 0;
-    if (g_settings.opacityLight > 100) g_settings.opacityLight = 100;
-
     v = Wh_GetStringSetting(L"Style.LightMode.borderColorMode");
     wcscpy_s(g_settings.borderColorModeLight, v ? v : L"default"); Wh_FreeStringSetting(v);
     v = Wh_GetStringSetting(L"Style.LightMode.highlightFillColorMode");
@@ -3778,6 +3817,30 @@ static void LoadSettings() {
         }
     }
     if (v) Wh_FreeStringSetting(v);
+
+    // Custom per-process icons (array of { process, iconPath }).
+    g_customIcons.clear();
+    auto trimWs = [](std::wstring s) -> std::wstring {
+        size_t a = s.find_first_not_of(L" \t\r\n");
+        if (a == std::wstring::npos) return L"";
+        size_t b = s.find_last_not_of(L" \t\r\n");
+        return s.substr(a, b - a + 1);
+    };
+    for (int i = 0; ; i++) {
+        PCWSTR proc = Wh_GetStringSetting(L"customIcons[%d].process", i);
+        PCWSTR icon = Wh_GetStringSetting(L"customIcons[%d].iconPath", i);
+        bool hasProc = proc && *proc;
+        bool hasIcon = icon && *icon;
+        if (hasProc && hasIcon) {
+            std::wstring p = trimWs(proc);
+            std::wstring ip = trimWs(icon);
+            if (!p.empty() && !ip.empty()) g_customIcons.push_back({p, ip});
+        }
+        bool endOfArray = !hasProc && !hasIcon;
+        if (proc) Wh_FreeStringSetting(proc);
+        if (icon) Wh_FreeStringSetting(icon);
+        if (endOfArray) break;
+    }
 }
 
 
@@ -4170,6 +4233,10 @@ void Wh_ModUninit() {
             if (pair.second) DestroyIcon(pair.second);
         }
         g_exeIconCache.clear();
+        for (auto& pair : g_customIconCache) {
+            if (pair.second) DestroyIcon(pair.second);
+        }
+        g_customIconCache.clear();
 
         if (g_isExplorer && IsMainExplorer()) {
             if (!GetSystemMetrics(SM_SHUTTINGDOWN)) {
