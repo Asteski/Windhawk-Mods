@@ -1,0 +1,44 @@
+// ==WindhawkMod==
+// @id           hide-apps-from-taskbar
+// @name         Hide Apps from Taskbar
+// @description  Hide specified apps from the taskbar when minimized. Special handling for File Explorer windows.
+// @version      1.0.0
+// @author       Copilot
+// @github       https://github.com/your-github
+// @include      *
+// @compilerOptions -std=c++20
+// ==/WindhawkMod==
+
+// ==WindhawkModSettings==
+/*
+- appList: "msedge.exe\r\nnotepad.exe"
+  $name: App Executables
+  $description: List of app executable names (e.g., msedge.exe, notepad.exe) to hide from the taskbar when minimized.
+- enableExplorer: false
+  $name: Enable for File Explorer windows
+  $description: If enabled, hides File Explorer windows from the taskbar when minimized (only actual Explorer windows, not all explorer.exe processes).
+*/
+// ==/WindhawkModSettings==
+
+// ==WindhawkModReadme==
+/*
+# Hide Apps from Taskbar
+
+This mod hides specified apps from the taskbar when minimized. It also provides a toggle to enable support for File Explorer windows, ensuring only actual folder windows are affected (not all explorer.exe processes).
+
+## Features
+- Hide taskbar button for minimized windows of selected apps
+- Special handling for File Explorer: only folder windows are affected
+- Restore taskbar button when window is restored
+- App list and Explorer toggle configurable in settings
+
+## Settings
+- **App Executables**: List of app executable names (e.g., msedge.exe, notepad.exe) to hide from the taskbar when minimized
+- **Enable for File Explorer windows**: If enabled, hides File Explorer windows from the taskbar when minimized (only actual Explorer windows, not all explorer.exe processes)
+
+## Technical Details
+- Uses Win32 API to change window styles and force refresh
+- Detects process name and window class to ensure only intended windows are affected
+- Safe and stable: does not impact unrelated windows or processes
+*/
+// ==/WindhawkModReadme==
