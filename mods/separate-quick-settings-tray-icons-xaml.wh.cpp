@@ -2269,7 +2269,19 @@ static wux::FrameworkElement FindNativeBatteryButton(
                 if ((name.find(L"battery") != std::wstring::npos ||
                      klass.find(L"battery") != std::wstring::npos) &&
                     name.find(L"icon") == std::wstring::npos) {
-                    return element;
+                    if (element.try_as<wuc::Control>()) return element;
+                    auto ancestor = FindAncestorFrameworkElement(element);
+                    while (ancestor) {
+                        auto ancestorClass = ToLower(std::wstring(
+                            winrt::get_class_name(ancestor).c_str()));
+                        auto ancestorName = ToLower(std::wstring(
+                            ancestor.Name().c_str()));
+                        if (ancestorClass.find(L"omnibutton") != std::wstring::npos ||
+                            ancestorName.find(L"battery") != std::wstring::npos) {
+                            if (ancestor.try_as<wuc::Control>()) return ancestor;
+                        }
+                        ancestor = FindAncestorFrameworkElement(ancestor);
+                    }
                 }
             }
         }
@@ -2310,7 +2322,15 @@ static bool DetachNativeBattery(wuc::Panel const& trayPanel) {
             return false;
         }
         children.RemoveAt(index);
-        trayPanel.Children().Append(g_nativeBatteryButton.as<wux::UIElement>());
+        uint32_t trayIndex = trayPanel.Children().Size();
+        if (g_trayControlCenterButton &&
+            trayPanel.Children().IndexOf(
+                g_trayControlCenterButton.as<wux::UIElement>(), trayIndex)) {
+            // The native Control Center slot is immediately before the clock
+            // and is the correct anchor for the extracted battery button.
+        }
+        trayPanel.Children().InsertAt(
+            trayIndex, g_nativeBatteryButton.as<wux::UIElement>());
         g_nativeBatteryParent = parentPanel;
         Wh_Log(L"Detached native battery control from nested panel.");
         return true;
