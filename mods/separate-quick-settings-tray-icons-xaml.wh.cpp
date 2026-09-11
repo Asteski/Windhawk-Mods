@@ -2266,9 +2266,7 @@ static wux::FrameworkElement FindNativeBatteryButton(
                 std::wstring name = ToLower(std::wstring(element.Name().c_str()));
                 if (name.rfind(L"separatequicksettingsxaml", 0) == 0) continue;
                 std::wstring klass = ToLower(std::wstring(winrt::get_class_name(element).c_str()));
-                if ((name.find(L"battery") != std::wstring::npos ||
-                     klass.find(L"battery") != std::wstring::npos) &&
-                    name.find(L"icon") == std::wstring::npos) {
+                if (klass == L"systemtray.batteryiconcontent") {
                     if (element.try_as<wuc::Control>()) return element;
                     auto ancestor = FindAncestorFrameworkElement(element);
                     while (ancestor) {
@@ -2292,6 +2290,50 @@ static wux::FrameworkElement FindNativeBatteryButton(
         }
     }
     return nullptr;
+}
+
+static bool ContainsBatteryContent(wux::DependencyObject const& root) {
+    if (!root) return false;
+    if (auto e = root.try_as<wux::FrameworkElement>()) {
+        if (ToLower(std::wstring(winrt::get_class_name(e).c_str())) ==
+            L"systemtray.batteryiconcontent") return true;
+    }
+    int count = wuxm::VisualTreeHelper::GetChildrenCount(root);
+    for (int i = 0; i < count; ++i) {
+        if (ContainsBatteryContent(wuxm::VisualTreeHelper::GetChild(root, i))) return true;
+    }
+    return false;
+}
+
+static void KeepOnlyNativeBattery(wux::FrameworkElement const& controlCenter) {
+    if (!controlCenter || !g_nativeBatteryButton) return;
+    try {
+        auto current = g_nativeBatteryButton.as<wux::DependencyObject>();
+        wux::FrameworkElement item = nullptr;
+        while (current) {
+            auto parent = wuxm::VisualTreeHelper::GetParent(current);
+            if (!parent) break;
+            auto panel = parent.try_as<wuc::Panel>();
+            if (panel) {
+                auto children = panel.Children();
+                uint32_t batteryIndex = 0;
+                if (children.IndexOf(current.as<wux::UIElement>(), batteryIndex) && children.Size() > 1) {
+                    for (uint32_t i = 0; i < children.Size(); ++i) {
+                        auto sibling = children.GetAt(i).try_as<wux::FrameworkElement>();
+                        if (sibling && sibling != current && !ContainsBatteryContent(sibling)) {
+                            sibling.Visibility(wux::Visibility::Collapsed);
+                        }
+                    }
+                    item = current.try_as<wux::FrameworkElement>();
+                    break;
+                }
+            }
+            current = parent;
+        }
+        if (item) Wh_Log(L"Kept native battery item and collapsed grouped siblings.");
+    } catch (...) {
+        Wh_Log(L"Failed to isolate native battery item: 0x%08X.", winrt::to_hresult());
+    }
 }
 
 static void UpdateNativeBatteryVisibility() {
@@ -5364,16 +5406,14 @@ static bool TryInjectBesideControlCenterButton(wux::FrameworkElement const& root
                    winrt::get_class_name(g_nativeBatteryButton).c_str(),
                    g_nativeBatteryButton.Name().c_str());
         }
-        DetachNativeBattery(parentPanel);
+        KeepOnlyNativeBattery(controlCenterButton);
         UpdateNativeBatteryVisibility();
         CaptureTrayButtonMetricsFromPanel(parentPanel, controlCenterButton);
         AttachTaskbarSizeRefreshHandlers(parentElement, controlCenterButton);
 
-        if (!GroupedButtonModeIs(L"native")) {
-            HideOriginalGroupedButton(controlCenterButton);
-        } else {
-            RestoreOriginalGroupedButton();
-        }
+        // Keep the native grouped control alive so the battery remains
+        // clickable; only its non-battery siblings are collapsed.
+        RestoreOriginalGroupedButton();
 
         auto children = parentPanel.Children();
         uint32_t insertIndex = children.Size();
@@ -5532,15 +5572,12 @@ static bool ApplyXamlButtons() {
                winrt::get_class_name(g_nativeBatteryButton).c_str(),
                g_nativeBatteryButton.Name().c_str());
     }
-    DetachNativeBattery(trayGrid);
+    KeepOnlyNativeBattery(controlCenterButton);
     UpdateNativeBatteryVisibility();
     AttachTaskbarSizeRefreshHandlers(trayGrid, controlCenterButton);
 
-    if (!GroupedButtonModeIs(L"native")) {
-        HideOriginalGroupedButton(controlCenterButton);
-    } else {
-        RestoreOriginalGroupedButton();
-    }
+    // Keep the native grouped control alive so the battery remains clickable.
+    RestoreOriginalGroupedButton();
 
     int insertCol = static_cast<int>(trayGrid.ColumnDefinitions().Size());
     if (controlCenterButton) {
