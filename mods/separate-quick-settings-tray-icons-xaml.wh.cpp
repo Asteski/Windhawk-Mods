@@ -24,13 +24,13 @@ Buttons:
 
 - Bluetooth -> `ms-controlcenter:bluetooth`
 - Network -> `ms-availablenetworks:`
-- Sound -> Quick Settings, sound output picker, or Volume Mixer
+- Sound -> Control Center, sound output picker or volume mixer
 - Control Center -> `ms-controlcenter:`
 
 Sound supports:
 
-- mouse wheel: unmute first, then volume up/down
-- middle click: mute toggle
+- Mouse wheel: unmute first, then volume up/down
+- Middle click: mute toggle
 
 ## Action formats
 
@@ -102,9 +102,9 @@ menu presenter receives its name after creation. Battery has no injected target.
   $name: Sound click action
   $description: "What happens when the separated sound icon is clicked."
   $options:
-  - quick_settings: Open Quick Settings
+  - quick_settings: Open Control Center
   - sound_output: Open sound output picker
-  - sndvol: Open Volume Mixer
+  - sndvol: Open volume mixer
 - showControlCenterButton: true
   $name: Show Control Center button
 - controlCenterGlyph: F4C3
