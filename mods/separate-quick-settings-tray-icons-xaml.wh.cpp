@@ -2,7 +2,7 @@
 // @id              separate-system-tray-icons
 // @name            Separate System Tray Icons
 // @description     Adds native-looking Bluetooth, network, and sound buttons to the Windows 11 taskbar tray.
-// @version         0.4.0
+// @version         0.5.0
 // @author          Asteski
 // @github          https://www.github.com/Asteski
 // @include         explorer.exe
@@ -25,6 +25,7 @@ Buttons:
 - Bluetooth -> `ms-controlcenter:bluetooth`
 - Network -> `ms-availablenetworks:`
 - Sound -> Quick Settings, sound output picker, or Volume Mixer
+- Control Center -> `ms-controlcenter:`
 
 Sound supports:
 
@@ -59,7 +60,7 @@ needed, the mod logs the actual control class; the button names stay the same.
 | `SystemTray.OmniButton#SeparateQuickSettingsXamlBluetooth` | Bluetooth button and its native template/hit target. |
 | `SystemTray.OmniButton#SeparateQuickSettingsXamlNetwork` | Network button. |
 | `SystemTray.OmniButton#SeparateQuickSettingsXamlSound` | Sound button, including wheel and middle-click handling. |
-| `SystemTray.OmniButton#SeparateQuickSettingsXamlQuickSettings` | Optional single-icon replacement for the original grouped button. |
+| `SystemTray.OmniButton#SeparateQuickSettingsXamlControlCenter` | Separate Control Center button; the original grouped button is always hidden. |
 | `Grid#SeparateTrayIconLayers` | Centered 16-by-16 glyph host inside each injected button. |
 | `FontIcon#SeparateTrayIconPrimary` | Main status or output-device glyph. |
 | `FontIcon#SeparateTrayIconUnderlay` | Theme-aware grey underlying glyph, where applicable. |
@@ -104,33 +105,28 @@ menu presenter receives its name after creation. Battery has no injected target.
   - quick_settings: Open Quick Settings
   - sound_output: Open sound output picker
   - sndvol: Open Volume Mixer
-- groupedButtonMode: compact
-  $name: Original grouped button
-  $description: "What to do with the original grouped Quick Settings tray button."
-  $options:
-  - hidden: Hide
-  - native: Keep native
-  - compact: Replace with single icon
-- compactGroupedButtonGlyph: F4C3
-  $name: Single grouped button glyph
-  $description: "Segoe Fluent Icons glyph used when the original grouped button mode is single icon. Example: F4C3"
-- groupedButtonAction: "ms-controlcenter:"
-  $name: Grouped button replacement action
-  $description: "Action used by the single icon replacement mode. Supports URI/path, cmd:, shell:, key:/hotkey:, web:, ms-settings:, and ~known-folder actions."
+- showControlCenterButton: true
+  $name: Show Control Center button
+- controlCenterGlyph: F4C3
+  $name: Control Center glyph
+- controlCenterAction: "ms-controlcenter:"
+  $name: Control Center action
 - showBluetoothButton: true
   $name: Show Bluetooth button
 - showNetworkButton: true
   $name: Show network button
 - showSoundButton: true
   $name: Show sound button
+- showBatteryButton: true
+  $name: Show battery button
 - showCurrentlyPlayingInSoundTooltip: true
   $name: Show currently playing in sound tooltip
 - soundIconFollowsOutputDevice: false
   $name: Sound icon follows output device
   $description: "When enabled, the sound icon uses an output-device glyph for headphones, speakers, display audio, etc. Muted/unavailable audio still uses the normal mute glyph."
-- buttonOrder: sound,bluetooth,network,quick_settings
+- buttonOrder: sound,bluetooth,network,controlcenter,battery
   $name: Button order
-  $description: "Comma-separated order: bluetooth, network, sound, quick_settings. Hidden and unavailable buttons are skipped; missing visible buttons are appended."
+  $description: "Comma-separated order: sound, bluetooth, network, controlcenter, battery. Hidden and unavailable buttons are skipped; missing visible buttons are appended."
 - contextMenuFramework: winui
   $name: Context menu framework
   $description: "Framework used for right-click menus on the Bluetooth, network, and sound buttons. WinUI follows the taskbar theme; Win32 uses the classic native popup menu."
@@ -201,16 +197,23 @@ namespace wuxm = winrt::Windows::UI::Xaml::Media;
 
 
 struct Settings {
-    std::wstring soundClickAction = L"sound_output";
+    // Retained internally for compatibility with the existing injection path;
+    // the original grouped button is now always hidden and the compact control
+    // is the permanent Control Center replacement.
     std::wstring groupedButtonMode = L"compact";
     std::wstring compactGroupedButtonGlyph = L"F4C3";
     std::wstring groupedButtonAction = L"ms-controlcenter:";
+    std::wstring soundClickAction = L"sound_output";
+    std::wstring controlCenterGlyph = L"F4C3";
+    std::wstring controlCenterAction = L"ms-controlcenter:";
     bool showBluetoothButton = true;
     bool showNetworkButton = true;
     bool showSoundButton = true;
+    bool showControlCenterButton = true;
+    bool showBatteryButton = true;
     bool showCurrentlyPlayingInSoundTooltip = true;
     bool soundIconFollowsOutputDevice = false;
-    std::wstring buttonOrder = L"sound,bluetooth,network,quick_settings";
+    std::wstring buttonOrder = L"sound,bluetooth,network,controlcenter,battery";
     std::wstring contextMenuFramework = L"winui";
 };
 
@@ -251,6 +254,7 @@ static wux::FrameworkElement g_bluetoothButton{nullptr};
 static wux::FrameworkElement g_networkButton{nullptr};
 static wux::FrameworkElement g_soundButton{nullptr};
 static wux::FrameworkElement g_compactGroupedButton{nullptr};
+static wux::FrameworkElement g_nativeBatteryButton{nullptr};
 struct IconLayers {
     wuc::Grid host{nullptr};
     wuc::FontIcon underlay{nullptr};
@@ -344,31 +348,31 @@ static std::wstring GetStringSettingWithDefault(PCWSTR name,
 static void LoadSettings() {
     g_settings.soundClickAction =
         GetStringSettingWithDefault(L"soundClickAction", L"sound_output");
-    g_settings.groupedButtonMode =
-        GetStringSettingWithDefault(L"groupedButtonMode", L"");
-    if (g_settings.groupedButtonMode.empty()) {
-        g_settings.groupedButtonMode =
-            Wh_GetIntSetting(L"hideOriginalGroupedButton") != 0 ? L"hidden"
-                                                                : L"compact";
-    }
-    g_settings.compactGroupedButtonGlyph =
-        GetStringSettingWithDefault(L"compactGroupedButtonGlyph", L"F4C3");
-    g_settings.groupedButtonAction =
-        GetStringSettingWithDefault(L"groupedButtonAction",
+    g_settings.controlCenterGlyph =
+        GetStringSettingWithDefault(L"controlCenterGlyph", L"F4C3");
+    g_settings.controlCenterAction =
+        GetStringSettingWithDefault(L"controlCenterAction",
                                     L"ms-controlcenter:");
+    g_settings.groupedButtonMode = L"compact";
+    g_settings.compactGroupedButtonGlyph = g_settings.controlCenterGlyph;
+    g_settings.groupedButtonAction = g_settings.controlCenterAction;
     g_settings.showBluetoothButton =
         Wh_GetIntSetting(L"showBluetoothButton") != 0;
     g_settings.showNetworkButton =
         Wh_GetIntSetting(L"showNetworkButton") != 0;
     g_settings.showSoundButton =
         Wh_GetIntSetting(L"showSoundButton") != 0;
+    g_settings.showControlCenterButton =
+        Wh_GetIntSetting(L"showControlCenterButton") != 0;
+    g_settings.showBatteryButton =
+        Wh_GetIntSetting(L"showBatteryButton") != 0;
     g_settings.showCurrentlyPlayingInSoundTooltip =
         Wh_GetIntSetting(L"showCurrentlyPlayingInSoundTooltip") != 0;
     g_settings.soundIconFollowsOutputDevice =
         Wh_GetIntSetting(L"soundIconFollowsOutputDevice") != 0;
     g_settings.buttonOrder =
         GetStringSettingWithDefault(L"buttonOrder",
-                                    L"sound,bluetooth,network,quick_settings");
+                                    L"sound,bluetooth,network,controlcenter,battery");
     g_settings.contextMenuFramework =
         GetStringSettingWithDefault(L"contextMenuFramework", L"winui");
     Wh_Log(L"Tray button settings: bluetooth=%d network=%d sound=%d order=[%s].",
@@ -3021,6 +3025,7 @@ static void RemoveInjectedControls(wuc::Panel const& parent) {
     g_networkButton = nullptr;
     g_soundButton = nullptr;
     g_compactGroupedButton = nullptr;
+    g_nativeBatteryButton = nullptr;
     g_bluetoothIcon = {};
     g_networkIcon = {};
     g_soundIcon = {};
@@ -3923,7 +3928,9 @@ enum class ButtonKind {
     Bluetooth,
     Network,
     Sound,
-    QuickSettings,
+    ControlCenter,
+    Battery,
+    QuickSettings = ControlCenter, // source compatibility for existing paths
 };
 
 static PCWSTR ButtonKindName(ButtonKind kind) {
@@ -3934,8 +3941,10 @@ static PCWSTR ButtonKindName(ButtonKind kind) {
             return L"network";
         case ButtonKind::Sound:
             return L"sound";
-        case ButtonKind::QuickSettings:
-            return L"quick_settings";
+        case ButtonKind::ControlCenter:
+            return L"controlcenter";
+        case ButtonKind::Battery:
+            return L"battery";
         default:
             return L"unknown";
     }
@@ -4500,7 +4509,7 @@ static bool TryParseButtonKind(std::wstring const& rawToken,
         *kind = ButtonKind::Sound;
         return true;
     }
-    if (token == L"quick_settings" || token == L"quicksettings" ||
+    if (token == L"controlcenter" || token == L"quick_settings" || token == L"quicksettings" ||
         token == L"control_center" || token == L"controlcenter" ||
         token == L"grouped") {
         *kind = ButtonKind::QuickSettings;
@@ -4518,8 +4527,9 @@ static bool IsButtonKindVisible(ButtonKind kind) {
         case ButtonKind::Sound:
             return g_settings.showSoundButton;
         case ButtonKind::QuickSettings:
-            return GroupedButtonModeIs(L"native") ||
-                   GroupedButtonModeIs(L"compact");
+            return g_settings.showControlCenterButton;
+        case ButtonKind::Battery:
+            return g_settings.showBatteryButton && g_nativeBatteryButton;
         default:
             return false;
     }
@@ -4529,7 +4539,7 @@ static void AppendOrderedButtonKind(std::vector<ButtonKind>& order,
                                     bool used[],
                                     ButtonKind kind) {
     const size_t index = static_cast<size_t>(kind);
-    if (index >= 4 || used[index] || !IsButtonKindVisible(kind)) {
+    if (index >= 5 || used[index] || !IsButtonKindVisible(kind)) {
         return;
     }
 
@@ -4539,7 +4549,7 @@ static void AppendOrderedButtonKind(std::vector<ButtonKind>& order,
 
 static std::vector<ButtonKind> GetVisibleButtonOrder() {
     std::vector<ButtonKind> order;
-    bool used[4]{};
+    bool used[5]{};
 
     size_t start = 0;
     while (start <= g_settings.buttonOrder.size()) {
@@ -4565,7 +4575,8 @@ static std::vector<ButtonKind> GetVisibleButtonOrder() {
     AppendOrderedButtonKind(order, used, ButtonKind::Bluetooth);
     AppendOrderedButtonKind(order, used, ButtonKind::Network);
     AppendOrderedButtonKind(order, used, ButtonKind::Sound);
-    AppendOrderedButtonKind(order, used, ButtonKind::QuickSettings);
+    AppendOrderedButtonKind(order, used, ButtonKind::ControlCenter);
+    AppendOrderedButtonKind(order, used, ButtonKind::Battery);
 
     std::wstring orderLog;
     for (auto kind : order) {
@@ -5087,6 +5098,8 @@ static wux::FrameworkElement ButtonElementForKind(ButtonKind kind) {
             return g_soundButton;
         case ButtonKind::QuickSettings:
             return g_compactGroupedButton;
+        case ButtonKind::Battery:
+            return g_nativeBatteryButton;
         default:
             return nullptr;
     }
@@ -5124,13 +5137,13 @@ static OrderedTrayButtons CreateTrayButtons() {
         g_soundButton = nullptr;
     }
 
-    if (GroupedButtonModeIs(L"compact")) {
+    if (g_settings.showControlCenterButton) {
         auto compactGlyph =
             GlyphFromHexSetting(g_settings.compactGroupedButtonGlyph, L'\xF4C3');
         g_compactGroupedButton =
             CreateTrayButton(ButtonKind::QuickSettings, compactGlyph.c_str(),
-                             L"SeparateQuickSettingsXamlQuickSettings",
-                             L"Quick Settings");
+                             L"SeparateQuickSettingsXamlControlCenter",
+                             L"Control Center");
     } else {
         g_compactGroupedButton = nullptr;
     }
@@ -5184,6 +5197,22 @@ static bool TryInjectBesideControlCenterButton(wux::FrameworkElement const& root
         RemoveInjectedControls(parentPanel);
         g_trayPanel = parentPanel;
         g_trayControlCenterButton = controlCenterButton;
+        g_nativeBatteryButton = nullptr;
+        // Battery remains a Windows-owned control. Identify only an obvious
+        // battery-named direct child; never replace or rename its content.
+        for (uint32_t i = 0; i < parentPanel.Children().Size(); ++i) {
+            auto candidate = parentPanel.Children().GetAt(i)
+                                 .try_as<wux::FrameworkElement>();
+            if (!candidate || candidate == controlCenterButton) continue;
+            auto name = ToLower(std::wstring(candidate.Name().c_str()));
+            if (name.find(L"battery") != std::wstring::npos) {
+                g_nativeBatteryButton = candidate;
+                Wh_Log(L"Native battery candidate: %s#%s.",
+                       winrt::get_class_name(candidate).c_str(),
+                       candidate.Name().c_str());
+                break;
+            }
+        }
         CaptureTrayButtonMetricsFromPanel(parentPanel, controlCenterButton);
         AttachTaskbarSizeRefreshHandlers(parentElement, controlCenterButton);
 
@@ -5342,6 +5371,20 @@ static bool ApplyXamlButtons() {
     CaptureTrayButtonMetricsFromPanel(trayGrid, controlCenterButton);
     g_trayPanel = trayGrid;
     g_trayControlCenterButton = controlCenterButton;
+    g_nativeBatteryButton = nullptr;
+    for (uint32_t i = 0; i < trayGrid.Children().Size(); ++i) {
+        auto candidate = trayGrid.Children().GetAt(i)
+                             .try_as<wux::FrameworkElement>();
+        if (!candidate || candidate == controlCenterButton) continue;
+        auto name = ToLower(std::wstring(candidate.Name().c_str()));
+        if (name.find(L"battery") != std::wstring::npos) {
+            g_nativeBatteryButton = candidate;
+            Wh_Log(L"Native battery candidate: %s#%s.",
+                   winrt::get_class_name(candidate).c_str(),
+                   candidate.Name().c_str());
+            break;
+        }
+    }
     AttachTaskbarSizeRefreshHandlers(trayGrid, controlCenterButton);
 
     if (!GroupedButtonModeIs(L"native")) {
