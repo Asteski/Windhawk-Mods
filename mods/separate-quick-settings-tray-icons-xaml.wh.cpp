@@ -5205,6 +5205,21 @@ static void RepositionNativeBatteryInPanel(wuc::Panel const& panel) {
                 break;
             }
         }
+        if (insertIndex == children.Size()) {
+            // Battery is last: place it after the last injected control,
+            // rather than after the clock and other native tray elements.
+            uint32_t lastInjected = 0;
+            bool foundInjected = false;
+            for (auto kind : order) {
+                auto element = ButtonElementForKind(kind);
+                uint32_t index = 0;
+                if (element && children.IndexOf(element.as<wux::UIElement>(), index)) {
+                    if (!foundInjected || index > lastInjected) lastInjected = index;
+                    foundInjected = true;
+                }
+            }
+            if (foundInjected) insertIndex = lastInjected + 1;
+        }
         children.InsertAt(insertIndex, g_nativeBatteryButton.as<wux::UIElement>());
         Wh_Log(L"Native battery positioned at tray panel index=%u.", insertIndex);
     } catch (...) {
