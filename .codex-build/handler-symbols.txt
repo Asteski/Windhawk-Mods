@@ -1,0 +1,11 @@
+base 180000000 error 0
+18005efc1 `DesktopTaskbarSettingsSingleton::Location'::`1'::catch$5
+180032df8 EnterpriseFeatureControl::GetPersistedRegistryLocation
+18001d35c winrt::SystemSettings::Desktop::Taskbar::implementation::SettingIndexFromLocationMode
+18001cdf4 winrt::SystemSettings::Desktop::Taskbar::implementation::LocationModeFromSettingIndex
+180037c2c DesktopTaskbarSettingsSingleton::UpdateLocationFromRegistry
+180034578 DesktopTaskbarSettingsSingleton::Location
+180034508 DesktopTaskbarSettingsSingleton::Location
+1800626a0 _imp_GetPersistedRegistryLocationW
+18001cdcc DesktopTaskbarSettingsSingleton::LocationChanged
+18003087c DesktopTaskbarSettingsSingleton::LocationSetByGroupPolicy

@@ -1,0 +1,15 @@
+base 180000000 error 0
+1804c1d1a `winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings6<winrt::WindowsUdk::UI::Shell::TaskbarSettings>::EffectiveSearchMode'::`1'::dtor$0
+1804c1d1a `winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings3<winrt::WindowsUdk::UI::Shell::TaskbarSettings>::DisplayMode'::`1'::dtor$0
+18003d468 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::SearchMode
+18000d910 winrt::WindowsUdk::UI::Shell::ITaskbarSettings3::~ITaskbarSettings3
+180012230 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::Alignment
+1800dd27c winrt::WindowsUdk::UI::Shell::TaskbarSettings::~TaskbarSettings
+1805acdf0 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings3>
+18003bb70 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::Size
+180480128 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings3<winrt::WindowsUdk::UI::Shell::TaskbarSettings>::DisplayMode
+180567fa0 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings6>
+18000d910 winrt::WindowsUdk::UI::Shell::ITaskbarSettings6::~ITaskbarSettings6
+18000d910 winrt::WindowsUdk::UI::Shell::ITaskbarSettings::~ITaskbarSettings
+18002372c winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::Location
+1800d2c58 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings6<winrt::WindowsUdk::UI::Shell::TaskbarSettings>::EffectiveSearchMode

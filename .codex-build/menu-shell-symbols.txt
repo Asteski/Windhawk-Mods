@@ -1,0 +1,1390 @@
+base 180000000 error 0
+1805d36a7 `SHGetContextMenuOfSelection'::`1'::dtor$0
+1805d8f65 `CDefView::FireContextMenuTelemetryEvent'::`1'::dtor$0
+1805d2d10 `CRegistryVerbsContextMenu::_GetIcon'::`1'::dtor$0
+1805d30cd `CDefView::_InvokeContextMenu'::`1'::dtor$0
+1805d2858 `HDXA_QueryContextMenu'::`1'::dtor$1
+1805d2760 `CRegistryVerbsContextMenu::_SupportsType'::`1'::dtor$0
+1805d2880 `CRegistryVerbsContextMenu::_StartGetStateTask'::`1'::dtor$0
+1805d2b16 `COpenSearchContextMenu::Initialize'::`1'::dtor$0
+1805d511b `COpenSearchContextMenu::Initialize'::`1'::dtor$1
+1805d2d10 `CCopyMoveToChooseFolder::_SetupContextMenu'::`1'::dtor$3
+1805d2760 `CCopyMoveToChooseFolder::_SetupContextMenu'::`1'::dtor$2
+1805d2810 `CCopyMoveToChooseFolder::_SetupContextMenu'::`1'::dtor$1
+1805d2b50 `CCopyMoveToChooseFolder::_SetupContextMenu'::`1'::dtor$0
+1805d7192 `OOPContextMenuWrapper::StoreHBITMAPsCreatedDuringRemoteCalls'::`1'::catch$3
+1805d2ae0 `CProperTreeHost::OnAfterContextMenu'::`1'::dtor$0
+1805d2760 `ConflictItemElement::_ShowContextMenu'::`1'::dtor$2
+1805d4920 `CDefView::_OnContextMenu'::`1'::dtor$0
+1805d5dc7 `CDefView::_InvokeContextMenuVerbOnSelectionWorker'::`1'::dtor$7
+1805d8f77 `CDefView::FireContextMenuTelemetryEvent'::`1'::dtor$1
+1805d43cb `RegisterSlowContextMenuEntry'::`1'::dtor$0
+1805d2846 `HDXA_QueryContextMenu'::`1'::dtor$0
+1805d7180 `OOPContextMenuWrapper::StoreHBITMAPsCreatedDuringRemoteCalls'::`1'::dtor$0
+1805d2834 `CCommandStoreShimOverIContextMenuCB::Execute'::`1'::dtor$0
+1805d330d `CRegistryVerbsContextMenu::_StartGetStateTask'::`1'::dtor$1
+1805dff26 `CIncludeInLibraryContextMenu::InvokeCommand'::`1'::dtor$0
+1805d2d10 `CPreviewThumbnailInner::_LaunchContextMenu'::`1'::dtor$2
+1805d2b50 `CPreviewThumbnailInner::_LaunchContextMenu'::`1'::dtor$0
+1805d2760 `CPreviewThumbnailInner::_LaunchContextMenu'::`1'::dtor$1
+1805d2d7c `CEnumExplorerCommandOverIContextMenu::_CreateSubCommandsFromHMENU'::`1'::dtor$0
+1805d2b04 `CDesktopBrowser::OnContextMenuDismiss'::`1'::dtor$0
+1805d2934 `CProperTreeHost::OnAfterContextMenu'::`1'::dtor$1
+1805d2880 `CExplorerCommandStateOverIContextMenu::_IsHandlerAvailable'::`1'::dtor$0
+1805d330d `ConflictItemElement::_ShowContextMenu'::`1'::dtor$3
+1805d6fca `OOPContextMenuWrapper::OOPContextMenuWrapper'::`1'::dtor$7
+1805d6fb4 `OOPContextMenuWrapper::OOPContextMenuWrapper'::`1'::dtor$6
+1805d6f9e `OOPContextMenuWrapper::OOPContextMenuWrapper'::`1'::dtor$1
+1805d6f8c `OOPContextMenuWrapper::OOPContextMenuWrapper'::`1'::dtor$0
+1805d2ae0 `CDefView::_InvokeContextMenuVerbOnSelectionWorker'::`1'::dtor$6
+1805d2710 `CRegistryVerbsContextMenu::OnCreatingError'::`1'::dtor$0
+1805d29b2 `CDefView::FireContextMenuTelemetryEvent'::`1'::dtor$2
+1805d331f `CRegistryVerbsContextMenu::_StartGetStateTask'::`1'::dtor$2
+1805d92fb `FileExplorerContextMenu::ShowOwnerDrawAppliedHMenu'::`1'::dtor$1
+1805d92e9 `FileExplorerContextMenu::ShowOwnerDrawAppliedHMenu'::`1'::dtor$0
+1805d2d10 `CRegistryVerbsContextMenu::_GetHelpText'::`1'::dtor$0
+1805d2bc2 `CCommandStoreShimOverIContextMenuCB::_ValidateOrInvokeVerb'::`1'::dtor$0
+1805d2834 `CNullSpaceContextMenu::InvokeCommand'::`1'::dtor$0
+1805d29b2 `CProperTreeHost::OnAfterContextMenu'::`1'::dtor$2
+1805d5336 `CDefView::_DoContextMenuPopup'::`1'::dtor$17
+1805d93d7 `CDefView::_DoContextMenuPopup'::`1'::dtor$14
+1805d93e9 `CDefView::_DoContextMenuPopup'::`1'::dtor$15
+1805d93b3 `CDefView::_DoContextMenuPopup'::`1'::dtor$12
+1805d93c5 `CDefView::_DoContextMenuPopup'::`1'::dtor$13
+1805d938f `CDefView::_DoContextMenuPopup'::`1'::dtor$10
+1805d93a1 `CDefView::_DoContextMenuPopup'::`1'::dtor$11
+1805d6ef5 `Microsoft::WRL::Details::MakeAndInitialize<OOPContextMenuWrapper,OOPContextMenuWrapper,_GUID const &>'::`1'::dtor$1
+1805d39c9 `ConflictItemElement::_ShowContextMenu'::`1'::dtor$0
+1805d363b `CDefView::_InvokeContextMenuVerbOnSelectionWorker'::`1'::dtor$5
+1805d286a `HDXA_QueryContextMenu'::`1'::dtor$2
+1805d523a `ImmersiveContextMenuHelper::_RetrieveParentArrayFromWindow'::`1'::dtor$0
+1805d8636 `CListViewHost::ShowContextMenuForSpotlight'::`1'::dtor$0
+1805d2abc `CRegistryVerbsContextMenu::_GetHelpText'::`1'::dtor$1
+180589dac s_HitTestContextMenu
+1805d9359 `CDefView::_DoContextMenuPopup'::`1'::dtor$0
+1805dac0a `CRegistryVerbsContextMenu::QueryContextMenu'::`1'::dtor$4
+1805de957 `CDesktopSpotlightOpenContextMenuVerb::Invoke'::`1'::dtor$0
+1805d6ee3 `Microsoft::WRL::Details::MakeAndInitialize<OOPContextMenuWrapper,OOPContextMenuWrapper,_GUID const &>'::`1'::dtor$0
+1805d2880 `ConflictItemElement::_ShowContextMenu'::`1'::dtor$1
+1805d5db5 `CDefView::_InvokeContextMenuVerbOnSelectionWorker'::`1'::dtor$4
+1805d5336 `CDefView::_DoContextMenuPopup'::`1'::dtor$7
+1805dac0a `CRegistryVerbsContextMenu::QueryContextMenu'::`1'::dtor$3
+1805d2810 `CDefView::DoBackgroundContextMenu'::`1'::dtor$0
+1805d363b `CDefView::_InvokeContextMenuVerbOnSelectionWorker'::`1'::dtor$3
+1805db438 `ResultsWrapIContextMenus'::`1'::dtor$0
+1805db45c `ResultsWrapIContextMenus'::`1'::dtor$1
+1805db08a `CMergedFldrContextMenu_CreateInstance'::`1'::dtor$0
+1805d2834 `CRegistryVerbsContextMenu::_GetItem'::`1'::dtor$0
+1805d29b2 `CRegistryVerbsContextMenu::_EnsureVerbs'::`1'::dtor$0
+1805de909 `CDesktopSpotlightOpenContextMenuVerb::GetState'::`1'::catch$0
+1805d6e07 `CRegistryVerbsContextMenu::QueryContextMenu'::`1'::dtor$2
+1805d5da3 `CDefView::_InvokeContextMenuVerbOnSelectionWorker'::`1'::dtor$2
+1805d2822 `CRegistryVerbsContextMenu::_GetItemCount'::`1'::dtor$0
+1805d2b50 `CRegistryVerbsContextMenu::_CompareItemToCommandArray'::`1'::dtor$1
+1805d7e79 `CDesktopSpotlightOpenContextMenuVerb::TrimWhiteSpaceFromString'::`1'::dtor$0
+1805d2810 `CRegistryVerbsContextMenu::_GetTypeOfItem'::`1'::dtor$1
+1805dabf8 `CRegistryVerbsContextMenu::QueryContextMenu'::`1'::dtor$1
+1805db001 `CExplorerCommandOverIContextMenu::CExplorerCommandOverIContextMenu'::`1'::dtor$4
+1805d395d `_CreateCommandFromContextMenuItem'::`1'::dtor$0
+1805d2880 `CRegistryVerbsContextMenu::_CompareItemToCommandArray'::`1'::dtor$0
+1805d2834 `CCommandStoreShimOverIContextMenuCB::GetState'::`1'::dtor$0
+1805d936b `CDefView::_DoContextMenuPopup'::`1'::dtor$4
+1805d2d10 `CRegistryVerbsContextMenu::_GetTypeOfItem'::`1'::dtor$0
+1805dabf8 `CRegistryVerbsContextMenu::QueryContextMenu'::`1'::dtor$0
+1805d2b04 `IContextMenu_SetInvokeVerbs'::`1'::dtor$0
+1805d5d91 `CDefView::_InvokeContextMenuVerbOnSelectionWorker'::`1'::dtor$0
+1805dac1c `CRegistryVerbsContextMenu::_AddToRecentDocs'::`1'::dtor$6
+1805d2ae0 `_GetContextMenuFromView'::`1'::dtor$1
+1805ddf7e `CDesktopSpotlightOpenContextMenuVerb::ReadPropertyBagFromDesktopSpotlightCLSIDRegistryAndUpdateFormCode'::`1'::dtor$3
+1805d523a `ImmersiveContextMenuHelper::_RemoveParentArrayFromWindow'::`1'::dtor$0
+1805d3683 `CDefView::AllowDarkModeContextMenu'::`1'::dtor$0
+1805d2810 `CRegistryVerbsContextMenu::_GetAppSource'::`1'::dtor$0
+1805d29b2 `_GetContextMenuFromView'::`1'::dtor$0
+1805d36a7 `CDesktopBrowser::EnsureContextMenuPresenter'::`1'::dtor$0
+1805d8fe3 `InvokeContextMenuWithTipTest'::`1'::dtor$0
+1805d4964 `CRegistryVerbsContextMenu::_IsDefaultVerb'::`1'::dtor$0
+1805d801e `CDesktopSpotlightOpenContextMenuVerb::ReadPropertyBagFromDesktopSpotlightCLSIDRegistryAndUpdateFormCode'::`1'::dtor$2
+1805d523a `ImmersiveContextMenuHelper::GetContextMenuDataForItem'::`1'::dtor$0
+1805d2ae0 `CEncryptionContextMenu::QueryContextMenu'::`1'::dtor$0
+1805d27e6 `CDefFolderMenu::QueryContextMenu'::`1'::dtor$2
+1805d2934 `CEncryptionContextMenu::QueryContextMenu'::`1'::dtor$1
+1805d27d4 `CDefFolderMenu::QueryContextMenu'::`1'::dtor$1
+1805d36a7 `CEncryptionContextMenu::QueryContextMenu'::`1'::dtor$2
+1805d27c2 `CDefFolderMenu::QueryContextMenu'::`1'::dtor$0
+1805d2760 `CRegistryVerbsContextMenu::_AddToRecentDocs'::`1'::dtor$4
+1805d8d3b `CDefView::DoCuratedContextMenu'::`1'::catch$7
+1805d2934 `CRegistryVerbsContextMenu::_ShouldRemoveVerb'::`1'::dtor$0
+1805d2a60 `CRegistryVerbsContextMenu::_ShouldRemoveVerb'::`1'::dtor$1
+1805d2880 `CExplorerCommandStateOverIContextMenu::GetState'::`1'::dtor$1
+1805d937d `CDefView::_DoContextMenuPopup'::`1'::dtor$9
+1805d7cc0 `CDesktopSpotlightOpenContextMenuVerb::ReadPropertyBagFromDesktopSpotlightCLSIDRegistryAndUpdateFormCode'::`1'::dtor$1
+1805d2b50 `CExplorerCommandOverIContextMenu::EnumSubCommands'::`1'::dtor$0
+1805d523a `ImmersiveContextMenuHelper::_RemoveOwnerDrawFromMenuWorker'::`1'::dtor$0
+1805d331f `CListViewHost::ShowContextMenu'::`1'::dtor$0
+1805da072 `CRegistryVerbsContextMenu::_AddToRecentDocs'::`1'::dtor$5
+1805d523a `ImmersiveContextMenuHelper::StoreContextMenuDataForItem'::`1'::dtor$0
+1805d2934 `_GetContextMenuFromView'::`1'::dtor$2
+1805d2b50 `CExplorerCommandStateOverIContextMenu::GetState'::`1'::dtor$0
+1805d2858 `CDefView::_DoContextMenuPopup'::`1'::dtor$8
+1805de969 `CDesktopSpotlightOpenContextMenuVerb::ReadPropertyBagFromDesktopSpotlightCLSIDRegistryAndUpdateFormCode'::`1'::dtor$0
+1805d29b2 `CEncryptionContextMenu::Initialize'::`1'::dtor$0
+1805d36a7 `CEncryptionContextMenu::Initialize'::`1'::dtor$1
+1805d2abc `CRegistryVerbsContextMenu::_AddFirstItemToCommandArray'::`1'::dtor$1
+1805d2d10 `CRegistryVerbsContextMenu::_AddFirstItemToCommandArray'::`1'::dtor$0
+1805dac2e `CRegistryVerbsContextMenu::_AreSelectionCommandsUniform'::`1'::dtor$0
+1805d6e19 `COpenSearchContextMenu::_ValidateUrls'::`1'::dtor$3
+1805d2958 `CRegistryVerbsContextMenu::_AddToRecentDocs'::`1'::dtor$2
+1805d2b04 `CDefView::CleanupAfterContextMenu'::`1'::dtor$0
+1805d523a `ImmersiveContextMenuHelper::_StoreParentArrayOnWindow'::`1'::dtor$0
+1805d4bde `CDesktopSpotlightOpenContextMenuVerb::ReadPropertyBagFromDesktopSpotlightCLSIDRegistryAndUpdateFormCode'::`1'::dtor$7
+1804ec010 MeasureDesktopSpotlightContextMenuOnboarding
+1805d2760 `CDefView::DoSelectionContextMenu'::`1'::dtor$0
+1805d2772 `CDefView::DoSelectionContextMenu'::`1'::dtor$1
+1805d2b04 `CRegistryVerbsContextMenu::_Execute'::`1'::dtor$2
+1805d2822 `CRegistryVerbsContextMenu::OnCreating'::`1'::dtor$1
+1805d2b50 `CDefView::_GetContextMenuFromObjectCollection'::`1'::dtor$0
+1805de945 `CDesktopSpotlightNextContextMenuVerb::Invoke'::`1'::dtor$0
+1805d6e4f `COpenSearchContextMenu::_ValidateUrls'::`1'::dtor$2
+1805d2934 `CDesktopBrowser::DoExpandedContextMenu'::`1'::dtor$0
+1805d2760 `CRegistryVerbsContextMenu::_AddToRecentDocs'::`1'::dtor$3
+1805d2810 `CRegistryVerbsContextMenu::GetVerbAssocObject'::`1'::dtor$0
+1805d2834 `CEnumExplorerCommandOverIContextMenu::_EnsureSubCommandCollection'::`1'::dtor$0
+1805d2834 `CRegistryVerbsContextMenu::OnCreating'::`1'::dtor$0
+1805d2760 `CDefView::_GetContextMenuFromObjectCollection'::`1'::dtor$1
+1805d331f `CDefView::OnBackgroundContextMenu'::`1'::dtor$2
+1805d2822 `CRegistryVerbsContextMenu::_GetMenuString'::`1'::dtor$0
+1805d2810 `COpenSearchContextMenu::_ValidateUrls'::`1'::dtor$1
+1805d330d `CRegistryVerbsContextMenu::_AddToRecentDocs'::`1'::dtor$0
+1805db78a `CDesktopSpotlightOpenContextMenuVerb::ReadPropertyBagFromDesktopSpotlightCLSIDRegistryAndUpdateFormCode'::`1'::dtor$5
+1805d2822 `CRegistryVerbsContextMenu::_Execute'::`1'::dtor$0
+1805d27f8 `CEncryptionContextMenu::_StoreItemPath'::`1'::dtor$0
+1805d2880 `CDefView::OnBackgroundContextMenu'::`1'::dtor$1
+1805d3a23 `CItemTile::OnContextMenu'::`1'::dtor$3
+1805d2760 `CItemTile::OnContextMenu'::`1'::dtor$2
+1805d2d7c `CItemTile::OnContextMenu'::`1'::dtor$1
+1805d4bba `CItemTile::OnContextMenu'::`1'::dtor$0
+1805d36a7 `COpenFileLocationMenu::QueryContextMenu'::`1'::dtor$0
+1805d989d `CExplorerSubCommandOverIContextMenu_CreateInstance'::`1'::dtor$0
+1805db013 `CExplorerSubCommandOverIContextMenu_CreateInstance'::`1'::dtor$1
+1805d8d29 `CDefView::DoCuratedContextMenu'::`1'::dtor$3
+1805d8d17 `CDefView::DoCuratedContextMenu'::`1'::dtor$1
+1805db03c `CExplorerSubCommandOverIContextMenu_CreateInstance'::`1'::dtor$4
+1805d8d05 `CDefView::DoCuratedContextMenu'::`1'::dtor$0
+1805d2b16 `CRegistryVerbsContextMenu::_GetMenuString'::`1'::dtor$1
+1805d2d10 `COpenSearchContextMenu::_ValidateUrls'::`1'::dtor$0
+1805d9202 `CRegistryVerbsContextMenu::_AddToRecentDocs'::`1'::dtor$1
+1805d913b `FileExplorerContextMenu::PrepareContextMenuInvokeVerbsForContext'::`1'::dtor$0
+1805d914d `FileExplorerContextMenu::PrepareContextMenuInvokeVerbsForContext'::`1'::dtor$1
+1805d4c02 `CDesktopSpotlightOpenContextMenuVerb::ReadPropertyBagFromDesktopSpotlightCLSIDRegistryAndUpdateFormCode'::`1'::dtor$4
+1805d2710 `CEncryptionContextMenu::_IsFirstFileOnEncryptableVolume'::`1'::dtor$0
+1805d2b04 `CRegistryVerbsContextMenu::_Execute'::`1'::dtor$1
+1805d2772 `CDefView::OnBackgroundContextMenu'::`1'::dtor$0
+1805d2ae0 `COpenFileLocationMenu::QueryContextMenu'::`1'::dtor$1
+1800b56c8 CDefView::TryGetContextMenuPresenter
+1800b5d10 wil::com_ptr_t<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>,wil::err_returncode_policy>::reset
+1802678d0 CExplorerCommandOverIContextMenu::QueryInterface
+1801313d0 CExplorerCommandStateOverIContextMenu_CreateInstance
+1805fe418 CContextMenuExtensionImpl::`vftable'
+18054bbb0 CISFBand::_OnContextMenu
+1800c7230 Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>
+1802c2ffc CDefView::_DoContextMenuPopup
+1803c7b60 CExplorerCommandOverIContextMenu::EnumSubCommands
+1804ca7a0 CDesktopSpotlightOpenContextMenuVerb::ReadPropertyBagFromDesktopSpotlightCLSIDRegistryAndUpdateFormCode
+180196050 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>::enhance_reporting
+180589884 ImmersiveContextMenuHelper::_RetrieveParentArrayFromWindow
+1805248a4 CContextMenuRenameVerb::~CContextMenuRenameVerb
+1802dc380 SHELL32_CDrivesContextMenu_Create
+180175da0 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>::Release
+1803c7940 CEnumExplorerCommandOverIContextMenu::`scalar deleting destructor'
+1802873b0 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::`vector deleting destructor'
+1802a30f0 _tip_ContextMenuSelectionTest::serialize<tson::input_archive>
+1802dc500 SHELL32_CRecentDocsContextMenu_CreateInstance
+1800c71e4 Microsoft::WRL::Details::Selector<CWRLObjectWithSite,Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::Details::ImplementsMarker<CWRLObjectWithSite>,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink> >::Selector<CWRLObjectWithSite,Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::Details::ImplementsMarker<CWRLObjectWithSite>,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink> >
+18072e728 Feature_Servicing_FileExplorer_RegistryLeakWithContextMenu__private_cppFeatureState
+18022ad90 OOPContextMenuWrapper::GetCommandString
+18022f2b0 CContextMenuExtensionImpl::QueryInterface
+1805fe448 CRecentDocsContextMenu::`vftable'
+180524b68 CContextMenuReplaceVerb::`vector deleting destructor'
+1805f4980 CContextMenuOnHMENU::`vftable'
+1801f1c80 CPlayMusicCommand::InvokeFromContextMenu
+180400db0 CContextMenuForwarder::HandleMenuMsg
+180133390 CRegistryVerbsContextMenu::AddRef
+18002bd30 ATL::CComPtr<CExplorerCommandOverIContextMenu>::~CComPtr<CExplorerCommandOverIContextMenu>
+1806279c0 FileExplorerContextMenu::c_VerbsForDesktopBackground
+1800e0250 CRegistryVerbsContextMenu::InvokeCommand
+18061e028 COpenSearchContextMenu::`vftable'
+1805f2558 CExplorerCommandStateOverIContextMenu::`vftable'
+180286eec Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandle
+180524e20 CContextMenuOnContextMenuArray::HandleMenuMsg2
+1800a9110 CNewMenu::QueryContextMenu
+18061e1c8 CLibraryFolderContextMenu::`vftable'
+1800b5fbc tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>::Release
+1802301e8 wil::details::FeatureImpl<__WilFeatureTraits_Feature_Servicing_FileExplorer_RegistryLeakWithContextMenu>::ReportUsage
+180227490 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::AddRef
+1803c8440 CExplorerCommandOverIContextMenu::Initialize
+18022f270 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::QueryInterface
+180525fa0 CContextMenuOnContextMenuArray::QueryInterface
+18002bbdc CRegistryVerbsContextMenu::_GetAssocObject
+180615478 CContextMenuForwarder::`vftable'
+1801f1c80 CSFToolbar::v_GetContextMenuModifier
+1800fd954 ImmersiveContextMenuHelper::HandleMergedMenus
+1800a4e30 CDefView::OnSelectionContextMenu
+180525b50 CContextMenuOnHMENU::QueryContextMenu
+1802c432c CDefView::_GetContextMenuFromObjectCollection
+1805fe3f8 CContextMenuCBImpl::`vftable'
+1800f607c winrt::impl::root_implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::subtract_final_reference
+180524aa8 CContextMenuOnContextMenuArrayNoDuplicateVerbs::`vector deleting destructor'
+1802a4450 wil::com_ptr_t<tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>,wil::err_returncode_policy>::~com_ptr_t<tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>,wil::err_returncode_policy>
+1802ca2c8 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest> >::complete_and_ignore
+1806153f8 CContextMenuForwarder::`vftable'
+180524674 CContextMenuOnContextMenuArray::CContextMenuOnContextMenuArray
+1802264e4 Microsoft::WRL::ComPtr<IContextMenuPresenterForSpotlight>::~ComPtr<IContextMenuPresenterForSpotlight>
+1801a1280 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::QueryInterface
+180163260 CLibraryPropSheetItemContextMenu::AddRef
+1800b165c Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>
+180158c30 CContextMenuOnHMENU::GetCommandString
+18068ab68 SID_SMenuBandBKContextMenu
+1801ee87c winrt::impl::root_implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::AddRef
+180226058 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>
+180611300 CExplorerSubCommandOverIContextMenu::`vftable'
+1804cb9e4 tip2::tip_test<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic> >::start
+1806aee0c `FileExplorerTelemetry::ShellNewContextMenuCreate::Stop'::`30'::_tlgEvent
+18038e04c CRegistryVerbsContextMenu::_GetIcon
+1801b5d20 CExplorerCommandStateOverIContextMenu::GetState
+18050922c CIncludeInLibraryContextMenuHelper::_PopulateSubMenu
+18017afe0 CContextMenuOnContextMenuArray::QueryInterface
+1801b30e0 CRegistryVerbsContextMenu::QueryContextMenu
+180085a64 winrt::com_ptr<CDesktopSpotlightOpenContextMenuVerb>::unconditional_release_ref
+1806113e8 CEnumExplorerCommandOverIContextMenu::`vftable'
+1805e6118 CRegistryVerbsContextMenu::`vftable'
+180731a60 Feature_ReduceSlideshowContextMenuLatency__private_lastUsedTickCount
+1803cc950 CMergedFldrContextMenu::Release
+1805261d0 CContextMenuReplaceVerb::_QueryNthContextMenu
+180163260 CIncludeInLibraryContextMenu::AddRef
+1801936c0 winrt::impl::root_implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::GetTrustLevel
+18019ac00 CDesktopSpotlightNextContextMenuVerb::GetFlags
+1805099e0 CLibraryFolderContextMenu_CreateInstance
+1805ecb40 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::`vftable'
+1801c0ad8 winrt::impl::root_implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::make_weak_ref
+1800c2608 CDefView::_OnContextMenu
+1801ef990 FileExplorerTelemetry::ContextMenuActionDetails::ContextMenuActionDetails
+1802264e4 Microsoft::WRL::ComPtr<IContextMenuPresenterTipTest>::~ComPtr<IContextMenuPresenterTipTest>
+18055ccc0 CMenuSFToolbar::_OnContextMenu
+180196050 tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>::on_result
+1800e0900 CRegistryVerbsContextMenu::GetCommandString
+1802312f8 OOPContextMenuWrapper::StoreHBITMAPsCreatedDuringRemoteCalls
+18005a424 ContextMenuTelemetry::IShellExtInit_Initialize<_GUID const & __ptr64,unsigned __int64 volatile & __ptr64>
+1803c8b9c CEnumExplorerCommandOverIContextMenu::_CreateSubCommandsFromHMENU
+18014f830 CRegistryVerbsContextMenu::OnCreating
+180017648 Microsoft::WRL::ComPtr<IContextMenu>::InternalRelease
+18072e768 Feature_ContextMenu_FilterInvokeVerbs__private_lastUsedTickCount
+1803fee48 CContextMenuForwarder::CContextMenuForwarder
+180286e64 Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory
+180234370 SetNavPaneContextMenuShowLibrariesOption
+18038da1c CRegistryVerbsContextMenu::_CompareItemToCommandArray
+18072ef10 g_tbNavPaneContextMenuShowThisPC
+1801382ac SHInvokeCommandOnContextMenu2
+1803c89c4 CEnumExplorerCommandOverIContextMenu::SetContextMenuCLSID
+18065a110 Shell32_InvokingContextMenu_Stop
+18061f2c8 CContextMenuOnContextMenuArray::`vftable'
+1804e7244 tson::output_archive::operator()<tson::nvp<_tip_SpotlightContextMenuFeature & __ptr64> >
+1802de0b0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu>::Release
+18020dd40 CExplorerCommandOverIContextMenu::AddRef
+180525410 CContextMenuOnContextMenuArray::InvokeCommand
+1801e2928 CRegistryVerbsContextMenu::_GetMenuString
+18072f490 Feature_DesktopSpotlightContextMenuLearnMoreCancelledTipExclusion__private_cppFeatureState
+1802a3a28 tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>
+1803c79c0 CExplorerSubCommandOverIContextMenu::`scalar deleting destructor'
+1800e086c CRegistryVerbsContextMenu::ShouldConsiderCurrentFolderAsSelection
+1802343c0 SetNavPaneContextMenuShowNetworkOption
+180615420 CContextMenuForwarder::`vftable'
+18065c3a0 Shell32_GeneratingContextMenu_Start
+1802343e0 SetNavPaneContextMenuShowThisPCOption
+18038d460 CRegistryVerbsContextMenu::HandleMenuMsg
+1802a4738 tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>::~merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>
+1803c9fcc CEncryptionContextMenu::_Encrypt
+1801385f0 COpenWithMenu::QueryContextMenu
+180400ee0 CContextMenuForwarder::InvokeCommand
+1801f1c80 CFindExtensionsMenu::QueryContextMenu
+180508230 CIncludeInLibraryContextMenu::QueryContextMenu
+180509b60 CLibraryPropSheetItemContextMenu::~CLibraryPropSheetItemContextMenu
+1802274c0 CContextMenuExtensionImpl::AddRef
+18050af40 CLibraryPropSheetItemContextMenu::Release
+1803a10f0 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>::serialize
+1802277b0 CContextMenuCBImpl::CallBack
+180401660 CContextMenuForwarder::QueryInterface
+180196050 tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>::on_result
+1806004f0 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::`vftable'
+180507300 COpenSearchContextMenu_CreateInstance
+1804ca230 CDesktopSpotlightNextContextMenuVerb::GetState
+18062dd80 `CLibraryPropSheetItemContextMenu::QueryInterface'::`5'::qit
+18061f2a8 CContextMenuReplaceVerb::`vftable'
+1800c6840 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::Release
+1805079e0 CIncludeInLibraryContextMenu::InvokeCommand
+18065a230 Shell32_InvokingContextMenu_Start
+180175d80 wil::com_ptr_t<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>,wil::err_returncode_policy>::~com_ptr_t<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>,wil::err_returncode_policy>
+1804ca2c0 CDesktopSpotlightNextContextMenuVerb::GetTitle
+18022f480 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::Release
+1802c958c wil::details::FeatureImpl<__WilFeatureTraits_Feature_ContextMenu_FilterInvokeVerbs>::__private_IsEnabled
+1801f1530 CExplorerCommandOverIContextMenu::Release
+1803c7940 CEnumExplorerCommandOverIContextMenu::`vector deleting destructor'
+1806aee96 `FileExplorerTelemetry::ShellNewContextMenuCreate::StartActivity'::`6'::_tlgEvent
+18044d900 CListViewHost::InvokeSelectionContextMenu
+18022f490 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::Release
+1802873b0 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::`scalar deleting destructor'
+18022b830 wil::details::FeatureImpl<__WilFeatureTraits_Feature_AppSiloFileExplorerContextMenus>::GetCurrentFeatureEnabledState
+18057a770 wil::details::FeatureImpl<__WilFeatureTraits_Feature_ReduceSlideshowContextMenuLatency>::__private_IsEnabled
+180102d30 Create_ContextMenuOnContextMenuArray
+18022f2a0 CContextMenuExtensionImpl::QueryInterface
+180328aa8 CPreviewThumbnailInner::_LaunchContextMenu
+1805e6208 CRegistryVerbsContextMenu::`vftable'
+18055ea50 CMenuSFToolbar::v_GetBKContextMenu
+180506c4c CContextMenuExtensionImpl::GetItem
+180526140 CContextMenuOnContextMenuArray::SetMenuRestrictions
+18016d8f4 CCommandStoreShimOverIContextMenuCB::_GetMenuCommandId
+1806112c0 CEnumExplorerCommandOverIContextMenu::`vftable'
+18072ef04 g_tbNavPaneContextMenuShowNetwork
+180435340 winrt::implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::QueryInterface
+180524b68 CContextMenuReplaceVerb::`scalar deleting destructor'
+180627af0 FileExplorerContextMenu::c_VerbsForDirectoryBackground
+18050ad00 CLibraryPropSheetItemContextMenu::QueryInterface
+1805071c0 COpenSearchContextMenu::get_MappingArray
+180095778 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IImmersiveContextMenuOwnerDrawHelper>::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IImmersiveContextMenuOwnerDrawHelper>
+1802b456c DesktopIconLayoutTelemetry::GridSizeChangeFromContextMenu
+180225930 ContextMenuTelemetry::CoCreateInstance<_GUID const & __ptr64,unsigned __int64 volatile & __ptr64>
+1800b5af8 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest> >::ensure_data
+180600f98 tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>::`vftable'
+18038e158 CRegistryVerbsContextMenu::_GetTypeOfItem
+18002ac90 CRegistryVerbsContextMenu::Initialize
+180615420 CContextMenuRenameVerb::`vftable'
+180525194 CContextMenuReplaceVerb::Init
+18072ef00 g_tbNavPaneContextMenuShowAllFolders
+1805e5128 CIncludeInLibraryContextMenu::`vftable'
+1800f600c winrt::impl::root_implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::~root_implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>
+180468dec _CreateCommandFromContextMenuItem
+18018bb90 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::AddRef
+1801abb40 FileExplorerContextMenu::ShowOwnerDrawAppliedHMenu
+18050ace0 CLibraryPropSheetItemContextMenu::QueryInterface
+1802e5674 CDrivesContextMenu_Create
+1803cadcc CMergedFldrContextMenu::~CMergedFldrContextMenu
+180225a3c Microsoft::WRL::Details::MakeAndInitialize<OOPContextMenuWrapper,OOPContextMenuWrapper,_GUID const & __ptr64>
+1803cddb8 CMergedFolder::_GetContextMenu
+18061e328 CLibraryPropSheetItemContextMenu::`vftable'
+1801b3d50 CRegistryVerbsContextMenu::_AddToRecentDocs
+1805fe258 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::`vftable'
+1806003f8 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::`vftable'
+1800fd4bc ContextMenuRenderingData::`scalar deleting destructor'
+1802897a0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::QueryInterface
+18022d910 CContextMenuExtensionImpl::InvokeCommand
+18062dc80 `CIncludeInLibraryContextMenu::QueryInterface'::`2'::qit
+18018d440 Microsoft::WRL::ComPtr<OOPContextMenuWrapper>::~ComPtr<OOPContextMenuWrapper>
+180162620 CListViewHost::ShowContextMenu
+180524aa8 CContextMenuOnContextMenuArrayNoDuplicateVerbs::`scalar deleting destructor'
+1803fb680 CRecentDocsContextMenu_CreateInstance
+1802aa858 FileExplorerTelemetry::DefView_CleanupAfterContextMenu
+1803c82c0 CCommandStoreShimOverIContextMenuCB::GetState
+1806153f8 CContextMenuRenameVerb::`vftable'
+1801f0e18 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >::complete
+18055c0e0 CMenuSFToolbar::_GetContextMenu
+18012f38c FileExplorerTelemetry::ContextMenu::Start<tagPOINT & __ptr64,_GUID>
+1802896b0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::QueryInterface
+1804f2e64 wil::com_ptr_t<tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>,wil::err_returncode_policy>::reset
+180506cd0 COpenSearchContextMenu::Initialize
+1805083c0 CIncludeInLibraryContextMenu::QueryInterface
+1802b5520 InvokeContextMenuWithTipTest
+1805795f0 wil::details::FeatureImpl<__WilFeatureTraits_Feature_ReduceSlideshowContextMenuLatency>::GetCachedFeatureEnabledState
+1800fd4e8 CImmersiveContextMenuOwnerDrawHelper::s_ContextMenuWndProc
+1802aacf0 CDefView::DoContextMenuPopup
+180560304 CMenuStaticToolbar::_OnContextMenu
+18022d250 OOPContextMenuWrapper::HandleMenuMsg
+18061f2c8 CContextMenuReplaceVerb::`vftable'
+1806003c0 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::`vftable'
+18050ac70 CLibraryPropSheetItemContextMenu::QueryInterface
+1801936c0 winrt::implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::find_inspectable
+18061f368 CContextMenuOnContextMenuArrayNoDuplicateVerbs::`vftable'
+180176ed8 CDefView::_InvokeContextMenuVerbOnSelection
+1801679e4 CContextMenuOnHMENU::CContextMenuOnHMENU
+180400d70 CContextMenuForwarder::HandleMenuMsg2
+18050e4b0 CLibraryPropSheetItemContextMenu::get_MenuID
+1801f1c80 CIncludeInLibraryContextMenu::HandleMenuMsg2
+1800c6a30 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::Release
+180319730 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::AddRef
+180400950 CContextMenuForwarder::GetSelection
+18002bd30 ATL::CComPtr<IContextMenuFactory>::~CComPtr<IContextMenuFactory>
+18022d130 CContextMenuExtensionImpl::HandleMenuMsg
+1805897f4 ImmersiveContextMenuHelper::_GetDpiForMonitorFromPoint
+18019ac00 CContextMenuExtensionImpl::get_DefaultMenu
+1805ed4e0 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::`vftable'
+180401f50 CContextMenuForwarder::SetInvokeVerbs
+1804c9c08 wil::com_ptr_t<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>,wil::err_returncode_policy>::~com_ptr_t<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>,wil::err_returncode_policy>
+1803fb5a0 CRecentDocsContextMenu::get_MappingArray
+180524a50 CContextMenuOnContextMenuArrayNoDuplicateVerbs::`vector deleting destructor'
+1802cb8f0 winrt::implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::get_unknown
+18065c330 Shell32_GeneratingContextMenu_Stop
+18029f05c tson::output_archive::operator()<tson::nvp<enum FileExplorerTelemetryCommon::ContextMenuType & __ptr64>,tson::nvp<unsigned int & __ptr64>,tson::nvp<unsigned int & __ptr64>,tson::nvp<bool & __ptr64>,tson::nvp<unsigned int & __ptr64>,tson::nvp<unsigned int & __ptr64> >
+1801fc9a0 DirectUI::ElementProvider::ShowContextMenu
+1801f1c80 CIncludeInLibraryContextMenu::HandleMenuMsg
+180260b40 CLibraryPropSheetItemContextMenu::AddRef
+180017da8 ContextMenu_GetCommandStringVerb
+1805fe328 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::`vftable'
+180562d20 CSFToolbar::QueryContextMenu
+1803c79c0 CExplorerSubCommandOverIContextMenu::`vector deleting destructor'
+1803cc2e0 CMergedFldrContextMenu::HandleMenuMsg
+18050d900 CLibraryPropSheetItemContextMenu::_OnQueryContextMenu
+1802ba1ec tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>::Release
+180343ca0 Microsoft::WRL::Details::Make<CNullSpaceContextMenu,CProperTreeHost * __ptr64>
+180234320 SetNavPaneContextMenuShowAllFoldersOption
+18065b900 Shell32_DefView_RightClickContextMenu_Info
+180014560 SafeRelease<IContextMenu>
+1802ae990 wil::details::FeatureImpl<__WilFeatureTraits_Feature_ContextMenu_FilterInvokeVerbs>::GetCachedFeatureEnabledState
+18050a070 CLibraryPropSheetItemContextMenu::GetContextMenu
+1804e906c wil::com_ptr_t<tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>,wil::err_returncode_policy>::~com_ptr_t<tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>,wil::err_returncode_policy>
+18060b2e8 CImmersiveContextMenuOwnerDrawHelper::`vftable'
+180268050 CExplorerCommandOverIContextMenu::Release
+1800b5f8c tip2::test_watcher<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >::~test_watcher<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >
+180436470 winrt::implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::get_local_iids
+180402090 CContextMenuForwarder::SetSelection
+18002c1c0 CRegistryVerbsContextMenu::_GetItemCount
+180268060 CExplorerCommandOverIContextMenu::Release
+18061ced8 winrt::impl::heap_implements<CDesktopSpotlightNextContextMenuVerb>::`vftable'
+18061cfc8 winrt::impl::heap_implements<CDesktopSpotlightOpenContextMenuVerb>::`vftable'
+18020d870 CImmersiveContextMenuOwnerDrawHelper::`scalar deleting destructor'
+1802678e0 CExplorerCommandOverIContextMenu::QueryInterface
+1804ece30 tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>::Release
+18050a370 CLibraryPropSheetItemContextMenu::Initialize
+18065b1d0 Shell32_DesktopContextMenu_Personalize_Info
+1805083f0 CIncludeInLibraryContextMenu::QueryInterface
+180646388 CLSID_DesktopSpotlightOpenContextMenuVerb
+18060b500 CNullSpaceContextMenu::`vftable'
+1805083e0 CIncludeInLibraryContextMenu::QueryInterface
+18061f4f0 CContextMenuWithoutVerbs::`vftable'
+180526050 CContextMenuOnContextMenuArray::SetHandlerClsid
+1804cb948 tip2::tip_test<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated> >::start
+1800e72e0 CExplorerCommandStateOverIContextMenu::`vector deleting destructor'
+180199910 CContextMenuOnHMENU::InvokeCommand
+1800144a0 CIncludeInLibraryContextMenu::Initialize
+1803cc760 CMergedFldrContextMenu::QueryInterface
+180163260 CContextMenuExtensionImpl::AddRef
+18050af20 CLibraryPropSheetItemContextMenu::Release
+1802ca520 tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>::deserialize
+1805fe348 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::`vftable'
+18022d050 OOPContextMenuWrapper::HandleMenuMsg2
+18029f578 FileExplorerTelemetry::BackgroundContextMenuOptionsInvokeTrackForSpotlight<unsigned short const * __ptr64>
+1806157b0 CContextMenuRenameVerb::`vftable'
+1803cc610 CMergedFldrContextMenu::QueryContextMenu
+180526020 CContextMenuOnContextMenuArray::Release
+18002bf44 CRegistryVerbsContextMenu::_SupportsSelectionMode
+1801ea8c4 ImmersiveContextMenuHelper::_RemoveParentArrayFromWindow
+1802640a0 CBrowseForFolder::OnBeforeContextMenu
+1803ca250 CEncryptionContextMenu::_OnInvokeCommand
+1804c59c0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::Release
+1805247f8 CContextMenuOnContextMenuArrayNoDuplicateVerbs::~CContextMenuOnContextMenuArrayNoDuplicateVerbs
+180506fb0 COpenSearchContextMenu::_OnQueryContextMenu
+18038d160 CRegistryVerbsContextMenu::GetAssocElement
+180601010 tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>::`vftable'
+18050acf0 CLibraryPropSheetItemContextMenu::QueryInterface
+1802cb544 _tip_ContextMenuSelectionTest::evaluate
+180526010 CContextMenuOnContextMenuArray::Release
+180508400 CIncludeInLibraryContextMenuHelper::QueryInterface
+1804a24a0 CDesktopBrowser::DoExpandedContextMenu
+18002bc24 CRegistryVerbsContextMenu::_EnsureAssocObject
+1800e72e0 CCommandStoreShimOverIContextMenuCB::`scalar deleting destructor'
+180524b30 CContextMenuRenameVerb::`scalar deleting destructor'
+1806a64bc `FileExplorerTelemetry::BackgroundContextMenuOptionsInvokeTrackForSpotlight<unsigned short const * __ptr64>'::`4'::_tlgEvent
+180286e24 Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>
+1803c790c CExplorerSubCommandOverIContextMenu::~CExplorerSubCommandOverIContextMenu
+180015d38 CDefView::DoSelectionContextMenu
+18022606c CContextMenuCBImpl::CContextMenuCBImpl
+1801f0e18 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest> >::complete
+1800b5690 tip2::test_data_control<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest> >::~test_data_control<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest> >
+180196050 tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>::on_result
+180400980 CContextMenuForwarder::GetSite
+1806aedb2 `FileExplorerTelemetry::ShellNewContextMenuCreate::StopActivity'::`30'::_tlgEvent
+180286e44 Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>
+18038d580 CRegistryVerbsContextMenu::QueryInterface
+18038d5a0 CRegistryVerbsContextMenu::QueryInterface
+18038d5c0 CRegistryVerbsContextMenu::QueryInterface
+18038d5e0 CRegistryVerbsContextMenu::QueryInterface
+180432860 winrt::implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::AddRef
+18038d600 CRegistryVerbsContextMenu::QueryInterface
+180400ee0 CContextMenuForwarder::SetMenuRestrictions
+1804c9fac wil::details::FeatureImpl<__WilFeatureTraits_Feature_DesktopSpotlightContextMenuLearnMoreCancelledTipExclusion>::GetCachedFeatureEnabledState
+180526040 CContextMenuOnContextMenuArray::Release
+1800fcf34 ImmersiveContextMenuHelper::ApplyOwnerDrawToMenu
+1804ca4c0 CDesktopSpotlightOpenContextMenuVerb::Invoke
+18062dc58 `CIncludeInLibraryContextMenuHelper::QueryInterface'::`2'::qit
+180014500 CIncludeInLibraryContextMenu::~CIncludeInLibraryContextMenu
+1802ceab8 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest> >::set_flag
+1805e60c8 CRegistryVerbsContextMenu::`vftable'
+180646868 CLSID_RecentDocsContextMenu
+180095778 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu>::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu>
+180627950 FileExplorerContextMenu::c_VerbsForSpotlight
+180524728 CContextMenuOnContextMenuArray::~CContextMenuOnContextMenuArray
+1801c6230 ATL::CComPtr<IListControlHostWithHoverContextMenu>::~CComPtr<IListControlHostWithHoverContextMenu>
+180466390 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::QueryInterface
+1803c83f0 CExplorerSubCommandOverIContextMenu::GetTitle
+180611708 CMergedFldrContextMenu::`vftable'
+180289760 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::QueryInterface
+1800caf60 FileExplorerTelemetry::ContextMenu::~ContextMenu
+18022d130 CContextMenuOnHMENU::HandleMenuMsg
+180525fd0 CContextMenuOnContextMenuArray::QueryService
+1804cba90 CDesktopSpotlightNextContextMenuVerb_CreateInstance
+1804e9388 tip2::tip_test<tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature> >::operator->
+18061f2c8 CContextMenuOnContextMenuArrayNoDuplicateVerbs::`vftable'
+180600fc0 tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>::`vftable'
+180196050 tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>::on_result
+180289790 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::QueryInterface
+1801995a0 CDesktopSpotlightOpenContextMenuVerb::GetIcon
+1803ca17c CEncryptionContextMenu::_IsFirstFileOnEncryptableVolume
+18072f6d0 `wil::Feature<__WilFeatureTraits_Feature_DesktopSpotlightContextMenuUpdatedTIPTelemetry>::GetImpl'::`2'::impl
+180611418 CExplorerCommandOverIContextMenu::`vftable'
+1805fbce0 tip2::test_watcher<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic> >::`vftable'
+1802272f0 CContextMenuExtensionImpl::`vector deleting destructor'
+1806a6e84 `FileExplorerTelemetry::DefView_CleanupAfterContextMenu'::`4'::_tlgEvent
+180322f70 CDesktopSpotlightOpenContextMenuVerb::GetCanonicalName
+1802ab2f0 CDefView::DoExpandedContextMenu
+180526274 Create_ContextMenuOnContextMenuArrayNoDuplicateVerbs
+180227430 OOPContextMenuWrapper::`vector deleting destructor'
+1800b16a4 Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>
+1803c788c CEnumExplorerCommandOverIContextMenu::~CEnumExplorerCommandOverIContextMenu
+180196050 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>::enhance_reporting
+1801a2b90 CNullSpaceContextMenu::`vector deleting destructor'
+18002c078 CRegistryVerbsContextMenu::_GetHandlerActivationModel
+1803cb080 CMergedFldrContextMenu_CreateInstance
+1802718fc _GetContextMenuOfFirstItem
+180560e30 CMenuStaticToolbar::v_TrackingSubContextMenu
+180117bc0 CContextMenuCBImpl::AddRef
+1805895e8 ImmersiveContextMenuHelper::OverrideBackgroundColor
+1803e8710 CClientExtractIcon::QueryContextMenu
+1806463b8 CLSID_CommandStoreShimOverIContextMenuCB
+180400890 CContextMenuForwarder::GetMenuRestrictions
+180646ec8 CLSID_IncludeInLibraryContextMenu
+18072e778 Feature_AppSiloFileExplorerContextMenus__private_lastUsedTickCount
+180234400 ShouldNavPaneContextMenuShowNetworkOption
+1805254d0 CContextMenuRenameVerb::InvokeCommand
+1800c5edc CExecuteItem::_GetContextMenu
+180230ca0 OOPContextMenuWrapper::RuntimeClassInitialize
+1804c9e44 CDesktopSpotlightOpenContextMenuVerb::~CDesktopSpotlightOpenContextMenuVerb
+180319720 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::AddRef
+1804cb3c0 winrt::implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::find_interface
+1805f89a8 tip2::test_watcher<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated> >::`vftable'
+180163240 CExplorerCommandOverIContextMenu::AddRef
+1800f1318 ShouldNavPaneContextMenuShowOptionAsChecked
+180117be0 CMergedFldrContextMenu::AddRef
+1801edeb0 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>::evaluate
+1802ca9a0 tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>::evaluate
+1803ff990 CContextMenuForwarder::AddRef
+1803c93c0 CEncryptionContextMenu::`vector deleting destructor'
+1801f1c80 CExplorerCommandStateOverIContextMenu::Execute
+18061f300 CContextMenuReplaceVerb::`vftable'
+180516c70 CLocationContextMenu::`vector deleting destructor'
+1802a2c28 tson::output_archive::process<tson::nvp<enum FileExplorerTelemetryCommon::ContextMenuType & __ptr64>,tson::nvp<unsigned int & __ptr64>,tson::nvp<unsigned int & __ptr64>,tson::nvp<bool & __ptr64>,tson::nvp<unsigned int & __ptr64>,tson::nvp<unsigned int & __ptr64> >
+1804c962c tson::input_archive::process<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated & __ptr64>
+1801f3010 FileExplorerTelemetry::ShellNewContextMenuCreate::WasAlreadyReportedToTelemetry
+180260b30 CIncludeInLibraryContextMenu::AddRef
+180031da8 CTSimpleArray<ContextMenuRenderingData * __ptr64,4294967294,CTPolicyCoTaskMem<ContextMenuRenderingData * __ptr64>,CSimpleArrayStandardCompareHelper<ContextMenuRenderingData * __ptr64>,CSimpleArrayStandardMergeHelper<ContextMenuRenderingData * __ptr64> >::_EnsureCapacity
+1802274c0 CIncludeInLibraryContextMenu::AddRef
+180615458 CContextMenuForwarder::`vftable'
+180506b70 COpenSearchContextMenu::~COpenSearchContextMenu
+18072f4a0 Feature_DesktopSpotlightContextMenuUpdatedTIPTelemetry__private_cppFeatureState
+180401f20 CContextMenuForwarder::SetHandlerClsid
+18072ef08 g_tbNavPaneContextMenuExpandToCurrentFolder
+1807330a0 `wil::Feature<__WilFeatureTraits_Feature_ReduceSlideshowContextMenuLatency>::GetImpl'::`2'::impl
+1806a6568 `FileExplorerTelemetry::BackgroundContextMenuOptionsClickTrackForSpotlight<enum FileExplorerTelemetry::BackgroundContextMenuOptionsTrackForSpotlightEnum>'::`4'::_tlgEvent
+180347e90 CProperTreeHost::OnAfterContextMenu
+180524a70 CContextMenuOnContextMenuArray::`vector deleting destructor'
+180260b90 CExplorerCommandOverIContextMenu::AddRef
+180466400 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::Release
+180347260 CNullSpaceContextMenu::InvokeCommand
+1806157b0 CContextMenuForwarder::`vftable'
+18061cf18 winrt::impl::producers_base<CDesktopSpotlightNextContextMenuVerb,std::tuple<IExplorerCommand> >::`vftable'
+1802274c0 CLibraryPropSheetItemContextMenu::AddRef
+180615478 CContextMenuWithoutVerbs::`vftable'
+1801f1c80 CRegistryVerbsContextMenu::ContextSensitiveHelp
+1804c9f70 winrt::impl::heap_implements<CDesktopSpotlightOpenContextMenuVerb>::`scalar deleting destructor'
+1802ca9e0 tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>::evaluate
+1805084a0 CIncludeInLibraryContextMenu::Release
+18020dc60 CContextMenuForwarder::AddRef
+180227808 CreateFileFolderContextMenu
+18020dc40 CContextMenuForwarder::AddRef
+1804365d0 winrt::impl::root_implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::query_interface_tearoff
+180186e80 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::AddRef
+180289780 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::QueryInterface
+18005a1ec ContextMenuTelemetry::QueryContextMenu<_GUID const & __ptr64,unsigned __int64 volatile & __ptr64>
+1802273a4 CContextMenuExtensionImpl::`vector deleting destructor'
+180289770 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::QueryInterface
+18061eb30 CLocationContextMenu::`vftable'
+1800c6310 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IImmersiveContextMenuOwnerDrawHelper>::Release
+18061cf70 winrt::impl::heap_implements<CDesktopSpotlightOpenContextMenuVerb>::`vftable'
+18058954c ImmersiveContextMenuHelper::GetCurrentThemeForOverrides
+180778b48 _imp_?ShowContextMenuElementProviderDirectUIUEAAJXZ
+180233570 CMergedFldrContextMenu::AddRef
+18018d440 Microsoft::WRL::ComPtr<IInvokeContextMenuCommand>::~ComPtr<IInvokeContextMenuCommand>
+18061ce80 winrt::impl::heap_implements<CDesktopSpotlightNextContextMenuVerb>::`vftable'
+1806115a0 CEncryptionContextMenu::`vftable'
+18061e048 COpenSearchContextMenu::`vftable'
+180564710 CSFToolbar::_GetContextMenu
+1806aec81 `FileExplorerTelemetry::ShellNewContextMenuCreate::StopActivity'::`12'::_tlgEvent
+18020d870 CImmersiveContextMenuOwnerDrawHelper::`vector deleting destructor'
+1803c8d10 CEnumExplorerCommandOverIContextMenu::_EnsureSubCommandCollection
+1804e9218 tip2::test_data_control<tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature> >::~test_data_control<tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature> >
+1805e60f8 CRegistryVerbsContextMenu::`vftable'
+1804c9f10 winrt::impl::heap_implements<CDesktopSpotlightNextContextMenuVerb>::`vector deleting destructor'
+18072f6a0 `wil::Feature<__WilFeatureTraits_Feature_ContextMenu_FilterInvokeVerbs>::GetImpl'::`2'::impl
+180731a68 Feature_ReduceSlideshowContextMenuLatency__private_cppFeatureState
+1801f852d _imp_load_IUnknown_DoContextMenuPopup
+18061f478 CContextMenuOnContextMenuArray::`vftable'
+18038dbfc CRegistryVerbsContextMenu::_EnsureSubMenuHandler
+180516f30 CLocationContextMenu::get_MappingArray
+1800e72e0 CExplorerCommandStateOverIContextMenu::`scalar deleting destructor'
+18038d4b0 CRegistryVerbsContextMenu::OnCreatingError
+180226738 OOPContextMenuWrapper::~OOPContextMenuWrapper
+1801ea12c CSimplePointerArray<ContextMenuRenderingData,CTContainer_PolicyNewMem,CSimpleArrayStandardCompareHelper<ContextMenuRenderingData * __ptr64> >::~CSimplePointerArray<ContextMenuRenderingData,CTContainer_PolicyNewMem,CSimpleArrayStandardCompareHelper<ContextMenuRenderingData * __ptr64> >
+1806a6d61 `FileExplorerTelemetry::ContextMenu::StopActivity'::`12'::_tlgEvent
+1805260e0 CContextMenuOnContextMenuArray::SetInvokeVerbs
+18022d260 CContextMenuExtensionImpl::Initialize
+180287700 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::AddRef
+1805071d0 COpenSearchContextMenu::get_MenuID
+1801f2a1c FileExplorerTelemetry::ContextMenuActionDetails::~ContextMenuActionDetails
+1804ca200 winrt::implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::GetRuntimeClassName
+1804c96cc tson::output_archive::process<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated & __ptr64>
+18072e770 Feature_ContextMenu_FilterInvokeVerbs__private_cppFeatureState
+1800e72e0 CCommandStoreShimOverIContextMenuCB::`vector deleting destructor'
+180342478 CPreviewBackground::_LaunchContextMenu
+1802aa1c0 FileExplorerTelemetry::ContextMenuActionDetails::ComputeTelemetryData
+1803fb5b0 CRecentDocsContextMenu::get_MenuID
+18038d570 CRegistryVerbsContextMenu::QueryInterface
+18022f410 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::Release
+180526650 Create_ContextMenuWithoutVerbs
+180524b30 CContextMenuRenameVerb::`vector deleting destructor'
+18061f398 CContextMenuReplaceVerb::`vftable'
+1804a2554 CDesktopBrowser::EnsureContextMenuPresenter
+18061f400 CContextMenuReplaceVerb::`vftable'
+180436484 winrt::impl::root_implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::query_interface
+180516c60 CLocationContextMenu::`vector deleting destructor'
+1805fe468 CContextMenuExtensionImpl::`vftable'
+18061eb10 CLocationContextMenu::`vftable'
+180400de0 CContextMenuForwarder::Initialize
+180525f90 CContextMenuOnContextMenuArray::QueryInterface
+18072f498 Feature_DesktopSpotlightContextMenuLearnMoreCancelledTipExclusion__private_lastUsedTickCount
+1802640a0 CScopeDialog::OnBeforeContextMenu
+180525f70 CContextMenuOnContextMenuArray::QueryInterface
+1802ca6cc tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest> >::ensure_data
+1801f8227 _imp_load_SHInvokeCommandOnContextMenuEx
+1803c8600 CExplorerSubCommandOverIContextMenu::Invoke
+18038d030 CRegistryVerbsContextMenu::AddRef
+18038d010 CRegistryVerbsContextMenu::AddRef
+1800182b0 CRegistryVerbsContextMenu::SetAssocElement
+18038cff0 CRegistryVerbsContextMenu::AddRef
+18038cfd0 CRegistryVerbsContextMenu::AddRef
+18038cfb0 CRegistryVerbsContextMenu::AddRef
+18005a4a0 FileExplorerTelemetry::ShellNewContextMenuCreate::StartActivity
+1802bba10 wil::details::FeatureImpl<__WilFeatureTraits_Feature_DesktopSpotlightContextMenuUpdatedTIPTelemetry>::ReportUsage
+1802a4690 tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>::~merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>
+1802ba234 tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>::Release
+1800b5aa0 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >::ensure_data
+1803c93b0 CEncryptionContextMenu::`vector deleting destructor'
+1804cb194 _tip_SpotlightOptionsInBackgroundContextMenuTestUpdated::evaluate
+1804c5970 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::QueryInterface
+1800b5994 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >::operator->
+180524a40 CContextMenuOnContextMenuArray::`vector deleting destructor'
+1802262bc OOPContextMenuWrapper::OOPContextMenuWrapper
+1804f2340 tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>::evaluate
+1804c5980 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::QueryInterface
+18062af30 `CContextMenuForwarder::QueryInterface'::`5'::qit
+1802aa1a0 CDefView::CompleteContextMenu
+180614f58 CRecentDocsContextMenu::`vftable'
+1801e1e1c CRegistryVerbsContextMenu::_InvokeCommandFromSubMenu
+1805f2530 CExplorerCommandStateOverIContextMenu::`vftable'
+1802dc6f0 SHELL32_CreateFileFolderContextMenu
+1802a37a0 tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>
+1802a325c _tip_ContextMenuSelectionTest::serialize<tson::output_archive>
+18002b948 CRegistryVerbsContextMenu::_IsValuePresent
+180600420 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::`vftable'
+180289b00 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::Release
+1802aa018 CDefView::CleanupAfterContextMenu
+18050d590 CLibraryPropSheetItemContextMenu::_OnInvokeCommand
+1803ccf30 CMergedFldrContextMenu::SetSite
+18018d440 Microsoft::WRL::ComPtr<IContextMenuPresenter>::~ComPtr<IContextMenuPresenter>
+180401870 CContextMenuForwarder::QueryService
+1803c86a0 CEnumExplorerCommandOverIContextMenu::Next
+180732090 `wil::Feature<__WilFeatureTraits_Feature_Servicing_FileExplorer_RegistryLeakWithContextMenu>::GetImpl'::`2'::impl
+1802a10e4 tson::make_nvp<enum FileExplorerTelemetryCommon::ContextMenuType & __ptr64>
+180227430 OOPContextMenuWrapper::`scalar deleting destructor'
+180267860 CExplorerCommandOverIContextMenu::QueryInterface
+1801a2b90 CNullSpaceContextMenu::`scalar deleting destructor'
+1805f2338 FileExplorerTelemetry::ContextMenu::`vftable'
+1801995a0 CDesktopSpotlightNextContextMenuVerb::GetToolTip
+180289b20 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::Release
+1804cb780 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>::serialize
+1805095c0 CLibraryFolderContextMenu::get_MenuID
+18018d440 Microsoft::WRL::ComPtr<IContextMenuBaseInfo>::~ComPtr<IContextMenuBaseInfo>
+1801a4280 CMergedFldrContextMenu::GetSite
+1803cb870 CMergedFldrContextMenu::GetCommandString
+1804c3c90 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::AddRef
+1807799a0 _imp_IUnknown_DoContextMenuPopup
+1804cace4 wil::details::FeatureImpl<__WilFeatureTraits_Feature_DesktopSpotlightContextMenuLearnMoreCancelledTipExclusion>::__private_IsEnabled
+1804c3ca0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::AddRef
+1804364ec winrt::impl::root_implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::query_interface_common
+1805fe2c8 OOPContextMenuWrapper::`vftable'
+1805fe388 OOPContextMenuWrapper::`vftable'
+180092f70 CPinnedList::QueryContextMenu
+18042a130 SHTrackContextMenu
+1802ca2c8 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest> >::complete_and_ignore
+180225864 Microsoft::WRL::Details::RuntimeClassBaseT<2>::AsIID<Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit> >
+1804354a0 winrt::implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::Release
+1805263b8 Create_ContextMenuRenameVerbWithInvokeMask
+1803cc9a0 CMergedFldrContextMenu::Release
+1801513e4 Microsoft::WRL::ComPtr<CNullSpaceContextMenu>::InternalRelease
+1803c93c0 CEncryptionContextMenu::`scalar deleting destructor'
+18022ef90 CContextMenuExtensionImpl::QueryContextMenu
+1804cae10 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>::deserialize
+180516c70 CLocationContextMenu::`scalar deleting destructor'
+1801f1c80 CShellSearchExt::QueryContextMenu
+180271760 _GetContextMenuFromView
+1802b6dc0 tip2::test_watcher<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest> >::NotifyFailure
+180358c10 CItemTile::OnContextMenu
+180525ea0 CContextMenuWithoutVerbs::QueryContextMenu
+180196050 tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>::enhance_reporting
+180102160 CDefView::DoBackgroundContextMenu
+180730e70 `wil::Feature<__WilFeatureTraits_Feature_DesktopSpotlightContextMenuLearnMoreCancelledTipExclusion>::GetImpl'::`2'::impl
+18054b730 CISFBand::_GetContextMenu
+18044f9ac CListViewHost::ShowContextMenuForSpotlight
+1803c8830 CEnumExplorerCommandOverIContextMenu::Release
+1804ba360 CCopyMoveToMenu::QueryContextMenu
+18055f8f0 CMenuSFToolbar::v_TrackingSubContextMenu
+18024ce30 CDesktopSpotlightNextContextMenuVerb::EnumSubCommands
+180401720 CContextMenuForwarder::QueryInterface
+180401740 CContextMenuForwarder::QueryInterface
+180524a70 CContextMenuOnContextMenuArray::`scalar deleting destructor'
+180289b40 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::Release
+1801f0a2c FileExplorerTelemetry::ShellNewContextMenuCreate::~ShellNewContextMenuCreate
+18038de1c CRegistryVerbsContextMenu::_GetAppSource
+180525f80 CContextMenuOnContextMenuArray::QueryInterface
+1806157d8 CContextMenuForwarder::`vftable'
+1804c9f70 winrt::impl::heap_implements<CDesktopSpotlightOpenContextMenuVerb>::`vector deleting destructor'
+1803c89a0 CEnumExplorerCommandOverIContextMenu::Reset
+18022abd0 CContextMenuExtensionImpl::GetCommandString
+180017648 Microsoft::WRL::ComPtr<IContextMenuForProgInvoke>::InternalRelease
+1801df514 IContextMenu_SetInvokeVerbs
+1802273a4 CContextMenuExtensionImpl::`scalar deleting destructor'
+1800e0b54 CRegistryVerbsContextMenu::_VerbCount
+1801f1c80 CCscUiCmdObj_WorkOfflineOnline::InvokeFromContextMenu
+1804c5960 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::QueryInterface
+18015e568 wil::details::FeatureImpl<__WilFeatureTraits_Feature_AppSiloFileExplorerContextMenus>::GetCachedFeatureEnabledState
+180436484 winrt::impl::root_implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::query_interface
+180511b40 CLocationFolderUI::_HandleContextMenu
+1805076c4 CIncludeInLibraryContextMenuHelper::~CIncludeInLibraryContextMenuHelper
+180319640 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::`vector deleting destructor'
+180525f60 CContextMenuOnContextMenuArray::QueryInterface
+1804cabfc CDesktopSpotlightOpenContextMenuVerb::TrimWhiteSpaceFromString
+18061f300 CContextMenuOnContextMenuArrayNoDuplicateVerbs::`vftable'
+1805fe448 CContextMenuExtensionImpl::`vftable'
+18020d870 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IImmersiveContextMenuOwnerDrawHelper>::`scalar deleting destructor'
+18060b270 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IImmersiveContextMenuOwnerDrawHelper>::`vftable'
+18038cf70 CRegistryVerbsContextMenu::`vector deleting destructor'
+180524ae0 CContextMenuOnHMENU::`scalar deleting destructor'
+1802ca66c tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest> >::ensure_data
+1806114e8 CCommandStoreShimOverIContextMenuCB::`vftable'
+1803ff4a0 CContextMenuForwarder::`scalar deleting destructor'
+1803c7d50 CCommandStoreShimOverIContextMenuCB::Execute
+1805fe418 CRecentDocsContextMenu::`vftable'
+180019118 CExplorerCommandStateOverIContextMenu::_IsHandlerAvailable
+1804ca108 wil::details::FeatureImpl<__WilFeatureTraits_Feature_DesktopSpotlightContextMenuLearnMoreCancelledTipExclusion>::GetCurrentFeatureEnabledState
+180615478 CContextMenuRenameVerb::`vftable'
+1804c3c40 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::`vector deleting destructor'
+1805f24f8 CCommandStoreShimOverIContextMenuCB::`vftable'
+1805ed448 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::`vftable'
+18038d480 CRegistryVerbsContextMenu::IsVerbSupported
+18022f250 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::QueryInterface
+1804c9108 FileExplorerTelemetry::BackgroundContextMenuSpotlightOptionsNotAvailableReason<enum FileExplorerTelemetry::SpotlightOptionsNotAvailableInBackgroundContextMenuReasonEnum>
+18002bd30 ATL::CComPtr<IContextMenu>::~CComPtr<IContextMenu>
+18038d6a0 CRegistryVerbsContextMenu::Release
+1800fd308 ImmersiveContextMenuHelper::_GetRenderingDataForMenuItem
+18038d3c0 CRegistryVerbsContextMenu::HandleMenuMsg2
+180506bd0 COpenSearchContextMenu::`vector deleting destructor'
+180260b30 CEnumExplorerCommandOverIContextMenu::AddRef
+180525cf0 CContextMenuReplaceVerb::QueryContextMenu
+1802274c0 CEnumExplorerCommandOverIContextMenu::AddRef
+1802272f0 CRecentDocsContextMenu::`vector deleting destructor'
+18024ce30 CDesktopSpotlightOpenContextMenuVerb::EnumSubCommands
+1803c77f8 CExplorerCommandOverIContextMenu::CExplorerCommandOverIContextMenu
+1803c9070 CExplorerCommandOverIContextMenu_CreateInstance
+1801a8a34 FileExplorerContextMenu::IsContextMenuPresenterAvailable
+18061f4a8 CContextMenuOnContextMenuArray::`vftable'
+1803f2200 CMVPRichEditOleCallback::GetContextMenu
+180563a90 CSFToolbar::_DoContextMenu
+180016db0 CDefFolderMenu::QueryContextMenu
+1802aeaec wil::details::FeatureImpl<__WilFeatureTraits_Feature_DesktopSpotlightContextMenuUpdatedTIPTelemetry>::GetCachedFeatureEnabledState
+18061e250 CLibraryFolderContextMenu::`vftable'
+18061e0b0 COpenSearchContextMenu::`vftable'
+180611538 CEncryptionContextMenu::`vftable'
+18038d830 CRegistryVerbsContextMenu::SetInvokeVerbs
+180163760 CContextMenuOnContextMenuArray::Release
+180109430 ShouldNavPaneContextMenuShowLibrariesOption
+1802274a0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::AddRef
+18022f260 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::QueryInterface
+1803c7a10 CExplorerSubCommandOverIContextMenu_CreateInstance
+18018d440 Microsoft::WRL::ComPtr<IContextMenu>::~ComPtr<IContextMenu>
+180196050 tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>::enhance_reporting
+1803ca3f0 CEncryptionContextMenu::get_MenuID
+1800b2008 CTSimpleArray<ContextMenuRenderingData * __ptr64,4294967294,CTPolicyCoTaskMem<ContextMenuRenderingData * __ptr64>,CSimpleArrayStandardCompareHelper<ContextMenuRenderingData * __ptr64>,CSimpleArrayStandardMergeHelper<ContextMenuRenderingData * __ptr64> >::RemoveAll
+180169960 CCommandStoreShimOverIContextMenuCB_CreateInstance
+1802979a0 CScopeDialog::OnAfterContextMenu
+180525590 CContextMenuReplaceVerb::InvokeCommand
+18002bd30 ATL::CComPtr<CExplorerSubCommandOverIContextMenu>::~CComPtr<CExplorerSubCommandOverIContextMenu>
+18029efb0 tson::input_archive::operator()<tson::nvp<enum FileExplorerTelemetryCommon::ContextMenuType & __ptr64>,tson::nvp<unsigned int & __ptr64>,tson::nvp<unsigned int & __ptr64>,tson::nvp<bool & __ptr64>,tson::nvp<unsigned int & __ptr64>,tson::nvp<unsigned int & __ptr64> >
+1803deb00 CAutomationCM::QueryContextMenu
+1802a4c90 wil::com_ptr_t<tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>,wil::err_returncode_policy>::operator=
+1800e04bc CRegistryVerbsContextMenu::_Execute
+1802ca480 tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>::deserialize
+180611498 CExplorerCommandOverIContextMenu::`vftable'
+1804ca780 tip2::test_watcher<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic> >::NotifyFailure
+18012f3f0 FileExplorerTelemetry::ContextMenu::StartActivity
+180524ba0 CContextMenuWithoutVerbs::`vector deleting destructor'
+18002a370 CRegistryVerbsContextMenu::QueryInterface
+1805e6180 CRegistryVerbsContextMenu::`vftable'
+18072f48c Feature_DesktopSpotlightContextMenuUpdatedTIPTelemetry__private_lastUsedTickCount
+1800f1d80 ShouldNavPaneContextMenuShowExpandToCurrentFolderOption
+18014f640 CContextMenuOnContextMenuArray::QueryContextMenu
+180524a60 CContextMenuReplaceVerb::`vector deleting destructor'
+1806157d8 CContextMenuWithoutVerbs::`vftable'
+180506c10 COpenSearchContextMenu::`scalar deleting destructor'
+18002a868 CRegistryVerbsContextMenu::`vector deleting destructor'
+180184060 CContextMenuOnContextMenuArray::AddRef
+18002bd30 ATL::CComPtr<CEnumExplorerCommandOverIContextMenu>::~CComPtr<CEnumExplorerCommandOverIContextMenu>
+180196050 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>::on_result
+180589310 ImmersiveContextMenuHelper::CanApplyOwnerDrawToMenu
+1801f8347 _imp_load_SHInvokeCommandOnContextMenu
+180268978 SHGetContextMenuOfSelection
+1800c7184 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>
+18072ef0c g_tbNavPaneContextMenuShowLibraries
+1805f24c0 CExplorerCommandStateOverIContextMenu::`vftable'
+1800fd8b8 ImmersiveContextMenuHelper::RemoveOwnerDrawFromMenu
+1800b57c4 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest> >::operator->
+1802c96ec wil::details::FeatureImpl<__WilFeatureTraits_Feature_DesktopSpotlightContextMenuUpdatedTIPTelemetry>::__private_IsEnabled
+180524c20 CContextMenuOnContextMenuArray::AddRef
+1802b9210 CDefView::PrepareForContextMenu
+18055ea90 CMenuSFToolbar::v_GetContextMenuModifier
+180779870 _imp_SHInvokeCommandOnContextMenu
+1806157f8 CContextMenuForwarder::`vftable'
+1804c9f30 winrt::impl::heap_implements<CDesktopSpotlightNextContextMenuVerb>::`scalar deleting destructor'
+1805fca98 FileExplorerTelemetry::ContextMenuActionDetails::`vftable'
+180227340 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::`vector deleting destructor'
+1802ca4e0 tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>::deserialize
+18022d8dc Microsoft::WRL::ComPtr<IContextMenuPresenterForSpotlight>::InternalRelease
+1807797f0 _imp_SHInvokeCommandOnContextMenuEx
+1803c7980 CExplorerCommandOverIContextMenu::`scalar deleting destructor'
+180233fcc SetNavPaneContextMenuOption
+180400e70 CContextMenuForwarder::Initialize
+1804c97d8 tip2::start_and_watch_errors<tip2::tip_test<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic> > >
+1801995a0 CDesktopSpotlightOpenContextMenuVerb::GetToolTip
+1806112e0 CExplorerCommandOverIContextMenu::`vftable'
+180017648 Microsoft::WRL::ComPtr<OOPContextMenuWrapper>::InternalRelease
+1802b7b80 CDefView::OnContextMenuDismiss
+180524cd0 CContextMenuRenameVerb::GetCommandString
+18002c004 CRegistryVerbsContextMenu::_GetHandlerMultiSelectModel
+1805e9430 FileExplorerTelemetry::ShellNewContextMenuCreate::`vftable'
+1803c8430 CEnumExplorerCommandOverIContextMenu::Initialize
+18061e280 CIncludeInLibraryContextMenuHelper::`vftable'
+1801fc9ac _imp_load_?ShowContextMenuElementProviderDirectUIUEAAJXZ
+180676e40 SID_ContextMenuForDropInvoke
+1800e67e0 CSendToMenu::QueryContextMenu
+18022d130 CContextMenuOnContextMenuArray::HandleMenuMsg
+1805eca68 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::`vftable'
+180524be0 CContextMenuOnContextMenuArray::AddRef
+180509884 CIncludeInLibraryContextMenuHelper_CreateInstance
+1802a46e4 tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>::~merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>
+1803c87a0 CEnumExplorerCommandOverIContextMenu::QueryInterface
+18061f430 CContextMenuReplaceVerb::`vftable'
+18022f1b0 OOPContextMenuWrapper::QueryContextMenu
+1805f24f8 CExplorerCommandStateOverIContextMenu::`vftable'
+1802cada0 _tip_ContextMenuCreationTest::evaluate
+1803c8790 CEnumExplorerCommandOverIContextMenu::QueryInterface
+1800b3ab0 tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>::serialize
+18019c3d0 CListViewHost::MergeSelectionContextMenu
+18024ce30 CSFToolbar::v_GetBKContextMenu
+1802273a4 CRecentDocsContextMenu::`scalar deleting destructor'
+18019a51c _tip_ContextMenuCreationTest::serialize<tson::input_archive>
+1802a385c tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>
+180526518 Create_ContextMenuReplaceVerbs
+1801e541c ImmersiveContextMenuHelper::_StoreParentArrayOnWindow
+180102dd4 CContextMenuOnContextMenuArray::Initialize
+1800b15b4 Microsoft::WRL::ComPtr<IContextMenu>::operator=
+1800e0b88 CRegistryVerbsContextMenu::_EnsureVerbs
+180124c10 CEnumExplorerCommandOverIContextMenu::Release
+180131454 CExplorerCommandStateOverIContextMenu::CExplorerCommandStateOverIContextMenu
+18002a3f0 CRegistryVerbsContextMenu::Release
+18050af50 CLibraryPropSheetItemContextMenu::Release
+180319640 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::`scalar deleting destructor'
+18002a240 CRegistryVerbsContextMenu::CRegistryVerbsContextMenu
+1801e9294 ImmersiveContextMenuHelper::ShouldUseDarkTheme
+1804ca380 CDesktopSpotlightNextContextMenuVerb::Invoke
+18020d870 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IImmersiveContextMenuOwnerDrawHelper>::`vector deleting destructor'
+180701f08 Feature_Servicing_FileExplorer_RegistryLeakWithContextMenu__descriptor
+180401dd0 ResultsWrapIContextMenus
+1804663a0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::QueryInterface
+18022f4a0 CContextMenuExtensionImpl::Release
+180339e68 CControlPanelCategoryModuleInner::_ShowAppletContextMenu
+18012d030 CContextMenuOnContextMenuArray::GetCommandString
+180289750 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::QueryInterface
+180600338 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::`vftable'
+180524ae0 CContextMenuOnHMENU::`vector deleting destructor'
+180210b10 CCDBurn::QueryContextMenu
+18034f850 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu>::QueryInterface
+1803ff4a0 CContextMenuForwarder::`vector deleting destructor'
+1804cb3c0 winrt::implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::find_interface
+180227480 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::AddRef
+1806a3856 `ContextMenuTelemetry::QueryContextMenu<_GUID const & __ptr64,unsigned __int64 volatile & __ptr64>'::`4'::_tlgEvent
+1803fb580 CRecentDocsContextMenu::_OnInvokeCommand
+1803c9e40 CEncryptionContextMenu::QueryContextMenu
+1804cbd20 CDesktopSpotlightOpenContextMenuVerb_CreateInstance
+180322f70 CDesktopSpotlightNextContextMenuVerb::GetCanonicalName
+1804c3c40 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::`scalar deleting destructor'
+1805eca98 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::`vftable'
+1801261f4 ContextMenuInfo_SetSite
+1804f215c tip2::tip_test<tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature> >::ensure_data
+1802274b0 CContextMenuExtensionImpl::AddRef
+18050af30 CLibraryPropSheetItemContextMenu::Release
+180191df0 CProperTreeHost::OnBeforeContextMenu
+18038d690 CRegistryVerbsContextMenu::Release
+1805f24c0 CCommandStoreShimOverIContextMenuCB::`vftable'
+18038d660 CRegistryVerbsContextMenu::Release
+1804bb970 CCopyMoveToChooseFolder::_SetupContextMenu
+1801eb7fc FileExplorerTelemetry::ActionSourceWithShellItemArrayAndDetails<enum FileExplorerTelemetryBase::NavigationSource,IUnknown * __ptr64,IShellItemArray * __ptr64 & __ptr64,FileExplorerTelemetry::ContextMenuActionDetails & __ptr64>
+1806157b0 CContextMenuWithoutVerbs::`vftable'
+1805f2598 CExplorerCommandStateOverIContextMenu::`vftable'
+1806aeee7 `FileExplorerTelemetry::ShellNewContextMenuCreate::Stop'::`12'::_tlgEvent
+180525000 CContextMenuOnHMENU::HandleMenuMsg2
+18061cf18 winrt::impl::producers_base<CDesktopSpotlightOpenContextMenuVerb,std::tuple<IExplorerCommand> >::`vftable'
+1804e8b80 tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>
+18038d610 CRegistryVerbsContextMenu::Release
+180525fb0 CContextMenuOnHMENU::QueryInterface
+180017648 Microsoft::WRL::ComPtr<IContextMenu2>::InternalRelease
+1804c9f20 winrt::impl::heap_implements<CDesktopSpotlightOpenContextMenuVerb>::`vector deleting destructor'
+18016b570 CContextMenuExtensionImpl::Release
+18022f1c0 OOPContextMenuWrapper::QueryContextMenu
+180525bd0 CContextMenuRenameVerb::QueryContextMenu
+18072e780 Feature_AppSiloFileExplorerContextMenus__private_cppFeatureState
+1801f3220 CContextMenuCBImpl::Release
+18022bdb0 wil::details::FeatureImpl<__WilFeatureTraits_Feature_Servicing_FileExplorer_RegistryLeakWithContextMenu>::GetCurrentFeatureEnabledState
+18022d180 OOPContextMenuWrapper::HandleMenuMsg
+1804e9138 tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>::~merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>
+180564630 CSFToolbar::_GetContextMenu
+18061d9f0 tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>::`vftable'
+1805ed578 Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>::`vftable'
+18022ad80 OOPContextMenuWrapper::GetCommandString
+1804ca200 winrt::implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::GetRuntimeClassName
+180564c10 CSFToolbar::_OnContextMenu
+18002bd30 ATL::CComPtr<IContextMenuCB>::~CComPtr<IContextMenuCB>
+18038e420 wil::details::FeatureImpl<__WilFeatureTraits_Feature_ContextMenu_FilterInvokeVerbs>::__private_IsEnabled
+1802ca9c0 tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>::evaluate
+1801f1c80 CExplorerCommandOverCommandStoreVerbList::InvokeFromContextMenu
+1801672a0 CCommandStoreShimOverIContextMenuCB::_ValidateOrInvokeVerb
+180516f40 CLocationContextMenu::get_MenuID
+180702340 Feature_DesktopSpotlightContextMenuLearnMoreCancelledTipExclusion__descriptor
+1803a0af0 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>::deserialize
+1805095b0 CLibraryFolderContextMenu::get_MappingArray
+180527ed4 ContextMenu_GetCommandStringHelp
+1802ce2b0 tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>::serialize
+1803c757c CExeDropTarget::_InvokeContextMenu
+180524ba0 CContextMenuWithoutVerbs::`scalar deleting destructor'
+1802274b0 CLibraryPropSheetItemContextMenu::AddRef
+1804c9cd0 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>::~merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>
+180401a20 CContextMenuForwarder::Release
+1802cb1e4 _tip_ContextMenuE2ELoadTest::evaluate
+180287670 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::AddRef
+1801f1354 wil::com_ptr_t<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>,wil::err_returncode_policy>::reset
+180646398 CLSID_DesktopSpotlightNextContextMenuVerb
+180401580 CContextMenuForwarder::QueryContextMenu
+180658320 IID_IContextMenuSite
+1800c7218 Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>
+180117bc0 CContextMenuOnHMENU::AddRef
+180615458 CContextMenuWithoutVerbs::`vftable'
+1804c99dc tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>
+180506c10 COpenSearchContextMenu::`vector deleting destructor'
+18002a868 CRegistryVerbsContextMenu::`scalar deleting destructor'
+1805090d0 CLibraryFolderContextMenu::_OnInvokeCommand
+1806116e0 CMergedFldrContextMenu::`vftable'
+18009f214 RegisterSlowContextMenuEntry
+1801f1c80 CIncludeInLibraryContextMenu::GetCommandString
+1801876f0 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest> >::test_id
+1801f8479 _imp_load_SHForwardContextMenuMsg
+1802979a0 CBrowseForFolder::OnAfterContextMenu
+1806504a0 CLSID_ExplorerCommandStateOverIContextMenu
+1801b3fa8 CRegistryVerbsContextMenu::_IsAsyncStateHandler
+1804365d0 winrt::impl::root_implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::query_interface_tearoff
+1803ca330 CEncryptionContextMenu::_StoreItemPath
+18022e1e0 OOPContextMenuWrapper::InvokeCommand
+180436470 winrt::implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::get_local_iids
+1803c9540 CEncryptionContextMenu::EncryptThreadProc
+180161608 CRegistryVerbsContextMenu::_GetItem
+1804001a0 CContextMenuForwarder::GetCommandString
+18061f398 CContextMenuOnContextMenuArrayNoDuplicateVerbs::`vftable'
+180401990 CContextMenuForwarder::Release
+18038d670 CRegistryVerbsContextMenu::Release
+1804e9bd0 DesktopWallpaperTelemetry::DesktopSpotlightEnabledWithContextMenuOptions
+1804cb628 wil::com_ptr_t<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>,wil::err_returncode_policy>::reset
+18061f2a8 CContextMenuOnContextMenuArray::`vftable'
+18038d680 CRegistryVerbsContextMenu::Release
+1804c9f30 winrt::impl::heap_implements<CDesktopSpotlightNextContextMenuVerb>::`vector deleting destructor'
+1801876f0 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest> >::test_id
+180227340 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::`scalar deleting destructor'
+1802876d0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::AddRef
+1800b5798 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >::watch_errors
+1802719c4 CMultiItemsDefaultCommand::_GetContextMenuToInvoke
+1801a2100 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu>::AddRef
+1803c7980 CExplorerCommandOverIContextMenu::`vector deleting destructor'
+1802ca5b0 tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>::enhance_reporting
+18019b700 CIncludeInLibraryContextMenu::Release
+180506e40 COpenSearchContextMenu::_OnInvokeCommand
+18002ae0c CRegistryVerbsContextMenu::_Cleanup
+180017648 Microsoft::WRL::ComPtr<IContextMenu3>::InternalRelease
+18015fca0 ATL::CComPtr<IContextMenu>::CComPtr<IContextMenu>
+180287680 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::AddRef
+180445954 FileExplorerTelemetry::ActionSourceWithDataObjectAndDetails<enum FileExplorerTelemetryBase::NavigationSource,IUnknown * __ptr64 & __ptr64,IDataObject * __ptr64 & __ptr64,FileExplorerTelemetry::ContextMenuActionDetails & __ptr64>
+180163600 CContextMenuForwarder::AddRef
+180186c9c Microsoft::WRL::Details::Make<CImmersiveContextMenuOwnerDrawHelper>
+180225814 Microsoft::WRL::AgileRef::As<IContextMenu>
+1801f30b8 CSimplePointerArrayNewMem<ContextMenuRenderingData,CSimpleArrayStandardCompareHelper<ContextMenuRenderingData * __ptr64> >::~CSimplePointerArrayNewMem<ContextMenuRenderingData,CSimpleArrayStandardCompareHelper<ContextMenuRenderingData * __ptr64> >
+18061eaa8 CLocationContextMenu::`vftable'
+1805084b0 CIncludeInLibraryContextMenuHelper::Release
+18049d268 ConflictItemElement::_ShowContextMenu
+1800c71a8 Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::Details::ImplementsMarker<CWRLObjectWithSite>,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::Details::ImplementsMarker<CWRLObjectWithSite>,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>
+18061f320 CContextMenuRenameVerb::`vftable'
+1804c68f0 FileExplorerTelemetry::ShellNewContextMenuCreate::StopActivity
+1801ed12c wil::com_ptr_t<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>,wil::err_returncode_policy>::~com_ptr_t<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>,wil::err_returncode_policy>
+180289a90 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::Release
+1803cc3d0 CMergedFldrContextMenu::InvokeCommand
+1800a2774 wil::details::FeatureImpl<__WilFeatureTraits_Feature_AppSiloFileExplorerContextMenus>::ReportUsage
+1801c6230 wil::com_ptr_t<IContextMenuForProgInvoke,wil::err_returncode_policy>::~com_ptr_t<IContextMenuForProgInvoke,wil::err_returncode_policy>
+1800e08bc CRegistryVerbsContextMenu::_GetVerb
+1804354a0 winrt::implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::Release
+1805e60a0 CRegistryVerbsContextMenu::`vftable'
+1806114c8 CCommandStoreShimOverIContextMenuCB::`vftable'
+18022e140 OOPContextMenuWrapper::InvokeCommand
+1806a6d15 `FileExplorerTelemetry::ContextMenu::StopActivity'::`30'::_tlgEvent
+18020269f _imp_load_StateRepoVerbsCache_GetContextMenuVerbs
+180701f98 Feature_AppSiloFileExplorerContextMenus__descriptor
+1804cab4c wil::details::FeatureImpl<__WilFeatureTraits_Feature_DesktopSpotlightContextMenuLearnMoreCancelledTipExclusion>::ReportUsage
+1801995a0 CDesktopSpotlightNextContextMenuVerb::GetIcon
+180196050 tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>::on_result
+1805e61c8 CRegistryVerbsContextMenu::`vftable'
+1802273a4 CRecentDocsContextMenu::`vector deleting destructor'
+18022d8dc Microsoft::WRL::ComPtr<IContextMenuPresenterTipTest>::InternalRelease
+1804364ec winrt::impl::root_implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::query_interface_common
+180175d58 tip2::test_watcher<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic> >::~test_watcher<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic> >
+1804019d0 CContextMenuForwarder::Release
+180162f68 CContextMenuOnHMENU::_FlipMenu
+180189350 CContextMenuOnContextMenuArray::_QueryNthContextMenu
+180432860 winrt::implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::AddRef
+18042b790 _TrackContextMenuWndProc
+180525290 CContextMenuOnContextMenuArray::Initialize
+1804019f0 CContextMenuForwarder::Release
+180227470 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::AddRef
+180401a00 CContextMenuForwarder::Release
+180196050 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>::on_result
+180615420 CContextMenuWithoutVerbs::`vftable'
+1802cb314 _tip_ContextMenuInitTest::evaluate
+1802ce2b0 tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>::serialize
+1805fe290 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::`vftable'
+1802a463c tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>::~merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>
+180646498 CLSID_EncryptionContextMenuHandler
+1800b5de4 tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>
+180507770 CLibraryFolderContextMenu::`vector deleting destructor'
+18020d870 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IContextMenu>::`scalar deleting destructor'
+1801f1c80 CRegistryVerbsContextMenu::ReplacePage
+18060b438 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IContextMenu>::`vftable'
+1804f2000 tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>::deserialize
+1804c9d94 tip2::test_data_control<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated> >::~test_data_control<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated> >
+180017648 Microsoft::WRL::ComPtr<IContextMenuPresenter>::InternalRelease
+180732070 `wil::Feature<__WilFeatureTraits_Feature_AppSiloFileExplorerContextMenus>::GetImpl'::`2'::impl
+1802cc9c4 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest> >::open_helper
+18029f4a0 FileExplorerTelemetryCommon::ActionSourceTelemetry::ActionSourceWithShellItemArrayAndDetails<enum FileExplorerTelemetryBase::NavigationSource,IUnknown * __ptr64,IShellItemArray * __ptr64 & __ptr64,FileExplorerTelemetry::ContextMenuActionDetails & __ptr64>
+18068b6b8 IID_IBackgroundContextMenuInvoked
+180526030 CContextMenuOnContextMenuArray::Release
+1802ac3e4 CDefView::FireContextMenuTelemetryEvent
+18038d650 CRegistryVerbsContextMenu::Release
+1804c9538 winrt::make_self<CDesktopSpotlightNextContextMenuVerb>
+1804c59d0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::Release
+180226660 CContextMenuExtensionImpl::~CContextMenuExtensionImpl
+1804c59b0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::Release
+180506fe8 COpenSearchContextMenu::_ValidateUrls
+18038d620 CRegistryVerbsContextMenu::Release
+1802ce340 tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>::serialize
+180287a58 Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::CanCastTo
+180629dc0 `CRegistryVerbsContextMenu::QueryInterface'::`9'::qit
+1802876b0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::AddRef
+180507830 CIncludeInLibraryContextMenuHelper::AddRef
+1802876a0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::AddRef
+1802b6ff0 CDefView::OnBackgroundContextMenu
+18022f470 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::Release
+1804458ec FileExplorerTelemetryCommon::ActionSourceTelemetry::ActionSourceWithDataObjectAndDetails<enum FileExplorerTelemetryBase::NavigationSource,IUnknown * __ptr64 & __ptr64,IDataObject * __ptr64 & __ptr64,FileExplorerTelemetry::ContextMenuActionDetails & __ptr64>
+180467a14 Microsoft::WRL::Details::MakeAndInitialize<CItemCommand,Windows::Internal::Storage::IItemCommand,bool & __ptr64,IShellItem * __ptr64 & __ptr64,IContextMenu * __ptr64 & __ptr64,unsigned int const & __ptr64,unsigned short (& __ptr64)[80],unsigned short (& __ptr64)[260],Windows::Internal::NativeString<Windows::Internal::CoTaskMemPolicy<unsigned short> > & __ptr64,unsigned int & __ptr64>
+1806463d8 CLSID_ExplorerCommandOverIContextMenu
+18061e2d8 CLibraryPropSheetItemContextMenu::`vftable'
+180507514 CIncludeInLibraryContextMenuHelper::CIncludeInLibraryContextMenuHelper
+1802264f0 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::~RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>
+1803492b0 CNullSpaceContextMenu::QueryContextMenu
+18022ce70 CContextMenuExtensionImpl::HandleMenuMsg2
+180600358 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::`vftable'
+1803c78d4 CExplorerCommandOverIContextMenu::~CExplorerCommandOverIContextMenu
+180509920 CIncludeInLibraryContextMenu_CreateInstance
+1804c976c tip2::start_and_watch_errors<tip2::tip_test<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated> > >
+1802b6dc0 tip2::test_watcher<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >::NotifyFailure
+18038d5b0 CRegistryVerbsContextMenu::QueryInterface
+180163260 CEnumExplorerCommandOverIContextMenu::AddRef
+18038d590 CRegistryVerbsContextMenu::QueryInterface
+18038d5f0 CRegistryVerbsContextMenu::QueryInterface
+1803c8a54 CEnumExplorerCommandOverIContextMenu::_CreateSubCommands
+180156f80 COpenFileLocationMenu::QueryContextMenu
+18038d5d0 CRegistryVerbsContextMenu::QueryInterface
+1801a5300 CExplorerCommandOverIContextMenu::GetFlags
+1806113b0 CEnumExplorerCommandOverIContextMenu::`vftable'
+180124a94 Microsoft::WRL::Details::MakeAllocator<OOPContextMenuWrapper>::~MakeAllocator<OOPContextMenuWrapper>
+180524d70 CContextMenuOnContextMenuArray::GetMenuRestrictions
+180124a94 Microsoft::WRL::Details::MakeAllocator<CNullSpaceContextMenu>::~MakeAllocator<CNullSpaceContextMenu>
+1805e6160 CRegistryVerbsContextMenu::`vftable'
+180346890 CNullSpaceContextMenu::GetCommandString
+1805e50d8 CIncludeInLibraryContextMenu::`vftable'
+180017648 Microsoft::WRL::ComPtr<IInvokeContextMenuCommand>::InternalRelease
+1800fe2e0 ImmersiveContextMenuHelper::GetContextMenuDataForItem
+1805f2530 CCommandStoreShimOverIContextMenuCB::`vftable'
+1803cc230 CMergedFldrContextMenu::HandleMenuMsg2
+180509c3c CLibraryPropSheetItemContextMenu::`vector deleting destructor'
+18072e714 Feature_Servicing_FileExplorer_RegistryLeakWithContextMenu__private_lastUsedTickCount
+1806a6eb3 `FileExplorerTelemetry::ContextMenu::StartActivity'::`6'::_tlgEvent
+18016ffec CDefView::AllowDarkModeContextMenu
+1800b5800 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >::start
+18022f4b0 CContextMenuExtensionImpl::Release
+180029df0 CRegistryVerbsContextMenu_CreateInstance
+180401a10 CContextMenuForwarder::Release
+18005a680 FileExplorerTelemetry::ShellNewContextMenuCreate::Stop
+180611380 CExplorerSubCommandOverIContextMenu::`vftable'
+1801f1c80 SHELL32_CLocationContextMenu_Create
+1804019e0 CContextMenuForwarder::Release
+1805fe3c0 OOPContextMenuWrapper::`vftable'
+1801f1c80 CSharePointView::ShowContextMenu
+18038d328 CRegistryVerbsContextMenu::GetVerbAssocObject
+180702880 Feature_ReduceSlideshowContextMenuLatency__descriptor
+18022acb0 OOPContextMenuWrapper::GetCommandString
+180507704 CLibraryFolderContextMenu::~CLibraryFolderContextMenu
+18011da00 CRegistryVerbsContextMenu::QueryService
+180435340 winrt::implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::QueryInterface
+1806a38c0 `ContextMenuTelemetry::CoCreateInstance<_GUID const & __ptr64,unsigned __int64 volatile & __ptr64>'::`4'::_tlgEvent
+1801bf010 CCopyAsPathMenu::QueryContextMenu
+1801ed104 tip2::test_watcher<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest> >::~test_watcher<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest> >
+1804cab04 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>::Release
+1806157d8 CContextMenuRenameVerb::`vftable'
+180196050 tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>::enhance_reporting
+1805e61a0 CRegistryVerbsContextMenu::`vftable'
+1801e7390 CContextMenuCBImpl::QueryInterface
+18061f300 CContextMenuOnContextMenuArray::`vftable'
+180071094 CDefView::_InvokeContextMenu
+1802b8850 CDefView::OnSelectionSpotlightContextMenu
+1801876f0 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >::test_id
+1801be6f0 CDesktopBrowser::OnContextMenuDismiss
+18018d440 Microsoft::WRL::ComPtr<IContextMenuForProgInvoke>::~ComPtr<IContextMenuForProgInvoke>
+1805077bc CLibraryFolderContextMenu::`vector deleting destructor'
+18022f0a0 OOPContextMenuWrapper::QueryContextMenu
+1804ca260 CDesktopSpotlightOpenContextMenuVerb::GetState
+1803ca400 CEncryptionContextMenuHandler_CreateInstance
+1802297ac wil::details::FeatureImpl<__WilFeatureTraits_Feature_Servicing_FileExplorer_RegistryLeakWithContextMenu>::GetCachedFeatureEnabledState
+18038d630 CRegistryVerbsContextMenu::Release
+1802a3378 tip2::details::tip_make_shared_nothrow<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>,_GUID * __ptr64 & __ptr64>
+18038d640 CRegistryVerbsContextMenu::Release
+1801936c0 CLocationContextMenu::Initialize
+1805f2578 CExplorerCommandStateOverIContextMenu::`vftable'
+18002a8a4 CRegistryVerbsContextMenu::_IsVisible
+1802ca980 tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest>::evaluate
+180287690 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::AddRef
+1804ca320 CDesktopSpotlightOpenContextMenuVerb::GetTitle
+1802876c0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::AddRef
+1803cc740 CMergedFldrContextMenu::QueryInterface
+1805fc0d0 `CContextMenuCBImpl::QueryInterface'::`2'::qit
+1805797d0 wil::details::FeatureImpl<__WilFeatureTraits_Feature_ReduceSlideshowContextMenuLatency>::GetCurrentFeatureEnabledState
+180401700 CContextMenuForwarder::QueryInterface
+1803ca3e0 CEncryptionContextMenu::get_MappingArray
+1802342d0 SetNavPaneContextMenuExpandToCurrentFolderOption
+1803c9be0 CEncryptionContextMenu::Initialize
+1806af048 `FileExplorerTelemetry::BackgroundContextMenuSpotlightOptionsNotAvailableReason<enum FileExplorerTelemetry::SpotlightOptionsNotAvailableInBackgroundContextMenuReasonEnum>'::`4'::_tlgEvent
+180589b00 CImmersiveContextMenuOwnerDrawHelper::ContextMenuWndProc
+180701f68 Feature_ContextMenu_FilterInvokeVerbs__descriptor
+1805253a0 CContextMenuOnContextMenuArray::Initialize
+18064d4b8 IID_IContextMenu
+1801ee87c winrt::impl::root_implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::AddRef
+1805091e0 CLibraryFolderContextMenu::_OnQueryContextMenu
+1802a4470 wil::com_ptr_t<tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>,wil::err_returncode_policy>::~com_ptr_t<tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>,wil::err_returncode_policy>
+18022f240 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IContextMenu,IContextMenu2,IContextMenu3,IShellExtInit>::QueryInterface
+18064e358 IID_IContextMenu3
+18064e348 IID_IContextMenu2
+180507780 CIncludeInLibraryContextMenu::`vector deleting destructor'
+180524948 CContextMenuReplaceVerb::~CContextMenuReplaceVerb
+1805ed428 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::`vftable'
+18062a500 `CMergedFldrContextMenu::QueryInterface'::`2'::qit
+18038dea8 CRegistryVerbsContextMenu::_GetHelpText
+18061f3b8 CContextMenuOnContextMenuArrayNoDuplicateVerbs::`vftable'
+180646d68 CLSID_OpenSearchContextMenu
+180082270 SHCreateDefaultContextMenu
+1801936c0 winrt::implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::find_inspectable
+180508490 CIncludeInLibraryContextMenu::Release
+1800f1e80 ShouldNavPaneContextMenuShowAllFoldersOption
+18022f280 CContextMenuExtensionImpl::QueryInterface
+18027f130 tip2::test_watcher<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated> >::NotifyFailure
+1800f600c winrt::impl::root_implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::~root_implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>
+1803c934c CEncryptionContextMenu::~CEncryptionContextMenu
+18020dc70 CContextMenuForwarder::AddRef
+18020dc30 CContextMenuForwarder::AddRef
+18020dc50 CContextMenuForwarder::AddRef
+180629e90 `CRegistryVerbsContextMenu::QueryInterface'::`5'::qit
+1800f4180 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::QueryInterface
+180234430 ShouldNavPaneContextMenuShowThisPCOption
+1803c7798 CCommandStoreShimOverIContextMenuCB::CCommandStoreShimOverIContextMenuCB
+18002bd30 ATL::CComPtr<IContextMenu3>::~CComPtr<IContextMenu3>
+18061e2b8 CLibraryPropSheetItemContextMenu::`vftable'
+180600fe8 tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>::`vftable'
+180289af0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::Release
+1800c71cc Microsoft::WRL::Details::Selector<Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>,Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::Details::ImplementsMarker<CWRLObjectWithSite>,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink> >::Selector<Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>,Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::Details::ImplementsMarker<CWRLObjectWithSite>,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink> >
+18002bd30 ATL::CComPtr<IContextMenuSite>::~CComPtr<IContextMenuSite>
+1804c9aa8 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>
+18061e1e8 CLibraryFolderContextMenu::`vftable'
+18061f398 CContextMenuOnContextMenuArray::`vftable'
+18022e1f0 OOPContextMenuWrapper::InvokeCommand
+18034f8c0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IImmersiveContextMenuOwnerDrawHelper>::QueryInterface
+18019ac00 CDesktopSpotlightOpenContextMenuVerb::GetFlags
+1801936c0 winrt::impl::root_implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::GetTrustLevel
+1806b0369 `DesktopWallpaperTelemetry::DesktopSpotlightEnabledWithContextMenuOptions'::`4'::_tlgEvent
+180158144 tip2::tip_test<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest> >::operator bool
+1801f0db8 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>::~merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>
+1805f2578 CCommandStoreShimOverIContextMenuCB::`vftable'
+1804caef0 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>::evaluate
+1801c0ad8 winrt::impl::root_implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::make_weak_ref
+1800b5ba4 tip2::test_data_control<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >::~test_data_control<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >
+1806115d0 CEncryptionContextMenu::`vftable'
+180525690 CContextMenuWithoutVerbs::InvokeCommand
+1804020c0 CContextMenuForwarder::SetSite
+18029f508 FileExplorerTelemetry::BackgroundContextMenuOptionsClickTrackForSpotlight<enum FileExplorerTelemetry::BackgroundContextMenuOptionsTrackForSpotlightEnum>
+18061f2a8 CContextMenuOnContextMenuArrayNoDuplicateVerbs::`vftable'
+1803c8a30 CEnumExplorerCommandOverIContextMenu::Skip
+18020d870 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,IContextMenu>::`vector deleting destructor'
+1805fe2e8 OOPContextMenuWrapper::`vftable'
+18042ad8c _CreateWindowForContextMenu
+18002bd30 wil::com_ptr_t<IContextMenu,wil::err_returncode_policy>::~com_ptr_t<IContextMenu,wil::err_returncode_policy>
+1805258f0 CContextMenuOnContextMenuArrayNoDuplicateVerbs::QueryContextMenu
+1800b3c20 _tip_ContextMenuCreationTest::serialize<tson::output_archive>
+18038d988 CRegistryVerbsContextMenu::_AreSelectionCommandsUniform
+1805f9d90 tip2::test_watcher<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >::`vftable'
+180196050 tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>::enhance_reporting
+1805f9d90 tip2::test_watcher<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest> >::`vftable'
+180524c00 CContextMenuOnContextMenuArray::AddRef
+18002b57c CRegistryVerbsContextMenu::_ShouldRemoveVerb
+180615458 CContextMenuRenameVerb::`vftable'
+180629d00 `CRegistryVerbsContextMenu::QueryInterface'::`11'::qit
+180085a64 winrt::com_ptr<CDesktopSpotlightNextContextMenuVerb>::unconditional_release_ref
+1806275a0 FileExplorerContextMenu::c_VerbsForFileSystemItemSelection
+1801dff24 CDefView::SetContextMenuCapability
+180526000 CContextMenuOnContextMenuArray::Release
+1802ca4e0 tip2::details::merged_data<_tip_ContextMenuInitTest,_tip_ContextMenuInitTest>::deserialize
+18038cfa0 CRegistryVerbsContextMenu::AddRef
+1802b9024 FileExplorerContextMenu::PrepareContextMenuInvokeVerbsForContext
+1800fc7f8 CRegistryVerbsContextMenu::_IsDefaultVerb
+1805e61e8 CRegistryVerbsContextMenu::`vftable'
+18024ce30 CEnumExplorerCommandOverIContextMenu::Clone
+18022d390 OOPContextMenuWrapper::Initialize
+18002bd30 ATL::CComPtr<CExplorerCommandStateOverIContextMenu>::~CComPtr<CExplorerCommandStateOverIContextMenu>
+1802c5328 _InvokeSpecificContextMenuVerb
+1802b1a40 wil::details::FeatureImpl<__WilFeatureTraits_Feature_ContextMenu_FilterInvokeVerbs>::GetCurrentFeatureEnabledState
+18061d030 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated>::`vftable'
+180017648 Microsoft::WRL::ComPtr<IContextMenuBaseInfo>::InternalRelease
+18038e248 CRegistryVerbsContextMenu::_StartGetStateTask
+1802bb954 wil::details::FeatureImpl<__WilFeatureTraits_Feature_ContextMenu_FilterInvokeVerbs>::ReportUsage
+1804c9e1c tip2::test_watcher<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated> >::~test_watcher<tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated,_tip_SpotlightOptionsInBackgroundContextMenuTestUpdated> >
+180579eb4 wil::details::FeatureImpl<__WilFeatureTraits_Feature_ReduceSlideshowContextMenuLatency>::ReportUsage
+18038d000 CRegistryVerbsContextMenu::AddRef
+18038d020 CRegistryVerbsContextMenu::AddRef
+18038cfc0 CRegistryVerbsContextMenu::AddRef
+1803c8770 CEnumExplorerCommandOverIContextMenu::QueryInterface
+18038cfe0 CRegistryVerbsContextMenu::AddRef
+18058976c ImmersiveContextMenuHelper::StoreContextMenuDataForItem
+1800189ec HDXA_QueryContextMenu
+180516bd4 CLocationContextMenu::~CLocationContextMenu
+18002b854 CRegistryVerbsContextMenu::_SupportsType
+18038cf80 CRegistryVerbsContextMenu::AddPages
+1800b5d9c tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>::Release
+180509c3c CLibraryPropSheetItemContextMenu::`scalar deleting destructor'
+180516de0 CLocationContextMenu::_OnInvokeCommand
+1805078f0 CLibraryFolderContextMenu::Initialize
+1802a4c60 wil::com_ptr_t<tip2::details::merged_data<_tip_ContextMenuE2ELoadTest,_tip_ContextMenuE2ELoadTest>,wil::err_returncode_policy>::operator=
+1801590f0 CContextMenuOnContextMenuArray::SetSite
+18016be90 CRegistryVerbsContextMenu::GetWindow
+1802b05a0 FileExplorerTelemetryCommon::ActionDetails::GetContextMenuType
+1802a4cc0 wil::com_ptr_t<tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>,wil::err_returncode_policy>::operator=
+180176f84 CDefView::_InvokeContextMenuVerbOnSelectionWorker
+1805e6140 CRegistryVerbsContextMenu::`vftable'
+180289b10 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::Release
+1802cb8f0 winrt::implements<CDesktopSpotlightOpenContextMenuVerb,IExplorerCommand>::get_unknown
+180646d78 CLSID_LibraryFolderContextMenu
+1800c6fec Microsoft::WRL::Details::RuntimeClassBaseT<2>::AsIID<Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink> >
+180516eb0 CLocationContextMenu::_OnQueryContextMenu
+18068ab78 SID_SMenuBandContextMenuModifier
+18002abac CRegistryVerbsContextMenu::~CRegistryVerbsContextMenu
+180610160 tip2::details::merged_data<_tip_SpotlightOptionsInBackgroundContextMenuTest_attributes,tip2::test_data_basic>::`vftable'
+180289b30 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::Release
+1805617e0 CToolbarMenu::v_TrackingSubContextMenu
+1802aad6c CDefView::DoCuratedContextMenu
+180466410 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::Release
+180779950 _imp_SHForwardContextMenuMsg
+1803c9b40 CEncryptionContextMenu::Init_FolderContentsInfo
+1802c6cfc _RemoveContextMenuItems
+1800c3a7c CDefView::_DoContextMenu
+1805077bc CLibraryFolderContextMenu::`scalar deleting destructor'
+1800e0d5c CRegistryVerbsContextMenu::_GetCommandStringFromSubMenu
+1800b17e0 CRegistryVerbsContextMenu::SetSite
+180524c10 CContextMenuOnContextMenuArray::AddRef
+180524bf0 CContextMenuOnContextMenuArray::AddRef
+1802a3920 tip2::details::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>::merged_data<_tip_ContextMenuSelectionTest,_tip_ContextMenuSelectionTest>
+18018ebe0 SHELL32_SHCreateDefaultContextMenu
+1806a66a2 `DesktopIconLayoutTelemetry::GridSizeChangeFromContextMenu'::`4'::_tlgEvent
+18016f320 CContextMenuOnHMENU::Release
+1803ff14c CContextMenuForwarder::~CContextMenuForwarder
+180508120 CIncludeInLibraryContextMenuHelper::OnSetChanged
+1800b1680 Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IContextMenuCB>
+1800e01dc CRegistryVerbsContextMenu::_FindIndex
+1802b1af0 wil::details::FeatureImpl<__WilFeatureTraits_Feature_DesktopSpotlightContextMenuUpdatedTIPTelemetry>::GetCurrentFeatureEnabledState
+1804f3180 tip2::details::merged_data<_tip_SpotlightContextMenuFeature,_tip_SpotlightContextMenuFeature>::serialize
+1804f26fc _tip_SpotlightContextMenuFeature::evaluate
+1805e5108 CIncludeInLibraryContextMenu::`vftable'
+1805ed520 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithSite,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::`vftable'
+1801e04ac CDefView::_CreateSelectionContextMenu
+1801f3010 FileExplorerTelemetry::ContextMenu::WasAlreadyReportedToTelemetry
+1804c959c winrt::make_self<CDesktopSpotlightOpenContextMenuVerb>
+180600390 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,Microsoft::WRL::ChainInterfaces<IShellFolder2,IShellFolder,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IPersistPropertyBag,IContextMenuCB,Microsoft::WRL::ChainInterfaces<IPersistPropertyBag,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,Microsoft::WRL::ChainInterfaces<IPersistFolder2,IPersistFolder,IPersist,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IThumbnailHandlerFactory,CWRLObjectWithSite>::`vftable'
+1801a2100 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,IImmersiveContextMenuOwnerDrawHelper>::AddRef
+180517250 CLocationContextMenu_Create
+1800e073c CRegistryVerbsContextMenu::_GetShellItemArray
+1801936c0 CContextMenuExtensionImpl::_OnQueryContextMenu
+1803c8820 CEnumExplorerCommandOverIContextMenu::Release
+1806a3887 `ContextMenuTelemetry::IShellExtInit_Initialize<_GUID const & __ptr64,unsigned __int64 volatile & __ptr64>'::`4'::_tlgEvent
+180507780 CIncludeInLibraryContextMenu::`scalar deleting destructor'
+180401730 CContextMenuForwarder::QueryInterface
+180401710 CContextMenuForwarder::QueryInterface
+180429ec0 CFolderMenu::QueryContextMenu
+180401750 CContextMenuForwarder::QueryInterface
+180139a10 CContextMenuOnHMENU::_RebaseMenu
+1806153f8 CContextMenuWithoutVerbs::`vftable'
+18002ba5c CRegistryVerbsContextMenu::_IsRestricted
+1801e6280 tip2::test_watcher<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >::test_watcher<tip2::details::merged_data<_tip_ContextMenuCreationTest,_tip_ContextMenuCreationTest> >
+1800f607c winrt::impl::root_implements<CDesktopSpotlightNextContextMenuVerb,IExplorerCommand>::subtract_final_reference
+180509bf0 CLibraryPropSheetItemContextMenu::`vector deleting destructor'
+18022608c CContextMenuExtensionImpl::CContextMenuExtensionImpl
+18061e308 CLibraryPropSheetItemContextMenu::`vftable'
+18012f110 FileExplorerTelemetry::ContextMenu::StopActivity
+18050e4a0 CLibraryPropSheetItemContextMenu::get_MappingArray
+18065aed0 Shell32_DesktopContextMenu_Display_Info
+180702358 Feature_DesktopSpotlightContextMenuUpdatedTIPTelemetry__descriptor
+1806583c0 IID_IContextMenuCB
+1800fdb00 ImmersiveContextMenuHelper::_RemoveOwnerDrawFromMenuWorker
+18038d84c CRegistryVerbsContextMenu::_AddFirstItemToCommandArray
+1803c8380 CExplorerCommandOverIContextMenu::GetState
+18077b640 _imp_StateRepoVerbsCache_GetContextMenuVerbs
+1800c708c Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,Microsoft::WRL::ChainInterfaces<IContextMenu3,IContextMenu2,IContextMenu,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil,Microsoft::WRL::Details::Nil>,IShellExtInit,IFileOperationProgressSink>::CanCastTo

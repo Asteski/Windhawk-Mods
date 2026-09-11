@@ -1,0 +1,991 @@
+base 180000000 error 0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting>'::`1'::dtor$0
+1801a3f7c `winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarJumplistOnHoverSetting::DesktopTaskbarJumplistOnHoverSetting'::`1'::dtor$1
+1800695dc AsyncResultHelpers::AsyncResult<SettingsBitmapLoadInfo>::AsyncResult<SettingsBitmapLoadInfo><TrayUI,long (__cdecl TrayUI::*)(SettingsBitmapLoadInfo const &),<lambda_9a439eb396f58ddc1374461e96fe5c0f> >
+1801a2538 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShareAnyWindow'::`1'::dtor$1
+1801a452d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShareAnyWindow'::`1'::dtor$1
+1801a6455 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$333
+1801a3f7c `winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarRecommendedSetting::DesktopTaskbarRecommendedSetting'::`1'::dtor$1
+1801ac91f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$0
+1801a47e7 `TrayUI::NotifySettingsChanged'::`1'::catch$0
+1801a265d `winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings12<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::ShouldShowRecentSection'::`1'::dtor$0
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8>::get_IsAIAssistanceEnabled'::`1'::catch$0
+1801a3f58 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSnSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSnSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a3f46 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSnSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSnSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a39a8 `NotifyIconSettingsDatabase::IsAttemptedGuidHijack'::`1'::dtor$5
+1801a452d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShareAnyWindowForProviderKind'::`1'::dtor$1
+1801ac90d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShareAnyWindowForProviderKind'::`1'::dtor$0
+1801a4f93 `winrt::impl::consume_SystemSettings_DataModel_ISettingItem<winrt::SystemSettings::DataModel::ISettingItem>::SettingChanged'::`1'::dtor$3
+1801a3f7c `winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowSearchOnHoverSetting::DesktopTaskbarShowSearchOnHoverSetting'::`1'::dtor$1
+180120690 winrt::impl::implements_delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_bc07437c7c35887bb4f6e50ae99c64b8> >::QueryInterface
+1801a6770 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$16
+1801a6964 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$36
+1801a686a `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$26
+1801a3f46 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarAlSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarAlSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a6a5e `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$46
+1801a3f58 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarAlSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarAlSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarIconSizePreferenceSetting>'::`1'::dtor$0
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9>::get_IconSizePreference'::`1'::catch$0
+1801a2538 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShareAnyWindow'::`1'::dtor$0
+1801a452d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShareAnyWindow'::`1'::dtor$0
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10>::get_ShowRecommendations'::`1'::catch$0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSearchSetting>'::`1'::dtor$0
+1801aca75 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$170
+1801a21a2 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowShowDesktop'::`1'::catch$0
+1801a265d `winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings12<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::ShouldShowAllAppsSection'::`1'::dtor$0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting>'::`1'::dtor$0
+1801a3f58 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarExpandableTaskbarSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarExpandableTaskbarSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a3f46 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarExpandableTaskbarSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarExpandableTaskbarSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a3996 `NotifyIconSettingsDatabase::IsAttemptedGuidHijack'::`1'::dtor$4
+1801a21e6 `CTaskBand::_HandleSettingChange'::`1'::dtor$0
+1801a6ef6 `StateCapture::AppBackupStateTelemetry::GetSettingsBackupFlags'::`1'::catch$2
+1801a5477 `winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::NonDelegatingGetRuntimeClassName'::`1'::catch$2
+1801a5477 `winrt::impl::delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_97d1d5d5e62cb3f17b4fe98388d34ae1> >::Invoke'::`1'::catch$3
+1801a6789 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$17
+1801a697d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$37
+1801a6883 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$27
+1801a6a77 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$47
+1801a6045 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_HideTaskbarInDesktopMode'::`1'::catch$2
+1801a259d `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarModel,winrt::WindowsUdk::UI::Shell::ITaskbarModel>::get_Settings'::`1'::catch$7
+18011cb00 winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable><<lambda_bc07437c7c35887bb4f6e50ae99c64b8> >
+1801ac931 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$2
+1801b0e2e `wil::GetActivationFactory<Windows::System::Profile::IEducationSettingsStatics>'::`1'::dtor$1
+1801b0e02 `wil::GetActivationFactory<Windows::System::Profile::IEducationSettingsStatics>'::`1'::dtor$0
+1801a4f81 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::SearchMode'::`1'::dtor$1
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::get_ShowFlashing'::`1'::catch$0
+1801a3f7c `winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting::DesktopTaskbarLoSetting'::`1'::dtor$1
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarRecommendedSetting>'::`1'::dtor$0
+1801a452d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowFlashing'::`1'::dtor$0
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a39cc `NotifyIconSettingsDatabase::IsAttemptedGuidHijack'::`1'::dtor$7
+1801a265d `winrt::impl::consume_WindowsUdk_Storage_ICloudStore2<winrt::WindowsUdk::Storage::CloudStore>::GetSyncSetting'::`1'::dtor$0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarXdrNotificationSetting>'::`1'::dtor$0
+1801a330f `winrt::impl::delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_97d1d5d5e62cb3f17b4fe98388d34ae1> >::Invoke'::`1'::dtor$0
+1801a453f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Size'::`1'::dtor$1
+1801a215e `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowBadges'::`1'::catch$4
+1801a673e `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$14
+1801a6932 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$34
+1801a6838 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$24
+1801a6a2c `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$44
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowTaskbarOnAllDisplays'::`1'::catch$3
+1801acb1f `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13>::ShowShareAnyWindowForProviderKind'::`1'::catch$0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarExpandableTaskbarSetting>'::`1'::dtor$0
+1801a453f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShareAnyWindow'::`1'::dtor$2
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowSearchOnHoverSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowSearchOnHoverSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowSearchOnHoverSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowSearchOnHoverSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801ac955 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$36
+1801aca2d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$122
+1801ac9f7 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$102
+1801aca09 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$112
+1801ac967 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$39
+1801aca87 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$182
+1801a3f7c `winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting::DesktopTaskbarFlashingSetting'::`1'::dtor$1
+1801a453f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::SearchMode'::`1'::dtor$0
+1801a3f46 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::SearchMode'::`1'::dtor$0
+1801a46ab `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3>::get_Theme'::`1'::catch$0
+1801a265d `winrt::weak_ref<winrt::SystemSettings::DataModel::ISettingItem>::from_com_ref<winrt::SystemSettings::DataModel::ISettingItem const &>'::`1'::dtor$0
+1801acb1f `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_HideTaskbarInTabletMode'::`1'::catch$0
+1801a453f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowFlashing'::`1'::dtor$1
+1801a39ba `NotifyIconSettingsDatabase::IsAttemptedGuidHijack'::`1'::dtor$6
+1801a22f4 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_SearchMode'::`1'::catch$0
+1801a452d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Size'::`1'::dtor$0
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3>::get_IsTaskbarSettingsContextMenuEnabled'::`1'::catch$0
+1801a6757 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$15
+1801a694b `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$35
+1801a6851 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$25
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSearchSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSearchSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a6a45 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$45
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSearchSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSearchSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSn2Setting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSn2Setting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a3f58 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarBadgingSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarBadgingSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarRecommendedSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarRecommendedSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarJumplistOnHoverSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarJumplistOnHoverSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarXdrNotificationSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarXdrNotificationSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSn2Setting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSn2Setting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a3f46 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarBadgingSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarBadgingSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarRecommendedSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarRecommendedSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarJumplistOnHoverSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarJumplistOnHoverSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarXdrNotificationSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarXdrNotificationSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a21a2 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5>::get_GroupingMode'::`1'::catch$0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting>'::`1'::dtor$0
+1801a22f4 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2>::get_ShowMiniSearch'::`1'::catch$0
+1800d35a0 wistd::__function::__func<<lambda_d312b67b4f7027f6903520f3fa736530>,long __cdecl(SettingsBitmapLoadInfo)>::`scalar deleting destructor'
+1801a453f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShareAnyWindow'::`1'::dtor$5
+1801a9014 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$45
+1801acacf `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$246
+1801acabd `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$226
+1801a9026 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$42
+1801acaab `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$206
+1801ac979 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$48
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ShowShowDesktop'::`1'::catch$0
+1801ac943 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$4
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarTaskViewSetting>'::`1'::dtor$0
+1801a3972 `NotifyIconSettingsDatabase::IsAttemptedGuidHijack'::`1'::dtor$1
+1801a2538 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowTaskView'::`1'::dtor$0
+1801a214c `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowTaskView'::`1'::dtor$0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowLabelsSetting>'::`1'::dtor$0
+1801a214c `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowBadges'::`1'::dtor$0
+1801a670c `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$12
+1801a6900 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$32
+1801a6806 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$22
+1801a69fa `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$42
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11>::get_ShowCrossDeviceResume'::`1'::catch$0
+1801a97b2 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$54
+1801ac99d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$57
+1801ac98b `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$51
+1801aca3f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$134
+1801aca99 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$194
+1801a2538 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShowDesktop'::`1'::dtor$0
+1801a214c `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShowDesktop'::`1'::dtor$0
+18007c7b0 wistd::__function::__func<<lambda_d312b67b4f7027f6903520f3fa736530>,long __cdecl(SettingsBitmapLoadInfo)>::destroy
+1801a3f46 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarTaskViewSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarTaskViewSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a3f58 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarTaskViewSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarTaskViewSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a4d4a `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::add_Changed'::`1'::catch$0
+1801a3960 `NotifyIconSettingsDatabase::IsAttemptedGuidHijack'::`1'::dtor$0
+1801a3f58 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a3f46 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1800be084 wistd::__function::__func<<lambda_d312b67b4f7027f6903520f3fa736530>,long __cdecl(SettingsBitmapLoadInfo)>::__func<<lambda_d312b67b4f7027f6903520f3fa736530>,long __cdecl(SettingsBitmapLoadInfo)>
+1801a22f4 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3>::get_DisplayMode'::`1'::catch$0
+1801ac8fb `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::EffectiveSearchMode'::`1'::dtor$0
+1801a214c `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Alignment'::`1'::dtor$0
+1801a2326 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Alignment'::`1'::dtor$0
+1801a6725 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$13
+1801a6919 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$33
+1801a681f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$23
+1801a6a13 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$43
+1801a4f81 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowCrossDeviceResume'::`1'::dtor$1
+1801a453f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowCrossDeviceResume'::`1'::dtor$0
+1801a265d `winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings6<winrt::WindowsUdk::UI::Shell::TaskbarSettings>::EffectiveSearchMode'::`1'::dtor$0
+1801ae0be `NotifyIconSettingsDatabase::NotifyIconSettingsDatabase'::`1'::dtor$3
+1801ae0a8 `NotifyIconSettingsDatabase::NotifyIconSettingsDatabase'::`1'::dtor$2
+1801ae092 `NotifyIconSettingsDatabase::NotifyIconSettingsDatabase'::`1'::dtor$1
+1801ae080 `NotifyIconSettingsDatabase::NotifyIconSettingsDatabase'::`1'::dtor$0
+1801a54f1 `NotifyIconSettingsIdentity::NotifyIconSettingsIdentity'::`1'::dtor$0
+1801a3a77 `NotifyIconSettingsIdentity::NotifyIconSettingsIdentity'::`1'::dtor$0
+1801a3a77 `NotifyIconSettingsIdentity::NotifyIconSettingsIdentity'::`1'::dtor$0
+1801ae0d4 `NotifyIconSettingsDatabase::NotifyIconSettingsDatabase'::`1'::dtor$4
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_HideTaskbarInDesktopMode'::`1'::catch$3
+1801acae1 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$274
+1801a6f54 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$66
+1801a63d5 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$60
+1801ac9af `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$63
+1801aca1b `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$117
+1801a6f42 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$69
+1801a265d `winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings12<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::ShouldShowPinnedSection'::`1'::dtor$0
+1801a597b `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowMeetNow'::`1'::catch$0
+1801a3f46 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a3f58 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_HideTaskbarInTabletMode'::`1'::catch$0
+1801a3984 `NotifyIconSettingsDatabase::IsAttemptedGuidHijack'::`1'::dtor$3
+1801a3f8e `winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings::GetDefault'::`1'::dtor$1
+1801a3f7c `winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarIconSizePreferenceSetting::DesktopTaskbarIconSizePreferenceSetting'::`1'::dtor$1
+1801a3f7c `winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting::DesktopTaskbarSizeSetting'::`1'::dtor$1
+1801a265d `winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings10<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::ShouldHideUserInformation'::`1'::dtor$0
+1801a2c39 `winrt::impl::invoke<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,std::nullptr_t>'::`1'::catch$11
+1801a27d9 `winrt::impl::invoke<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,std::nullptr_t>'::`1'::dtor$0
+1801a6045 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ShowTaskbarOnAllDisplays'::`1'::catch$2
+1801a662b `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$3
+1801a66da `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$10
+1801a6612 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$2
+1801a65f9 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$1
+1801a68ce `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$30
+1801a65e7 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$0
+1801a67d4 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$20
+1801a668f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$7
+1801a6ac2 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$50
+1801a6676 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$6
+1801a69c8 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$40
+1801a665d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$5
+1801a6644 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$4
+1801a66c1 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$9
+1801a66a8 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$8
+1801ac9c1 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$76
+1801aca51 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$146
+1801a6f30 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$72
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5>::get_ShowLabels'::`1'::catch$0
+1801ac9d3 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$78
+1801a5d9b `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_SearchMode'::`1'::catch$1
+1801a2c27 `winrt::impl::invoke<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,std::nullptr_t>'::`1'::dtor$1
+1801a66f3 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$11
+1801a68e7 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$31
+1801a67ed `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$21
+1801a6adb `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$51
+1801a69e1 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$41
+18011ff50 winrt::impl::delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_bc07437c7c35887bb4f6e50ae99c64b8> >::Invoke
+1801a4c51 `winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::get_weak'::`1'::dtor$2
+1801ac9e5 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$81
+1801a6045 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_Alignment'::`1'::catch$0
+1801a47c3 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::IconSizePreference'::`1'::dtor$1
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_PeekToPreviewDesktop'::`1'::catch$0
+1801a453f `winrt::impl::factory_cache_entry<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings,winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettingsStatics>::call<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings (__cdecl*)(winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettingsStatics const &)>'::`1'::dtor$0
+1801a3887 `winrt::impl::factory_cache_entry<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings,winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettingsStatics>::call<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings (__cdecl*)(winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettingsStatics const &)>'::`1'::dtor$3
+1801a434e `winrt::impl::invoke<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,winrt::WindowsUdk::UI::Shell::TaskbarSettings,std::nullptr_t>'::`1'::catch$3
+1801a5519 `NotifyIconSettingsDatabase::TryGetSettingsForExistingIcon'::`1'::dtor$2
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowLabelsSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowLabelsSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowLabelsSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowLabelsSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a5fc7 `StateCapture::AppBackupStateTelemetry::GetSettingsBackupFlags'::`1'::dtor$0
+1801a4f93 `winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::Changed'::`1'::dtor$3
+1801ae0fc `NotifyIconSettingsDatabase::CreateDefaultSettingsForNewIcon'::`1'::dtor$1
+1801a883d `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7>::get_ShowSearchOnHover'::`1'::catch$3
+1801a50ef `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowContextMenus'::`1'::catch$0
+1801a453f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Location'::`1'::dtor$5
+1801a347b `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_UseAccentColorOnTaskbar'::`1'::catch$0
+1801aca63 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize'::`1'::dtor$158
+1801a47c3 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::IconSizePreference'::`1'::dtor$0
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarDaSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarDaSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarDaSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarDaSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarAlSetting>'::`1'::dtor$0
+1801a552b `NotifyIconSettingsDatabase::TryGetSettingsForExistingIcon'::`1'::dtor$3
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ItemPlacement'::`1'::catch$3
+1801a214c `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7>::get_ShowSearchOnHover'::`1'::dtor$0
+1801ae0ea `NotifyIconSettingsDatabase::CreateDefaultSettingsForNewIcon'::`1'::dtor$0
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12>::get_ShowTaskbarCompanion'::`1'::catch$4
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarIconSizePreferenceSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarIconSizePreferenceSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarIconSizePreferenceSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarIconSizePreferenceSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a22f4 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowShareAnyWindow'::`1'::catch$0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSdSetting>'::`1'::dtor$0
+1801a3bf6 `NotifyIconSettingsDatabase::s_IsRegistrySubkeyValid'::`1'::dtor$0
+1801a5477 `winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::NonDelegatingGetTrustLevel'::`1'::catch$0
+1801a21a2 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowTaskView'::`1'::catch$0
+1801ae10e `NotifyIconSettingsDatabase::CreateDefaultSettingsForNewIcon'::`1'::dtor$3
+1801a22f4 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_Size'::`1'::catch$0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSn2Setting>'::`1'::dtor$0
+1801a6045 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_Size'::`1'::catch$5
+1801a5d9b `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_Location'::`1'::catch$0
+1801a2f38 `NotifyIconSettingsDatabase::ValidateRegistry'::`1'::dtor$4
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSnSetting>'::`1'::dtor$0
+1801a2f60 `NotifyIconSettingsDatabase::ValidateRegistry'::`1'::dtor$7
+1801a2f4a `NotifyIconSettingsDatabase::ValidateRegistry'::`1'::dtor$6
+1801a2f26 `NotifyIconSettingsDatabase::ValidateRegistry'::`1'::dtor$1
+1801a2f14 `NotifyIconSettingsDatabase::ValidateRegistry'::`1'::dtor$0
+1801a265d `winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::get_weak'::`1'::dtor$1
+1801a3f7c `winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSn2Setting::DesktopTaskbarSn2Setting'::`1'::dtor$1
+1801ac90d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::IconSizePreference'::`1'::dtor$2
+1801a265d `winrt::weak_ref<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::from_com_ref<winrt::WindowsUdk::UI::Shell::ITaskbarSettings const &>'::`1'::dtor$0
+1801a265d `winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings9<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::ShouldShowSuggestedFiles'::`1'::dtor$0
+1801a3f46 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowExpandableTaskbar'::`1'::dtor$0
+1801a27c7 `winrt::impl::invoke<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,winrt::WindowsUdk::UI::Shell::TaskbarSettings,std::nullptr_t>'::`1'::dtor$0
+1801a5507 `NotifyIconSettingsDatabase::TryGetSettingsForExistingIcon'::`1'::dtor$1
+1801a5477 `winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::NonDelegatingGetTrustLevel'::`1'::catch$0
+1801add75 `winrt::WindowsUdk::UI::Shell::implementation::NotificationAreaIcon2::RegisterForSettingChanges'::`1'::dtor$24
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ShowDashboard'::`1'::catch$0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarJumplistOnHoverSetting>'::`1'::dtor$0
+1801a265d `winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings11<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::StartSize'::`1'::dtor$0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarBadgingSetting>'::`1'::dtor$0
+1801a3f46 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSdSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSdSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a3f58 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSdSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSdSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShSetting>'::`1'::dtor$0
+1801a452d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Location'::`1'::dtor$0
+1801a6575 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Location'::`1'::dtor$0
+1801acb1f `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_UseAccentColorOnTaskbar'::`1'::catch$0
+1801a3f7c `winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSnSetting::DesktopTaskbarSnSetting'::`1'::dtor$1
+1801ac90d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::IconSizePreference'::`1'::dtor$5
+1800e7640 wistd::__function::__func<<lambda_d312b67b4f7027f6903520f3fa736530>,long __cdecl(SettingsBitmapLoadInfo)>::__clone
+1801ae02f `std::vector<std::pair<NotifyIconSettingsIdentity,unsigned __int64>,std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >::_Emplace_reallocate<std::pair<NotifyIconSettingsIdentity,unsigned __int64> >'::`1'::catch$1
+1801a271f `winrt::impl::delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_bc07437c7c35887bb4f6e50ae99c64b8> >::Invoke'::`1'::dtor$0
+1801a3a27 `NotifyIconSettingsDatabase::IsAttemptedGuidHijack'::`1'::dtor$9
+1801a214c `winrt::WindowsUdk::UI::Shell::implementation::NotificationAreaIcon2::RegisterForSettingChanges'::`1'::dtor$23
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarInkWorkspaceSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarInkWorkspaceSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarInkWorkspaceSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarInkWorkspaceSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a6045 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_IsStartButtonContextMenuEnabled'::`1'::catch$0
+1801a452d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::DisplayMode'::`1'::dtor$0
+1801a453f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::DisplayMode'::`1'::dtor$1
+1801a6045 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ItemPlacement'::`1'::catch$2
+1801a2538 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowDashboard'::`1'::dtor$0
+1801a214c `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowDashboard'::`1'::dtor$0
+1801a452d `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Location'::`1'::dtor$1
+1801a6575 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Location'::`1'::dtor$1
+1800d1564 wistd::__function::__func<<lambda_d312b67b4f7027f6903520f3fa736530>,long __cdecl(SettingsBitmapLoadInfo)>::~__func<<lambda_d312b67b4f7027f6903520f3fa736530>,long __cdecl(SettingsBitmapLoadInfo)>
+1801a2538 `winrt::impl::factory_cache_entry<winrt::Windows::System::Profile::EducationSettings,winrt::Windows::System::Profile::IEducationSettingsStatics>::call<bool (__cdecl*)(winrt::Windows::System::Profile::IEducationSettingsStatics const &)>'::`1'::dtor$0
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::Windows::System::Profile::EducationSettings,winrt::Windows::System::Profile::IEducationSettingsStatics>::call<bool (__cdecl*)(winrt::Windows::System::Profile::IEducationSettingsStatics const &)>'::`1'::dtor$2
+1801a79b7 `MigrateSettings'::`1'::dtor$2
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_PeekToPreviewDesktop'::`1'::catch$0
+1801a22f4 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_Alignment'::`1'::catch$0
+1801a5477 `winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::NonDelegatingGetRuntimeClassName'::`1'::catch$2
+1801a39fb `NotifyIconSettingsDatabase::IsAttemptedGuidHijack'::`1'::dtor$8
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4>::put_IsSearchBoxSettingEnabled'::`1'::catch$0
+1801a5803 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_Size'::`1'::dtor$0
+1801a4069 `TrayUI::LoadSettingsBitmap'::`1'::dtor$0
+1801a213a `TrayUI::LoadSettingsBitmap'::`1'::dtor$1
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarDaSetting>'::`1'::dtor$0
+1801acaf3 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowRecommendations'::`1'::dtor$0
+1801a2538 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::IsSearchBoxSettingEnabled'::`1'::dtor$0
+18001aa80 winrt::impl::implements_delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_bc07437c7c35887bb4f6e50ae99c64b8> >::AddRef
+1801a22f4 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_Location'::`1'::catch$0
+1801a453f `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Location'::`1'::dtor$2
+1801a79c9 `MigrateSettings'::`1'::dtor$10
+1801a46dd `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6>::get_EffectiveSearchMode'::`1'::catch$0
+1801a4197 `CTaskBand::_RefreshSettings'::`1'::dtor$0
+1801a3f8e `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$3
+1801a6575 `winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const &)>'::`1'::dtor$0
+1801a6045 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6>::put_EffectiveSearchMode'::`1'::catch$2
+1801a21a2 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowDashboard'::`1'::catch$0
+1800e7700 wistd::__function::__func<<lambda_d312b67b4f7027f6903520f3fa736530>,long __cdecl(SettingsBitmapLoadInfo)>::__move
+1801ae06e `std::_Uninitialized_move<std::pair<NotifyIconSettingsIdentity,unsigned __int64> *,std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >'::`1'::dtor$0
+1801a67a2 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$18
+1801a689c `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$28
+1801a6996 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$38
+1801a6a90 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$48
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarInkWorkspaceSetting>'::`1'::dtor$0
+1800503ec std::find_if<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > > >,<lambda_99abdb0adc1e2ae815872b8728342cad> >
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4>::get_IsSearchBoxSettingEnabled'::`1'::catch$0
+1801a3433 `winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowSearchOnHoverSetting>'::`1'::dtor$0
+1800b07b0 wistd::__function::__func<<lambda_d312b67b4f7027f6903520f3fa736530>,long __cdecl(SettingsBitmapLoadInfo)>::operator()
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ShowShareAnyWindow'::`1'::catch$0
+1801a23c4 `CTaskBand::_RefreshSettings'::`1'::dtor$1
+1801a214c `winrt::WindowsUdk::UI::Shell::implementation::NotificationAreaIcon2::RegisterForSettingChanges'::`1'::dtor$9
+1800282c0 winrt::impl::implements_delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_bc07437c7c35887bb4f6e50ae99c64b8> >::Release
+1801add49 `winrt::WindowsUdk::UI::Shell::implementation::NotificationAreaIcon2::RegisterForSettingChanges'::`1'::dtor$10
+1801a6045 `winrt::impl::delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_bc07437c7c35887bb4f6e50ae99c64b8> >::Invoke'::`1'::catch$4
+1801add37 `winrt::WindowsUdk::UI::Shell::implementation::NotificationAreaIcon2::RegisterForSettingChanges'::`1'::dtor$6
+1801a330f `winrt::WindowsUdk::UI::Shell::implementation::NotificationAreaIcon2::RegisterForSettingChanges'::`1'::dtor$4
+1801a265d `winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings3<winrt::WindowsUdk::UI::Shell::TaskbarSettings>::DisplayMode'::`1'::dtor$0
+1801ae01d `std::vector<std::pair<NotifyIconSettingsIdentity,unsigned __int64>,std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >::_Emplace_reallocate<std::pair<NotifyIconSettingsIdentity,unsigned __int64> >'::`1'::dtor$0
+1801a5477 `winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ShowTaskView'::`1'::catch$0
+1801a214c `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowMiniSearch'::`1'::dtor$0
+1801a67bb `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$19
+1801a68b5 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$29
+1801a69af `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$39
+1801a6aa9 `winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings'::`1'::dtor$49
+180208ceb `TrayNotificationAreaTelemetry::CTrayNotificationAreaTelemetry::WriteNewNotifyIconSettingsToRegistry<bool,unsigned short const * __ptr64,unsigned short (& __ptr64)[260]>'::`4'::_tlgEvent
+180126b38 winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::GetIids
+180028360 std::exchange<winrt::com_ptr<winrt::impl::event_array<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> > >,winrt::com_ptr<winrt::impl::event_array<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> > > >
+1800c5c80 winrt::implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::get_local_iids
+1800beb94 Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::Details::ImplementsMarker<CWRLObjectWithGITSite>,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::~ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::Details::ImplementsMarker<CWRLObjectWithGITSite>,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>
+1801ee5b8 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarSnSetting>
+18008ae60 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6>::get_EffectiveSearchMode
+180018240 winrt::event<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >::remove
+1801c6d48 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::`vftable'
+180013c70 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowTaskView
+1801c2618 CreativeFramework::MobilityExperienceSettings::c_regValueLastResumeOnPCTime
+1801298d0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ShowTaskbarOnAllDisplays
+180083044 std::pair<NotifyIconSettingsIdentity,unsigned __int64>::~pair<NotifyIconSettingsIdentity,unsigned __int64>
+1800b9dcc winrt::impl::require_one<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting,winrt::SystemSettings::DataModel::ISettingItem>::operator winrt::SystemSettings::DataModel::ISettingItem
+1800622ac winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::DisplayMode
+1801ee628 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarAlSetting>
+18010238c winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarJumplistOnHoverSetting::DesktopTaskbarJumplistOnHoverSetting
+1800f7cd4 winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::NonDelegatingGetTrustLevel
+180127ab0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,void>::QueryInterface
+180054b48 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+180238c60 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarDaSetting,winrt::Windows::Foundation::IActivationFactory>
+180126ee0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::GetRuntimeClassName
+180087830 TrayUI::HandleHeadlinesSettingsChange
+180238aa0 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSn2Setting,winrt::Windows::Foundation::IActivationFactory>
+1801297e0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ShowShareAnyWindow
+1801292c0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7>::get_ShowSearchOnHover
+180128764 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShareAnyWindowForProviderKind
+1800a7c50 winrt::implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::get_unknown
+180014c90 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowDashboard
+1800bc474 StateCapture::AppBackupStateTelemetry::GetSettingsBackupFlags
+1801ee5a8 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarSn2Setting>
+18002f1c4 CreativeFramework::ContentDeliveryManagerSettings::DoesKeyExist
+1800bfdc8 winrt::impl::abi<winrt::SystemSettings::DataModel::ISettingItem,void>::type::`vcall'{152}'
+1800b1ffc winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting::DesktopTaskbarFlashingSetting
+180174350 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::QueryInterface
+1801c5ed0 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`vftable'
+180174320 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::QueryInterface
+1800b3830 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowLabelsSetting>
+1801259c0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,void>::AddRef
+1801252e0 winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarIconSizePreferenceSetting::DesktopTaskbarIconSizePreferenceSetting
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarSn2Setting::~IDesktopTaskbarSn2Setting
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarSearchSetting::~IDesktopTaskbarSearchSetting
+180124428 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarIconSizePreferenceSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarIconSizePreferenceSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+180124bc8 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowSearchOnHoverSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowSearchOnHoverSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+180128f00 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_HideTaskbarInTabletMode
+180056aec TrayUI::_OnSettingChange
+180238b60 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowLabelsSetting,winrt::Windows::Foundation::IActivationFactory>
+1801254c0 winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSn2Setting::DesktopTaskbarSn2Setting
+1800d3c30 TrayUI::AsyncSaveSettings
+1800adab8 std::vector<std::pair<NotifyIconSettingsIdentity,unsigned __int64>,std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >::push_back
+180125448 winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting::DesktopTaskbarSizeSetting
+18008e040 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,void>::QueryInterface
+180123bf8 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowSearchOnHoverSetting>
+1800e6798 TrayUI::_HandleTrayPrivateSettingMessage
+1800b79bc TrayUI::_RefreshSettingsAndBandSite
+180128298 SettingIndexToSnMode
+18005b020 winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::~root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>
+1801247f0 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarRecommendedSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarRecommendedSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1800adb10 NotifyIconSettingsIdentity::NotifyIconSettingsIdentity
+1801ee618 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarIconSizePreferenceSetting>
+18007df20 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowMeetNow
+180174330 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::QueryInterface
+1800b9dcc winrt::impl::require_one<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting,winrt::SystemSettings::DataModel::ISettingItem>::operator winrt::SystemSettings::DataModel::ISettingItem
+180174340 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::QueryInterface
+1800f1040 winrt::impl::implements_delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_97d1d5d5e62cb3f17b4fe98388d34ae1> >::~implements_delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_97d1d5d5e62cb3f17b4fe98388d34ae1> >
+1801259a0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,void>::AddRef
+18007e040 CTaskListWndMulti::SettingsChanged
+1801277f8 winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::QueryInterface
+180014da0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2>::get_ShowMiniSearch
+180238b20 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSdSetting,winrt::Windows::Foundation::IActivationFactory>
+180026888 CApplicationUsageTracker::_GetWindowTrackingSettings
+180126d10 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>::GetRuntimeClassName
+1800b2148 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>
+180123a50 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarIconSizePreferenceSetting>
+1801273b0 winrt::impl::delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_97d1d5d5e62cb3f17b4fe98388d34ae1> >::Invoke
+1800954d4 TrayStuckRectData::SaveSettings
+180238c40 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarExpandableTaskbarSetting,winrt::Windows::Foundation::IActivationFactory>
+180238a80 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowSearchOnHoverSetting,winrt::Windows::Foundation::IActivationFactory>
+18014734c NotifyIconSettingsDatabase::CreateDefaultSettingsForNewIcon
+180129830 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ShowShowDesktop
+18007104c winrt::weak_ref<winrt::SystemSettings::DataModel::ISettingItem>::from_com_ref<winrt::SystemSettings::DataModel::ISettingItem const & __ptr64>
+1800797c0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowContextMenus
+180126bd0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14,void>::GetIids
+18003a770 winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::AddRef
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarSdSetting::~IDesktopTaskbarSdSetting
+18011acbc winrt::impl::event_revoker<winrt::SystemSettings::DataModel::ISettingItem,&winrt::impl::abi<winrt::SystemSettings::DataModel::ISettingItem,void>::type::`vcall'{152}'>::revoke_impl
+1801c8038 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings8>
+180127a90 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,void>::QueryInterface
+1800f5f80 winrt::impl::produce_base<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>::GetIids
+18014714c winrt::impl::producers_base<NotifyIconSettingsDatabase,std::tuple<winrt::Windows::Foundation::IInspectable> >::producers_base<NotifyIconSettingsDatabase,std::tuple<winrt::Windows::Foundation::IInspectable> >
+18018d1dc CreativeFramework::ContentDeliveryManagerSettings::Details::GetSettingValue<unsigned long,16>
+180082a60 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::Release
+180129180 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_PeekToPreviewDesktop
+1801ee5c8 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarLoSetting>
+180174310 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::QueryInterface
+1801742e0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::QueryInterface
+180125980 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,void>::AddRef
+1800af3d8 winrt::impl::event_revoker<winrt::WindowsUdk::UI::Shell::ITaskbarSettings,&winrt::impl::abi<winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::type::`vcall'{264}'>::operator=
+180167d5c TrayNotificationAreaTelemetry::CTrayNotificationAreaTelemetry::WriteNewNotifyIconSettingsToRegistry<bool,unsigned short const * __ptr64,unsigned short (& __ptr64)[260]>
+1801293fc winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::get_strong
+1801ee588 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarShowSearchOnHoverSetting>
+18006d920 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::add_Changed
+18009aab8 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarLayoutManager<winrt::WindowsUdk::UI::Shell::ITaskbarLayoutManager>::ReportSettingsForMonitor
+1800bc880 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::QueryInterface
+180147134 winrt::impl::producer_convert<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>::producer_convert<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>
+1800b375c winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarExpandableTaskbarSetting>
+180124938 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSearchSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSearchSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1801293e0 winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::get_local_iids
+18007a79c NotifyIconSettingsIdentity::NotifyIconSettingsIdentity
+1800b711c wil::details::FeatureImpl<__WilFeatureTraits_Feature_MercurySettingsStateCapture>::ReportUsage
+18023a4b0 winrt::impl::factory_cache_entry_v<winrt::Windows::System::Profile::EducationSettings,winrt::Windows::System::Profile::IEducationSettingsStatics>
+1800bb570 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarDaSetting>
+1800e3ab8 winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings11<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::StartSize
+180123da0 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSn2Setting>
+1800b3904 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarBadgingSetting>
+1800b3b24 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarRecommendedSetting>
+1800fca98 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarJumplistOnHoverSetting>
+180123e74 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarXdrNotificationSetting>
+1801c5e50 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`vftable'
+180144da8 winrt::WindowsUdk::UI::Shell::implementation::NotificationAreaIcon2::OnRegistrySettingsChanged
+1801c6618 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings9>
+1800bf6d0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,void>::QueryInterface
+1801ee5d8 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarRecommendedSetting>
+180062c10 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowShareAnyWindow
+180176984 winrt::get_activation_factory<winrt::Windows::System::Profile::IEducationSettingsStatics>
+18001a6e0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarModel,winrt::WindowsUdk::UI::Shell::ITaskbarModel>::get_Settings
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarRecommendedSetting::~IDesktopTaskbarRecommendedSetting
+180129680 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_Location
+1800b4f94 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSdSetting>
+18012efbc std::vector<std::pair<NotifyIconSettingsIdentity,unsigned __int64>,std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >::~vector<std::pair<NotifyIconSettingsIdentity,unsigned __int64>,std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >
+180124d10 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1801cc4b8 winrt::impl::delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_97d1d5d5e62cb3f17b4fe98388d34ae1> >::`vftable'
+1800629fc winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::abi_guard::abi_guard
+1801117f4 winrt::impl::consume_SystemSettings_DataModel_ISettingItem<winrt::SystemSettings::DataModel::ISettingItem>::SettingChanged
+18009b64c winrt::impl::as<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,0>
+1801239d8 winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable><<lambda_97d1d5d5e62cb3f17b4fe98388d34ae1> >
+18018db64 wil::GetActivationFactory<Windows::System::Profile::IEducationSettingsStatics>
+180238bc0 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarIconSizePreferenceSetting,winrt::Windows::Foundation::IActivationFactory>
+1801742f0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::QueryInterface
+180174300 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::QueryInterface
+180125960 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,void>::AddRef
+18008a490 winrt::event<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >::get_token
+1801e9a30 winrt::impl::guid_v<winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettingsStatics>
+180085b70 std::copy_n<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> * __ptr64,unsigned int,winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> * __ptr64>
+1801288f0 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowTaskView
+1801ee608 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarExpandableTaskbarSetting>
+180126cf0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::GetIids
+180068718 Microsoft::WRL::ComPtr<AsyncResultHelpers::AsyncResult<SettingsBitmapLoadInfo> >::~ComPtr<AsyncResultHelpers::AsyncResult<SettingsBitmapLoadInfo> >
+180072b94 Microsoft::WRL::Details::RuntimeClassBaseT<2>::AsIID<Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase> >
+180124a80 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowLabelsSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowLabelsSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1800f69c0 winrt::impl::produce_base<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>::GetTrustLevel
+1801282c8 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowCrossDeviceResume
+18001ab74 winrt::SystemSettings::DataModel::ISettingItem::~ISettingItem
+180123b24 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting>
+180085ea0 TaskItemFilterFactory::SetTaskbarSettings
+180129360 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12>::get_ShowTaskbarCompanion
+1800562f0 TrayUI::LoadSettingsBitmap
+180126b90 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,void>::GetIids
+1801246b8 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+18005c068 winrt::event<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >::operator()<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,std::nullptr_t>
+1800bff10 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,void>::QueryInterface
+1800d6234 wil::details::FeatureImpl<__WilFeatureTraits_Feature_MercurySettingsStateCapture>::GetCachedFeatureEnabledState
+180054c9c winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarExpandableTaskbarSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarExpandableTaskbarSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1800d40e0 TrayTelemetry::ContextMenuTaskbarSettings
+1801281e4 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::SearchMode
+1801294d0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_HideTaskbarInDesktopMode
+180125114 winrt::impl::interface_list<winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::find<winrt::impl::find_iid_traits<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings> >
+180125860 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::`vector deleting destructor'
+18008c2a4 winrt::impl::as<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::impl::abi<winrt::Windows::Foundation::IUnknown,void>::type,0>
+1800bc5b4 wil::details::FeatureImpl<__WilFeatureTraits_Feature_MercurySettingsStateCapture>::__private_IsEnabled
+180238ba0 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarInkWorkspaceSetting,winrt::Windows::Foundation::IActivationFactory>
+1801742d0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::QueryInterface
+180027f98 winrt::impl::invoke<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,std::nullptr_t>
+180125940 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,void>::AddRef
+180095758 winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::make_weak_ref
+180057fd8 CTaskBand::_HandleSettingChange
+180125920 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14,void>::AddRef
+180125900 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,void>::AddRef
+1801258e0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,void>::AddRef
+1801258c0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,void>::AddRef
+1801258a0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,void>::AddRef
+1800513d0 NotifyIconSettingsDatabase::s_IsRegistrySubkeyValid
+1801bea90 winrt::impl::guid_v<winrt::SystemSettings::DataModel::ISettingItem>
+1800852d0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,void>::Release
+18008d8b0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,void>::Release
+1800bd8d0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,void>::Release
+180127cf0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,void>::Release
+180070240 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,void>::Release
+180073950 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,void>::Release
+1800c91c0 MigrateSettingsForUndockedTaskbar
+180127d10 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,void>::Release
+180127d30 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,void>::Release
+1801297b0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ShowMeetNow
+180062260 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3>::get_DisplayMode
+18012f150 NotifyIconSettingsDatabase::~NotifyIconSettingsDatabase
+180018ea4 winrt::com_ptr<winrt::impl::event_array<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> > >::unconditional_release_ref
+180126bb0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,void>::GetIids
+180028408 winrt::impl::event_array<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >::event_array<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >
+1801270a0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::GetTrustLevel
+18003930c NotifyIconSettingsDatabase::ValidateRegistry
+180127a70 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,void>::QueryInterface
+1801c1960 AsyncResultHelpers::AsyncResult<SettingsBitmapLoadInfo>::`vftable'
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarDaSetting::~IDesktopTaskbarDaSetting
+180129550 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_HideTaskbarInTabletMode
+1800b2208 Microsoft::WRL::Details::Selector<CWRLObjectWithGITSite,Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::Details::ImplementsMarker<CWRLObjectWithGITSite>,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase> >::Selector<CWRLObjectWithGITSite,Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,0,Microsoft::WRL::Details::ImplementsMarker<CWRLObjectWithGITSite>,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase> >
+18001ab74 winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>::~TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>
+180127860 winrt::impl::implements_delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_97d1d5d5e62cb3f17b4fe98388d34ae1> >::QueryInterface
+18006bce0 winrt::impl::produce_base<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>::AddRef
+18022c178 Feature_GlobalStateCaptureTaskbarSettings__descriptor
+1800e0794 wil::details::FeatureImpl<__WilFeatureTraits_Feature_GlobalStateCaptureTaskbarSettings>::ReportUsage
+180146d80 std::vector<std::pair<NotifyIconSettingsIdentity,unsigned __int64>,std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >::_Emplace_reallocate<std::pair<NotifyIconSettingsIdentity,unsigned __int64> >
+18012f290 winrt::impl::heap_implements<NotifyIconSettingsDatabase>::`vector deleting destructor'
+180014f1c winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Alignment
+18007c880 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,void>::AddRef
+180125358 winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting::DesktopTaskbarLoSetting
+1801f0a50 c_NotifyIconSettingsRootKey
+1801c5eb0 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`vftable'
+1801cde08 winrt::impl::produce<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::`vftable'
+1801ee568 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarXdrNotificationSetting>
+180127040 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,void>::GetTrustLevel
+1801c3f08 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarShSetting>
+180174360 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::Release
+1800aea88 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarTaskViewSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarTaskViewSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1801ee578 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarShowLabelsSetting>
+180238478 Feature_MercurySettingsStateCapture__private_lastUsedTickCount
+180127020 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,void>::GetTrustLevel
+180070000 winrt::impl::produce_base<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>::QueryInterface
+18003f6a0 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarModel<winrt::WindowsUdk::UI::Shell::ITaskbarModel>::Settings
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarXdrNotificationSetting::~IDesktopTaskbarXdrNotificationSetting
+180014cdc winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowDashboard
+180127000 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,void>::GetTrustLevel
+180125a18 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Alignment
+18007a890 NotifyIconSettingsDatabase::TryGetSettingsForExistingIcon
+180126fe0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,void>::GetTrustLevel
+180126b50 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,void>::GetIids
+1801faab0 RuntimeClass_Windows_System_Profile_EducationSettings
+1800647b0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::Release
+1801277c4 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::PeekToPreviewDesktop
+1801743c0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::Release
+18004fc54 NotifyIconSettingsDatabase::IsAttemptedGuidHijack
+180126fc0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,void>::GetTrustLevel
+1801743e0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::Release
+180058aec CTaskBand::_RefreshSettings
+180126fa0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,void>::GetTrustLevel
+18005bf90 winrt::weak_ref<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>::get
+180125860 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::`scalar deleting destructor'
+1800fb550 winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::query_interface_common
+180174380 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::Release
+1801c5d68 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::`vftable'
+180128d40 winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::find_interface
+180056850 TrayUI::_HandleSettingChange
+18003bdb0 wil::com_ptr_t<Windows::System::Profile::IEducationSettingsStatics,wil::err_exception_policy>::~com_ptr_t<Windows::System::Profile::IEducationSettingsStatics,wil::err_exception_policy>
+180014d50 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowShowDesktop
+18006b710 winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::GetTrustLevel
+1801743a0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::Release
+180070e80 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_SearchMode
+1800e310c winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings12<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::ShouldShowAllAppsSection
+18011b9f8 TryGetRegistrySettingDWORD
+180129760 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ShowDashboard
+180147054 std::_Uninitialized_move<std::pair<NotifyIconSettingsIdentity,unsigned __int64> * __ptr64,std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >
+180050380 std::_Destroy_range<std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >
+180085a9c winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarInkWorkspaceSetting>
+1801b3228 _imp_SHSettingsChanged
+18006b710 TrayUI::GetSettingsIconBitmap
+180042e60 TrayUI::RefreshSettings
+18012864c winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShareAnyWindow
+180129930 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_Size
+1801c5e10 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`vftable'
+180238be0 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarLoSetting,winrt::Windows::Foundation::IActivationFactory>
+180015020 winrt::impl::consume_SystemSettings_DataModel_ISettingItem<winrt::SystemSettings::DataModel::ISettingItem>::GetValue
+18023b340 `wil::Feature<__WilFeatureTraits_Feature_GlobalStateCaptureTaskbarSettings>::GetImpl'::`2'::impl
+180124f80 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarXdrNotificationSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarXdrNotificationSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1800a7248 winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::get_weak
+180126b70 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,void>::GetIids
+1801f0788 c_NotifyIconSettingsDevVersion
+1800d94b0 wil::details::FeatureImpl<__WilFeatureTraits_Feature_GlobalStateCaptureTaskbarSettings>::GetCurrentFeatureEnabledState
+18011a56c winrt::weak_ref<winrt::SystemSettings::DataModel::ISettingItem>::get
+18012840c winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowExpandableTaskbar
+18003bdb0 wil::com_ptr_t<IShellTaskSchedulerSettings,wil::err_exception_policy>::~com_ptr_t<IShellTaskSchedulerSettings,wil::err_exception_policy>
+18014711c winrt::impl::producer<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>::producer<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>
+1801253d0 winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShowSearchOnHoverSetting::DesktopTaskbarShowSearchOnHoverSetting
+1801cce18 NotifyIconSettingsDatabase::`vftable'
+1800b9dcc winrt::impl::require_one<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting,winrt::SystemSettings::DataModel::ISettingItem>::operator winrt::SystemSettings::DataModel::ISettingItem
+18023b310 `wil::Feature<__WilFeatureTraits_Feature_MercurySettingsStateCapture>::GetImpl'::`2'::impl
+18001ab74 winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettings::~IStartMenuSettings
+180127080 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,void>::GetTrustLevel
+18012f290 winrt::impl::heap_implements<NotifyIconSettingsDatabase>::`scalar deleting destructor'
+1800ada84 std::_Default_allocator_traits<std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >::construct<std::pair<NotifyIconSettingsIdentity,unsigned __int64>,std::pair<NotifyIconSettingsIdentity,unsigned __int64> >
+180127b08 winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::Release
+180127060 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,void>::GetTrustLevel
+18001ab74 winrt::weak_ref<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>::~weak_ref<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>
+180084524 Microsoft::WRL::ComPtr<IImmersiveSettingsCache>::~ComPtr<IImmersiveSettingsCache>
+1801470e4 winrt::impl::produce<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::produce<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarAlSetting::~IDesktopTaskbarAlSetting
+180129230 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5>::get_ShowLabels
+1801c25b0 CreativeFramework::MobilityExperienceSettings::c_regKeyMobility
+1801c5628 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarTaskViewSetting>
+18001ab74 winrt::WindowsUdk::UI::Shell::ITaskbarSettings3::~ITaskbarSettings3
+180205661 `TrayTelemetry::ContextMenuTaskbarSettings'::`4'::_tlgEvent
+1800f8340 winrt::impl::implements_delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,<lambda_97d1d5d5e62cb3f17b4fe98388d34ae1> >::Release
+1800696d8 AsyncResultHelpers::AsyncResult<SettingsBitmapLoadInfo>::~AsyncResult<SettingsBitmapLoadInfo>
+180052864 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::Alignment
+180173250 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::AddRef
+1801c1ba8 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings2>
+1800b5740 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::remove_Changed
+180173260 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::AddRef
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarSnSetting::~IDesktopTaskbarSnSetting
+180088000 NotifyIconSettingsDatabase::GetUIOrderForIcon
+1800c5850 winrt::implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::GetRuntimeClassName
+180126d80 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,void>::GetRuntimeClassName
+1800bfe70 winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::query_interface_tearoff
+1800b39d8 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSearchSetting>
+1800431bc CSecondaryTaskBand::_LoadSettings
+18022cc40 Feature_MercurySettingsStateCapture__descriptor
+180123ccc winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting>
+18003b408 winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::~root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>
+180126cd0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,void>::GetIids
+180126cb0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,void>::GetIids
+180126c50 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,void>::GetIids
+180126c30 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,void>::GetIids
+180126c90 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,void>::GetIids
+18014797c NotifyIconSettingsDatabase::MoveIcon
+180126c70 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,void>::GetIids
+180126c10 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,void>::GetIids
+180126bf0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,void>::GetIids
+180238a40 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarXdrNotificationSetting,winrt::Windows::Foundation::IActivationFactory>
+1801cc4d8 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13>::`vftable'
+18006d740 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::QueryInterface
+1801cde08 winrt::impl::produce_base<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>::`vftable'
+1801ee410 winrt::impl::uncloaked_iids<winrt::impl::interface_list<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14> >::value
+1800c8fe8 MigrateSettings
+180027d80 winrt::com_ptr<winrt::impl::event_array<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> > >::operator=
+1800b16d0 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::TaskbarSettings
+1800b3aac winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarRecommendedSetting::DesktopTaskbarRecommendedSetting
+180238ca0 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarAlSetting,winrt::Windows::Foundation::IActivationFactory>
+180087810 winrt::WindowsUdk::UI::Shell::TaskbarSettings::~TaskbarSettings
+18012847c winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowFlashing
+180127730 winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::NonDelegatingGetIids
+1801ee5f8 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarSearchSetting>
+180173150 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`vector deleting destructor'
+180078970 TrayUI::SettingsBitmapLoaded
+18012744c winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::IsSearchBoxSettingEnabled
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarTaskViewSetting::~IDesktopTaskbarTaskViewSetting
+1800e7e20 wil::details::FeatureImpl<__WilFeatureTraits_Feature_GlobalStateCaptureTaskbarSettings>::__private_IsEnabled
+18001ab74 winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettings9::~IStartMenuSettings9
+1800b8cb0 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>::~TaskbarSettings_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>
+180238ae0 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSnSetting,winrt::Windows::Foundation::IActivationFactory>
+180173270 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::AddRef
+1801e9a40 winrt::impl::guid_v<winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettings9>
+1801c1ac8 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings3>
+180173240 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::AddRef
+180054dfc winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarAlSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarAlSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1800ff7ec winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarJumplistOnHoverSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarJumplistOnHoverSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+180126da0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,void>::GetRuntimeClassName
+1800e31d4 winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings12<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::ShouldShowPinnedSection
+180129430 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_Alignment
+180238c20 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarBadgingSetting,winrt::Windows::Foundation::IActivationFactory>
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarIconSizePreferenceSetting::~IDesktopTaskbarIconSizePreferenceSetting
+180128730 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13>::ShowShareAnyWindowForProviderKind
+1800b4bcc winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSnSetting>
+1801c5de0 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`vftable'
+1801c5e30 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`vftable'
+1801291b0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11>::get_ShowCrossDeviceResume
+180014e58 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShowDesktop
+1800d987c wil::details::FeatureImpl<__WilFeatureTraits_Feature_MercurySettingsStateCapture>::GetCurrentFeatureEnabledState
+180173280 Microsoft::WRL::Details::ImplementsHelper<Microsoft::WRL::RuntimeClassFlags<2>,1,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::CanCastTo
+18003ee38 winrt::impl::event_revoker<winrt::SystemSettings::DataModel::ISettingItem,&winrt::impl::abi<winrt::SystemSettings::DataModel::ISettingItem,void>::type::`vcall'{152}'>::~event_revoker<winrt::SystemSettings::DataModel::ISettingItem,&winrt::impl::abi<winrt::SystemSettings::DataModel::ISettingItem,void>::type::`vcall'{152}'>
+1800283c8 winrt::impl::make_event_array<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >
+180066790 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_Location
+180237dd8 Feature_GlobalStateCaptureTaskbarSettings__private_lastUsedTickCount
+180124e48 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSn2Setting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSn2Setting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1801cc580 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12>::`vftable'
+180126f80 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14,void>::GetTrustLevel
+180129180 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_PeekToPreviewDesktop
+180238480 Feature_MercurySettingsStateCapture__private_cppFeatureState
+180014144 Microsoft::WRL::ComPtr<IImmersiveSettingsCache>::InternalRelease
+1800b4de0 winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::AddRef
+1800e3910 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::Size
+1800e3364 winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings9<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::ShouldShowSuggestedFiles
+1801ee5e8 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarSdSetting>
+1800cdb3c winrt::impl::factory_cache_entry<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings,winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettingsStatics>::call<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings (__cdecl*)(winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettingsStatics const & __ptr64)>
+1800b8ca4 winrt::implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::~implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>
+180127c90 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14,void>::Release
+180238b40 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSearchSetting,winrt::Windows::Foundation::IActivationFactory>
+1801299d0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_UseAccentColorOnTaskbar
+18005d398 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings3<winrt::WindowsUdk::UI::Shell::TaskbarSettings>::DisplayMode
+1800e3530 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::ShowTaskView
+18007104c winrt::weak_ref<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::from_com_ref<winrt::WindowsUdk::UI::Shell::ITaskbarSettings const & __ptr64>
+180125b34 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::EffectiveSearchMode
+1800b29cc winrt::weak_ref<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get
+1801291f0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::get_ShowFlashing
+180129480 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6>::put_EffectiveSearchMode
+1801250b8 winrt::impl::interface_list<winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::find<winrt::impl::find_iid_traits<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings> >
+1801ee598 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarSizeSetting>
+180173210 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::AddRef
+180064960 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3>::get_Theme
+180173220 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::AddRef
+180126d40 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,void>::GetRuntimeClassName
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarLoSetting::~IDesktopTaskbarLoSetting
+18005b0a4 winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::subtract_final_reference
+1801270b8 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::IconSizePreference
+1800f6950 winrt::impl::produce_base<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>::GetRuntimeClassName
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarShowSearchOnHoverSetting::~IDesktopTaskbarShowSearchOnHoverSetting
+1800a7c50 winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::find_inspectable
+180128864 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShowDesktop
+1801c2a60 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarInkWorkspaceSetting>
+1800b4b54 winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSnSetting::DesktopTaskbarSnSetting
+1800c5e08 winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::query_interface_common
+1801cc548 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11>::`vftable'
+180128f60 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9>::get_IconSizePreference
+1801278b0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,void>::QueryInterface
+180127890 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,void>::QueryInterface
+180127990 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,void>::QueryInterface
+180147164 NotifyIconSettingsDatabase::NotifyIconSettingsDatabase
+180127920 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,void>::QueryInterface
+180127a00 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14,void>::QueryInterface
+1801ecd30 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarJumplistOnHoverSetting>
+180129040 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_IsStartButtonContextMenuEnabled
+180152b00 CTaskListWnd::SettingsChanged
+18008a4c0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::AddRef
+1800d3a40 TrayUI::ApplyRemoteSettings
+180126ec0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,void>::GetRuntimeClassName
+1800a7c50 winrt::implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::find_inspectable
+180126ea0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,void>::GetRuntimeClassName
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarJumplistOnHoverSetting::~IDesktopTaskbarJumplistOnHoverSetting
+180126e00 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,void>::GetRuntimeClassName
+180126de0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,void>::GetRuntimeClassName
+180126e80 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,void>::GetRuntimeClassName
+180126e60 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,void>::GetRuntimeClassName
+180126e40 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,void>::GetRuntimeClassName
+180126e20 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,void>::GetRuntimeClassName
+180173150 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`scalar deleting destructor'
+1800503b8 std::pair<NotifyIconSettingsIdentity,unsigned __int64>::pair<NotifyIconSettingsIdentity,unsigned __int64>
+1801f4250 winrt::impl::guid_v<winrt::Windows::System::Profile::IEducationSettingsStatics>
+180128c0c winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::abi_GetTrustLevel
+180129880 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ShowTaskView
+180085d5c winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::GroupingMode
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarSizeSetting::~IDesktopTaskbarSizeSetting
+180238ac0 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSizeSetting,winrt::Windows::Foundation::IActivationFactory>
+180173230 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::AddRef
+1800532b0 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSdSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSdSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1800bfe70 winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::query_interface_tearoff
+18012856c winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowRecommendations
+18001ab74 winrt::Windows::System::Profile::IEducationSettingsStatics::~IEducationSettingsStatics
+180238510 winrt::impl::factory_cache_entry_v<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings,winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettingsStatics>
+180129380 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowTaskbarOnAllDisplays
+1800be93c winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+18011ac4c winrt::impl::event_revoker<winrt::SystemSettings::DataModel::ISettingItem,&winrt::impl::abi<winrt::SystemSettings::DataModel::ISettingItem,void>::type::`vcall'{152}'>::revoke
+180173200 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::AddRef
+18005314c winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSnSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarSnSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+180126d60 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,void>::GetRuntimeClassName
+1800e34c4 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::ShowDashboard
+180092714 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::ShowShareAnyWindow
+1800d5ce4 wil::details::FeatureImpl<__WilFeatureTraits_Feature_GlobalStateCaptureTaskbarSettings>::GetCachedFeatureEnabledState
+180238b00 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarRecommendedSetting,winrt::Windows::Foundation::IActivationFactory>
+18001ab74 winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettingsStatics::~IStartMenuSettingsStatics
+180129120 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ItemPlacement
+180069754 wistd::function<long __cdecl(SettingsBitmapLoadInfo)>::operator=
+1800f7c4c winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::NonDelegatingGetRuntimeClassName
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarInkWorkspaceSetting::~IDesktopTaskbarInkWorkspaceSetting
+180149ed8 CSecondaryTray::_OnSettingChange
+18016971c CSecondaryTaskBand::_RefreshSettings
+180095850 winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::query_interface
+180238c00 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarJumplistOnHoverSetting,winrt::Windows::Foundation::IActivationFactory>
+1800bb4c0 NotifyIconSettingsIdentity::NotifyIconSettingsIdentity
+1801c6d10 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10>::`vftable'
+18009b578 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarAlSetting>
+180014dec winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowMiniSearch
+180128254 winrt::impl::consume_SystemSettings_DataModel_ISettingItem<winrt::SystemSettings::DataModel::ISettingItem>::SetValue
+1801c70d8 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2>::`vftable'
+1800eedb0 winrt::impl::interface_list<winrt::Windows::Foundation::IInspectable>::find<winrt::impl::find_iid_traits<NotifyIconSettingsDatabase> >
+180070ecc winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::SearchMode
+1800a57d0 winrt::event<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >::~event<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >
+1801c7010 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3>::`vftable'
+180127bd0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,void>::Release
+18005bf08 winrt::impl::invoke<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>,winrt::WindowsUdk::UI::Shell::TaskbarSettings,std::nullptr_t>
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarExpandableTaskbarSetting::~IDesktopTaskbarExpandableTaskbarSetting
+1800af44c winrt::impl::event_revoker<winrt::WindowsUdk::UI::Shell::ITaskbarSettings,&winrt::impl::abi<winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::type::`vcall'{264}'>::swap
+1801c2568 CreativeFramework::MobilityExperienceSettings::c_regValueLastResumeOnPCInteractionTime
+18003b61c winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::subtract_final_reference
+180016b9c std::_Destroy_range<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> * __ptr64,winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> * __ptr64>
+1801242e0 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarDaSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarDaSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+180125560 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::~TaskbarSettings
+1801c86f0 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings6>
+1801c6c38 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6>::`vftable'
+1800b4780 winrt::impl::make_agile_delegate<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >
+18012f290 NotifyIconSettingsDatabase::`scalar deleting destructor'
+18007d3c0 TrayUI::SettingsChanged
+180176684 winrt::impl::factory_cache_entry<winrt::Windows::System::Profile::EducationSettings,winrt::Windows::System::Profile::IEducationSettingsStatics>::call<bool (__cdecl*)(winrt::Windows::System::Profile::IEducationSettingsStatics const & __ptr64)>
+1800a7c50 winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::get_unknown
+180062c5c winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowShareAnyWindow
+1800f7cd4 winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::NonDelegatingGetTrustLevel
+1801cce18 winrt::impl::heap_implements<NotifyIconSettingsDatabase>::`vftable'
+1801c6af0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7>::`vftable'
+180124570 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarInkWorkspaceSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarInkWorkspaceSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1801c5d68 winrt::impl::heap_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>::`vftable'
+180125860 winrt::impl::heap_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>::`scalar deleting destructor'
+1800696a0 AsyncResultHelpers::AsyncResult<SettingsBitmapLoadInfo>::`vector deleting destructor'
+1801c6e90 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4>::`vftable'
+180058d1c CTaskBand::IsTaskGroupsSettingEnabled
+1800b6128 winrt::impl::event_revoker<winrt::WindowsUdk::UI::Shell::ITaskbarSettings,&winrt::impl::abi<winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::type::`vcall'{264}'>::~event_revoker<winrt::WindowsUdk::UI::Shell::ITaskbarSettings,&winrt::impl::abi<winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::type::`vcall'{264}'>
+180238a60 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarTaskViewSetting,winrt::Windows::Foundation::IActivationFactory>
+1801c5da8 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarFlashingSetting>
+1801c46d8 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`vftable'
+180127634 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Location
+1801c6cd0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5>::`vftable'
+1801c8008 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings10>
+1801ee4f0 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings11>
+1801ee500 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings12>
+180126f20 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,void>::GetTrustLevel
+1801ee510 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings13>
+1801ee400 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>
+1800e329c winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings12<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::ShouldShowRecentSection
+1801be4d0 CreativeFramework::ContentDeliveryManagerSettings::c_regKeySuggestedAppEvents
+18009f188 winrt::WindowsUdk::UI::Shell::implementation::NotificationAreaIcon2::RegisterForSettingChanges
+180067aa0 TrayUI::NotifySettingsChanged
+180129270 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10>::get_ShowRecommendations
+1800c2e50 wistd::__function::__base<long __cdecl(SettingsBitmapLoadInfo)>::`vector deleting destructor'
+180129620 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_ItemPlacement
+18006d9d8 winrt::event<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >::add
+1800b2074 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting>
+1801295d0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4>::put_IsSearchBoxSettingEnabled
+18004a9b0 winrt::com_ptr<NotifyIconSettingsDatabase>::unconditional_release_ref
+180127c30 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,void>::Release
+180068760 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_Size
+1801c5e70 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`vftable'
+1801c6a38 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8>::`vftable'
+18004a994 winrt::com_ptr<NotifyIconSettingsDatabase>::~com_ptr<NotifyIconSettingsDatabase>
+18001ab74 winrt::WindowsUdk::UI::Shell::ITaskbarSettings6::~ITaskbarSettings6
+18011e540 winrt::impl::abi<winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::type::`vcall'{264}'
+1801c6988 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9>::`vftable'
+1801731f0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::AddRef
+1800bfdf4 std::_Uninitialized_backout_al<std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >::~_Uninitialized_backout_al<std::allocator<std::pair<NotifyIconSettingsIdentity,unsigned __int64> > >
+1801c85e0 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings7>
+18009a26c winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable>::operator()
+180054fe8 winrt::impl::factory_cache_entry<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarBadgingSetting,winrt::Windows::Foundation::IActivationFactory>::call<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarBadgingSetting (__cdecl*)(winrt::Windows::Foundation::IActivationFactory const & __ptr64)>
+1801ee638 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarBadgingSetting>
+180128fb0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8>::get_IsAIAssistanceEnabled
+180013cbc winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowTaskView
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarBadgingSetting::~IDesktopTaskbarBadgingSetting
+18005057c NotifyIconSettingsIdentity::NotifyIconSettingsIdentity
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarFlashingSetting::~IDesktopTaskbarFlashingSetting
+180128548 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowMeetNow
+180084524 Microsoft::WRL::ComPtr<IShellTaskSchedulerSettings>::~ComPtr<IShellTaskSchedulerSettings>
+180014144 Microsoft::WRL::ComPtr<IShellTaskSchedulerSettings>::InternalRelease
+1801c5638 winrt::impl::guid_v<winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarDaSetting>
+180050554 NotifyIconSettingsIdentity::~NotifyIconSettingsIdentity
+180088ab0 CSecondaryTray::RefreshSettings
+1801c8028 winrt::impl::guid_v<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >
+180126f00 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,void>::GetTrustLevel
+1801796a0 winrt::impl::consume_Windows_System_Profile_IEducationSettingsStatics<winrt::Windows::System::Profile::IEducationSettingsStatics>::IsEducationEnvironment
+1801bf160 c_NotifySettingsDevVersionValueName
+18001ab74 winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettings11::~IStartMenuSettings11
+180128ff0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4>::get_IsSearchBoxSettingEnabled
+18006b710 winrt::impl::root_implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::GetTrustLevel
+18003f214 winrt::impl::try_as<winrt::SystemSettings::DataModel::ISettingItem,winrt::impl::abi<winrt::Windows::Foundation::IUnknown,void>::type,0>
+18001ab74 winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettings10::~IStartMenuSettings10
+1800589b4 ShouldRefreshSettings
+180127b50 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,void>::Release
+180125170 winrt::impl::interface_list<winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::find<winrt::impl::find_iid_traits<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings> >
+180087810 winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings::~StartMenuSettings
+1800db6e4 winrt::impl::consume_WindowsUdk_Storage_ICloudStore2<winrt::WindowsUdk::Storage::CloudStore>::GetSyncSetting
+1800e2fb0 TrayUI::SettingsChanged
+18004a940 winrt::impl::produce_base<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>::Release
+18001ab74 winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettings12::~IStartMenuSettings12
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarShowLabelsSetting::~IDesktopTaskbarShowLabelsSetting
+1801c8508 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings4>
+18001ab74 winrt::SystemSettings::Desktop::Taskbar::IDesktopTaskbarShSetting::~IDesktopTaskbarShSetting
+180126dc0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14,void>::GetRuntimeClassName
+180041530 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_UseAccentColorOnTaskbar
+180127af0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,void>::QueryInterface
+18012f290 NotifyIconSettingsDatabase::`vector deleting destructor'
+1801743b0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::Release
+1800bfc9c winrt::implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::~implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>
+1801743d0 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::Release
+1801c5e90 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`vftable'
+180125860 winrt::impl::heap_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>::`vector deleting destructor'
+180125228 winrt::impl::interface_list<winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::find<winrt::impl::find_iid_traits<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings> >
+1800696a0 AsyncResultHelpers::AsyncResult<SettingsBitmapLoadInfo>::`scalar deleting destructor'
+18009b70c winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Initialize
+1801c1b58 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>
+180174370 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::Release
+1801c9190 Taskbar_Settings_Changed
+180088c14 CSecondaryTray::_LoadSettings
+180238c80 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarFlashingSetting,winrt::Windows::Foundation::IActivationFactory>
+180237420 Feature_GlobalStateCaptureTaskbarSettings__private_cppFeatureState
+180174390 Microsoft::WRL::Details::RuntimeClassImpl<Microsoft::WRL::RuntimeClassFlags<2>,1,0,0,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::Release
+18005c034 winrt::com_ptr<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>::~com_ptr<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>
+180147108 winrt::impl::produce_base<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>::produce_base<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable,void>
+180069eb0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::AddRef
+18001ab74 winrt::WindowsUdk::UI::Shell::ITaskbarSettings::~ITaskbarSettings
+180125a00 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,void>::AddRef
+1801290c0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3>::get_IsTaskbarSettingsContextMenuEnabled
+180126f60 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,void>::GetTrustLevel
+18005d0a4 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::Location
+1801251cc winrt::impl::interface_list<winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::find<winrt::impl::find_iid_traits<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings> >
+1801277c4 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::PeekToPreviewDesktop
+1800c2e50 wistd::__function::__base<long __cdecl(SettingsBitmapLoadInfo)>::`scalar deleting destructor'
+1800bd7f0 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarTaskViewSetting>
+1801e9a60 winrt::impl::guid_v<winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettings11>
+180014ed0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_Alignment
+1800136d0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_ShowBadges
+1800687ac winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Size
+180127b70 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,void>::Release
+1800db630 TrayUI::GetSettingsIconBitmapForSystemMenu
+1801e9a70 winrt::impl::guid_v<winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettings10>
+18003ecd4 winrt::impl::event_revoker<winrt::SystemSettings::DataModel::ISettingItem,&winrt::impl::abi<winrt::SystemSettings::DataModel::ISettingItem,void>::type::`vcall'{152}'>::operator=
+1800dae50 winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings::GetDefault
+180095758 winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::make_weak_ref
+180095334 TrayStuckRectData::LoadSettings
+1801c7d38 wistd::__function::__base<long __cdecl(SettingsBitmapLoadInfo)>::`vftable'
+180043310 CTaskBand::_LoadSettings
+180128380 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowDashboard
+180125284 winrt::impl::interface_list<winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::find<winrt::impl::find_iid_traits<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings> >
+180041038 wistd::function<long __cdecl(SettingsBitmapLoadInfo)>::~function<long __cdecl(SettingsBitmapLoadInfo)>
+18011e5bc winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings<winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::Changed
+1800d44a8 winrt::impl::consume_WindowsUdk_UI_Shell_ITaskbarSettings6<winrt::WindowsUdk::UI::Shell::TaskbarSettings>::EffectiveSearchMode
+1801c5d38 winrt::impl::guid_v<winrt::WindowsUdk::UI::Shell::ITaskbarSettings5>
+1801e9a50 winrt::impl::guid_v<winrt::WindowsUdk::UI::StartScreen::Implementation::IStartMenuSettings12>
+180127ad0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,void>::QueryInterface
+1800f7c4c winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::NonDelegatingGetRuntimeClassName
+180085d10 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5>::get_GroupingMode
+180128e80 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::get_HideTaskbarInDesktopMode
+18005c050 winrt::com_ptr<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings>::unconditional_release_ref
+1801274e8 winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::Location
+18007c0d8 winrt::Windows::Foundation::IActivationFactory::ActivateInstance<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShSetting>
+1800832c0 winrt::implements<NotifyIconSettingsDatabase,winrt::Windows::Foundation::IInspectable>::find_interface
+180238b80 winrt::impl::factory_cache_entry_v<winrt::SystemSettings::Desktop::Taskbar::DesktopTaskbarShSetting,winrt::Windows::Foundation::IActivationFactory>
+180128c18 winrt::event<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >::add_agile
+1800e3044 winrt::impl::consume_WindowsUdk_UI_StartScreen_Implementation_IStartMenuSettings10<winrt::WindowsUdk::UI::StartScreen::Implementation::StartMenuSettings>::ShouldHideUserInformation
+1800a5054 winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::AddRef
+1800797fc winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings::ShowContextMenus
+1801296f0 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings>::put_SearchMode
+1800b299c winrt::impl::event_revoker<winrt::WindowsUdk::UI::Shell::ITaskbarSettings,&winrt::impl::abi<winrt::WindowsUdk::UI::Shell::ITaskbarSettings,void>::type::`vcall'{264}'>::revoke_impl
+180128c00 winrt::impl::root_implements<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings2,winrt::WindowsUdk::UI::Shell::ITaskbarSettings3,winrt::WindowsUdk::UI::Shell::ITaskbarSettings4,winrt::WindowsUdk::UI::Shell::ITaskbarSettings5,winrt::WindowsUdk::UI::Shell::ITaskbarSettings6,winrt::WindowsUdk::UI::Shell::ITaskbarSettings7,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,winrt::WindowsUdk::UI::Shell::ITaskbarSettings9,winrt::WindowsUdk::UI::Shell::ITaskbarSettings10,winrt::WindowsUdk::UI::Shell::ITaskbarSettings11,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,winrt::WindowsUdk::UI::Shell::ITaskbarSettings13,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::abi_GetRuntimeClassName
+1800bfdac winrt::impl::producer_ref<winrt::WindowsUdk::UI::Shell::TaskbarSettings>::~producer_ref<winrt::WindowsUdk::UI::Shell::TaskbarSettings>
+1801259e0 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings8,void>::AddRef
+1801cc510 winrt::impl::produce<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings14>::`vftable'
+180126f40 winrt::impl::produce_base<winrt::WindowsUdk::UI::Shell::implementation::TaskbarSettings,winrt::WindowsUdk::UI::Shell::ITaskbarSettings12,void>::GetTrustLevel
+1801c5db8 Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<2>,CWRLObjectWithGITSite,IServiceProvider,IShouldSwitchToDesktop,ILayoutPreferencesOnAppLaunch,IExecuteCommandHost,ILocalCopyDownloadSettings,IWakeOnRPCCalls,ILaunchTargetMonitor,IUpdateViewValueSet,Microsoft::WRL::FtmBase>::`vftable'
+18005be28 winrt::event<winrt::Windows::Foundation::TypedEventHandler<winrt::WindowsUdk::UI::Shell::TaskbarSettings,winrt::Windows::Foundation::IInspectable> >::operator()<winrt::WindowsUdk::UI::Shell::TaskbarSettings,std::nullptr_t>
