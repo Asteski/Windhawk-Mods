@@ -255,6 +255,7 @@ static wux::FrameworkElement g_networkButton{nullptr};
 static wux::FrameworkElement g_soundButton{nullptr};
 static wux::FrameworkElement g_compactGroupedButton{nullptr};
 static wux::FrameworkElement g_nativeBatteryButton{nullptr};
+static wuc::Panel g_nativeBatteryParent{nullptr};
 struct IconLayers {
     wuc::Grid host{nullptr};
     wuc::FontIcon underlay{nullptr};
@@ -2293,6 +2294,33 @@ static void UpdateNativeBatteryVisibility() {
     }
 }
 
+static bool DetachNativeBattery(wuc::Panel const& trayPanel) {
+    if (!trayPanel || !g_nativeBatteryButton) return false;
+    try {
+        auto parent = FindAncestorFrameworkElement(g_nativeBatteryButton);
+        auto parentPanel = parent ? parent.try_as<wuc::Panel>() : nullptr;
+        while (parent && !parentPanel) {
+            parent = FindAncestorFrameworkElement(parent);
+            parentPanel = parent ? parent.try_as<wuc::Panel>() : nullptr;
+        }
+        if (!parentPanel || parentPanel == trayPanel) return parentPanel == trayPanel;
+        auto children = parentPanel.Children();
+        uint32_t index = 0;
+        if (!children.IndexOf(g_nativeBatteryButton.as<wux::UIElement>(), index)) {
+            return false;
+        }
+        children.RemoveAt(index);
+        trayPanel.Children().Append(g_nativeBatteryButton.as<wux::UIElement>());
+        g_nativeBatteryParent = parentPanel;
+        Wh_Log(L"Detached native battery control from nested panel.");
+        return true;
+    } catch (...) {
+        Wh_Log(L"Could not detach native battery control: 0x%08X.",
+               winrt::to_hresult());
+        return false;
+    }
+}
+
 static bool IsInjectedElement(wux::FrameworkElement const& element) {
     if (!element) {
         return false;
@@ -3070,6 +3098,7 @@ static void RemoveInjectedControls(wuc::Panel const& parent) {
     g_soundButton = nullptr;
     g_compactGroupedButton = nullptr;
     g_nativeBatteryButton = nullptr;
+    g_nativeBatteryParent = nullptr;
     g_bluetoothIcon = {};
     g_networkIcon = {};
     g_soundIcon = {};
@@ -5250,6 +5279,7 @@ static bool TryInjectBesideControlCenterButton(wux::FrameworkElement const& root
                    winrt::get_class_name(g_nativeBatteryButton).c_str(),
                    g_nativeBatteryButton.Name().c_str());
         }
+        DetachNativeBattery(parentPanel);
         UpdateNativeBatteryVisibility();
         CaptureTrayButtonMetricsFromPanel(parentPanel, controlCenterButton);
         AttachTaskbarSizeRefreshHandlers(parentElement, controlCenterButton);
@@ -5415,6 +5445,7 @@ static bool ApplyXamlButtons() {
                winrt::get_class_name(g_nativeBatteryButton).c_str(),
                g_nativeBatteryButton.Name().c_str());
     }
+    DetachNativeBattery(trayGrid);
     UpdateNativeBatteryVisibility();
     AttachTaskbarSizeRefreshHandlers(trayGrid, controlCenterButton);
 
