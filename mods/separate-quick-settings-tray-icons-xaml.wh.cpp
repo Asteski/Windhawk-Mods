@@ -2281,6 +2281,18 @@ static wux::FrameworkElement FindNativeBatteryButton(
     return nullptr;
 }
 
+static void UpdateNativeBatteryVisibility() {
+    if (!g_nativeBatteryButton) return;
+    try {
+        g_nativeBatteryButton.Visibility(g_settings.showBatteryButton
+                                             ? wux::Visibility::Visible
+                                             : wux::Visibility::Collapsed);
+    } catch (...) {
+        Wh_Log(L"Failed to update native battery visibility: 0x%08X.",
+               winrt::to_hresult());
+    }
+}
+
 static bool IsInjectedElement(wux::FrameworkElement const& element) {
     if (!element) {
         return false;
@@ -4561,7 +4573,10 @@ static bool IsButtonKindVisible(ButtonKind kind) {
         case ButtonKind::QuickSettings:
             return g_settings.showControlCenterButton;
         case ButtonKind::Battery:
-            return g_settings.showBatteryButton && g_nativeBatteryButton;
+            // The battery control is native and remains in its original
+            // parent. It is handled separately below; never insert it into
+            // the ordered injected-button list.
+            return false;
         default:
             return false;
     }
@@ -5131,7 +5146,7 @@ static wux::FrameworkElement ButtonElementForKind(ButtonKind kind) {
         case ButtonKind::QuickSettings:
             return g_compactGroupedButton;
         case ButtonKind::Battery:
-            return g_nativeBatteryButton;
+            return nullptr;
         default:
             return nullptr;
     }
@@ -5235,6 +5250,7 @@ static bool TryInjectBesideControlCenterButton(wux::FrameworkElement const& root
                    winrt::get_class_name(g_nativeBatteryButton).c_str(),
                    g_nativeBatteryButton.Name().c_str());
         }
+        UpdateNativeBatteryVisibility();
         CaptureTrayButtonMetricsFromPanel(parentPanel, controlCenterButton);
         AttachTaskbarSizeRefreshHandlers(parentElement, controlCenterButton);
 
@@ -5399,6 +5415,7 @@ static bool ApplyXamlButtons() {
                winrt::get_class_name(g_nativeBatteryButton).c_str(),
                g_nativeBatteryButton.Name().c_str());
     }
+    UpdateNativeBatteryVisibility();
     AttachTaskbarSizeRefreshHandlers(trayGrid, controlCenterButton);
 
     if (!GroupedButtonModeIs(L"native")) {
