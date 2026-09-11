@@ -4622,10 +4622,7 @@ static bool IsButtonKindVisible(ButtonKind kind) {
         case ButtonKind::QuickSettings:
             return g_settings.showControlCenterButton;
         case ButtonKind::Battery:
-            // The battery control is native and remains in its original
-            // parent. It is handled separately below; never insert it into
-            // the ordered injected-button list.
-            return false;
+            return g_settings.showBatteryButton && g_nativeBatteryButton;
         default:
             return false;
     }
@@ -5215,6 +5212,28 @@ static void RepositionNativeBatteryInPanel(wuc::Panel const& panel) {
     }
 }
 
+static void RepositionNativeBatteryInGrid(wuc::Grid const& grid, int insertCol) {
+    if (!grid || !g_nativeBatteryButton || !g_settings.showBatteryButton) return;
+    try {
+        auto order = GetVisibleButtonOrder();
+        size_t batteryOrder = order.size();
+        for (size_t i = 0; i < order.size(); ++i) {
+            if (order[i] == ButtonKind::Battery) { batteryOrder = i; break; }
+        }
+        if (batteryOrder >= order.size()) return;
+        // Injected controls occupy consecutive auto-sized columns beginning
+        // at the former Control Center column. Keep the native battery in
+        // that same sequence, preserving its native content and behavior.
+        wuc::Grid::SetColumn(g_nativeBatteryButton, insertCol +
+                             static_cast<int>(batteryOrder));
+        Wh_Log(L"Native battery positioned at grid column=%d.",
+               insertCol + static_cast<int>(batteryOrder));
+    } catch (...) {
+        Wh_Log(L"Native battery grid positioning failed: 0x%08X.",
+               winrt::to_hresult());
+    }
+}
+
 static wux::FrameworkElement ButtonElementForKind(ButtonKind kind) {
     switch (kind) {
         case ButtonKind::Bluetooth:
@@ -5528,6 +5547,8 @@ static bool ApplyXamlButtons() {
     } else {
         InsertGridTrayButtons(trayGrid, buttons.all, insertCol);
     }
+
+    RepositionNativeBatteryInGrid(trayGrid, insertCol);
 
     EnsureUpdateTimer();
 
