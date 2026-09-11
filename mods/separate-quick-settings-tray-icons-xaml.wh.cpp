@@ -2249,6 +2249,38 @@ static wux::FrameworkElement FindControlCenterButton(
     return nullptr;
 }
 
+// Locate the existing Windows battery control without replacing or renaming
+// it.  The battery can be nested several levels below SystemTrayFrameGrid,
+// so search the complete visual subtree and require an explicit battery
+// marker in the element name or class.
+static wux::FrameworkElement FindNativeBatteryButton(
+    wux::DependencyObject const& root) {
+    if (!root) return nullptr;
+    std::vector<wux::DependencyObject> stack{root};
+    while (!stack.empty()) {
+        auto current = stack.back();
+        stack.pop_back();
+        if (auto element = current.try_as<wux::FrameworkElement>()) {
+            {
+                std::wstring name = ToLower(std::wstring(element.Name().c_str()));
+                if (name.rfind(L"separatequicksettingsxaml", 0) == 0) continue;
+                std::wstring klass = ToLower(std::wstring(winrt::get_class_name(element).c_str()));
+                if ((name.find(L"battery") != std::wstring::npos ||
+                     klass.find(L"battery") != std::wstring::npos) &&
+                    name.find(L"icon") == std::wstring::npos) {
+                    return element;
+                }
+            }
+        }
+        int count = wuxm::VisualTreeHelper::GetChildrenCount(current);
+        for (int i = count - 1; i >= 0; --i) {
+            auto child = wuxm::VisualTreeHelper::GetChild(current, i);
+            if (child) stack.push_back(child);
+        }
+    }
+    return nullptr;
+}
+
 static bool IsInjectedElement(wux::FrameworkElement const& element) {
     if (!element) {
         return false;
@@ -5197,21 +5229,11 @@ static bool TryInjectBesideControlCenterButton(wux::FrameworkElement const& root
         RemoveInjectedControls(parentPanel);
         g_trayPanel = parentPanel;
         g_trayControlCenterButton = controlCenterButton;
-        g_nativeBatteryButton = nullptr;
-        // Battery remains a Windows-owned control. Identify only an obvious
-        // battery-named direct child; never replace or rename its content.
-        for (uint32_t i = 0; i < parentPanel.Children().Size(); ++i) {
-            auto candidate = parentPanel.Children().GetAt(i)
-                                 .try_as<wux::FrameworkElement>();
-            if (!candidate || candidate == controlCenterButton) continue;
-            auto name = ToLower(std::wstring(candidate.Name().c_str()));
-            if (name.find(L"battery") != std::wstring::npos) {
-                g_nativeBatteryButton = candidate;
-                Wh_Log(L"Native battery candidate: %s#%s.",
-                       winrt::get_class_name(candidate).c_str(),
-                       candidate.Name().c_str());
-                break;
-            }
+        g_nativeBatteryButton = FindNativeBatteryButton(parentPanel);
+        if (g_nativeBatteryButton) {
+            Wh_Log(L"Native battery candidate: %s#%s.",
+                   winrt::get_class_name(g_nativeBatteryButton).c_str(),
+                   g_nativeBatteryButton.Name().c_str());
         }
         CaptureTrayButtonMetricsFromPanel(parentPanel, controlCenterButton);
         AttachTaskbarSizeRefreshHandlers(parentElement, controlCenterButton);
@@ -5371,19 +5393,11 @@ static bool ApplyXamlButtons() {
     CaptureTrayButtonMetricsFromPanel(trayGrid, controlCenterButton);
     g_trayPanel = trayGrid;
     g_trayControlCenterButton = controlCenterButton;
-    g_nativeBatteryButton = nullptr;
-    for (uint32_t i = 0; i < trayGrid.Children().Size(); ++i) {
-        auto candidate = trayGrid.Children().GetAt(i)
-                             .try_as<wux::FrameworkElement>();
-        if (!candidate || candidate == controlCenterButton) continue;
-        auto name = ToLower(std::wstring(candidate.Name().c_str()));
-        if (name.find(L"battery") != std::wstring::npos) {
-            g_nativeBatteryButton = candidate;
-            Wh_Log(L"Native battery candidate: %s#%s.",
-                   winrt::get_class_name(candidate).c_str(),
-                   candidate.Name().c_str());
-            break;
-        }
+    g_nativeBatteryButton = FindNativeBatteryButton(trayGrid);
+    if (g_nativeBatteryButton) {
+        Wh_Log(L"Native battery candidate: %s#%s.",
+               winrt::get_class_name(g_nativeBatteryButton).c_str(),
+               g_nativeBatteryButton.Name().c_str());
     }
     AttachTaskbarSizeRefreshHandlers(trayGrid, controlCenterButton);
 
