@@ -5184,6 +5184,37 @@ struct OrderedTrayButtons {
     std::vector<wux::FrameworkElement> afterNativeQuickSettings;
 };
 
+static std::vector<ButtonKind> GetVisibleButtonOrder();
+static wux::FrameworkElement ButtonElementForKind(ButtonKind kind);
+
+static void RepositionNativeBatteryInPanel(wuc::Panel const& panel) {
+    if (!panel || !g_nativeBatteryButton || !g_settings.showBatteryButton) return;
+    try {
+        auto children = panel.Children();
+        uint32_t oldIndex = 0;
+        if (!children.IndexOf(g_nativeBatteryButton.as<wux::UIElement>(), oldIndex)) return;
+        auto order = GetVisibleButtonOrder();
+        size_t batteryOrder = order.size();
+        for (size_t i = 0; i < order.size(); ++i) {
+            if (order[i] == ButtonKind::Battery) { batteryOrder = i; break; }
+        }
+        children.RemoveAt(oldIndex);
+        uint32_t insertIndex = children.Size();
+        for (size_t i = batteryOrder + 1; i < order.size(); ++i) {
+            auto next = ButtonElementForKind(order[i]);
+            uint32_t nextIndex = 0;
+            if (next && children.IndexOf(next.as<wux::UIElement>(), nextIndex)) {
+                insertIndex = nextIndex;
+                break;
+            }
+        }
+        children.InsertAt(insertIndex, g_nativeBatteryButton.as<wux::UIElement>());
+        Wh_Log(L"Native battery positioned at tray panel index=%u.", insertIndex);
+    } catch (...) {
+        Wh_Log(L"Native battery reposition failed: 0x%08X.", winrt::to_hresult());
+    }
+}
+
 static wux::FrameworkElement ButtonElementForKind(ButtonKind kind) {
     switch (kind) {
         case ButtonKind::Bluetooth:
@@ -5343,6 +5374,8 @@ static bool TryInjectBesideControlCenterButton(wux::FrameworkElement const& root
                                   buttons.all[i].as<wux::UIElement>());
             }
         }
+
+        RepositionNativeBatteryInPanel(parentPanel);
 
         UpdateDynamicXamlIcons();
         EnsureUpdateTimer();
