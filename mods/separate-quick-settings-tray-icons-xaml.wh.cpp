@@ -5277,9 +5277,15 @@ static void ShowNativeBatteryHost() {
     try {
         g_originalGroupedButton.Visibility(wux::Visibility::Visible);
         g_originalGroupedButton.Opacity(1.0);
-        g_originalGroupedButton.Width(NAN);
-        g_originalGroupedButton.MinWidth(0);
-        g_originalGroupedButton.MaxWidth(INFINITY);
+        double batteryWidth = g_nativeBatteryButton
+                                  ? g_nativeBatteryButton.ActualWidth()
+                                  : 0;
+        if (!(batteryWidth > 1.0 && batteryWidth < 256.0)) {
+            batteryWidth = g_trayButtonWidth;
+        }
+        g_originalGroupedButton.Width(batteryWidth);
+        g_originalGroupedButton.MinWidth(batteryWidth);
+        g_originalGroupedButton.MaxWidth(batteryWidth);
     } catch (...) {
         Wh_Log(L"Failed to show native battery host: 0x%08X.",
                winrt::to_hresult());
