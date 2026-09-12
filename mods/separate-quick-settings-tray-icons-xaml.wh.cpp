@@ -36,6 +36,7 @@ button appears only when Windows reports a battery.
 Sound supports:
 
 - Mouse wheel: unmute first, then volume up/down
+- **Volume scroll step**: use the Windows default or change volume by 2, 5, or 10 percentage points per wheel notch.
 - Middle click: mute toggle
 
 Sound can show currently playing media in its tooltip and use an output-device
@@ -135,6 +136,14 @@ menu presenter receives its name after creation.
 // ==WindhawkModSettings==
 /*
 - sound:
+    - volumeWheelStep: "0"
+      $name: Volume scroll step
+      $description: "Volume change per mouse-wheel notch over Sound. System default uses Windows' normal volume steps."
+      $options:
+      - "0": System default
+      - "2": 2%
+      - "5": 5%
+      - "10": 10%
     - soundClickAction: sound_output
       $name: Sound click action
       $description: "What happens when the separated sound icon is clicked."
@@ -281,6 +290,7 @@ struct Settings {
     std::wstring compactGroupedButtonGlyph = L"F4C3";
     std::wstring groupedButtonAction = L"ms-controlcenter:";
     std::wstring soundClickAction = L"sound_output";
+    int volumeWheelStep = 0;
     std::wstring controlCenterGlyph = L"F4C3";
     std::wstring controlCenterAction = L"ms-controlcenter:";
     std::wstring batteryAction = L"ms-controlcenter:";
@@ -462,6 +472,9 @@ static void LoadSettings() {
         : L"ms-controlcenter:";
     g_settings.soundClickAction =
         GetStringSettingWithDefault(L"sound.soundClickAction", L"sound_output");
+    const auto volumeStep = GetStringSettingWithDefault(L"sound.volumeWheelStep", L"0");
+    g_settings.volumeWheelStep = volumeStep == L"2" ? 2 :
+        volumeStep == L"5" ? 5 : volumeStep == L"10" ? 10 : 0;
     g_settings.controlCenterGlyph =
         GetStringSettingWithDefault(L"controlCenter.controlCenterGlyph", L"F4C3");
     g_settings.controlCenterAction =
@@ -1511,8 +1524,16 @@ static void StepDefaultEndpointVolume(bool up) {
     }
 
     if (SUCCEEDED(hr)) {
-        hr = up ? volume->VolumeStepUp(nullptr)
-                : volume->VolumeStepDown(nullptr);
+        float current = 0;
+        if (g_settings.volumeWheelStep > 0 &&
+            SUCCEEDED(volume->GetMasterVolumeLevelScalar(&current))) {
+            const float step = g_settings.volumeWheelStep / 100.0f;
+            const float target = (std::clamp)(current + (up ? step : -step), 0.0f, 1.0f);
+            hr = volume->SetMasterVolumeLevelScalar(target, nullptr);
+        } else {
+            hr = up ? volume->VolumeStepUp(nullptr)
+                    : volume->VolumeStepDown(nullptr);
+        }
     }
     Wh_Log(L"Sound wheel: VolumeStep%s returned 0x%08X", up ? L"Up" : L"Down",
            hr);
