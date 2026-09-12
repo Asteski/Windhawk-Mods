@@ -1,7 +1,7 @@
 // ==WindhawkMod==
 // @id              separate-system-tray-icons
 // @name            Separate System Tray Icons
-// @description     Adds native-looking Bluetooth, network, and sound buttons to the Windows 11 taskbar tray.
+// @description     Replaces the grouped Windows 11 system tray button with separate sound, Bluetooth, network, Control Center, and battery buttons.
 // @version         0.6.0
 // @author          Asteski
 // @github          https://www.github.com/Asteski
@@ -14,8 +14,9 @@
 /*
 # Separate System Tray Icons
 
-Adds native-looking Bluetooth, network, and sound buttons to the Windows 11 taskbar tray,
-and remove grouped-up Control Center button completely!
+Replaces the grouped Windows 11 system tray button with separate sound,
+Bluetooth, network, Control Center, and battery buttons. The original grouped
+button is hidden while the mod is active and restored when it is unloaded.
 
 This mod injects real XAML `FontIcon` elements into the Windows 11 taskbar tray.
 That means icons are drawn as XAML text/vector glyphs instead of rasterized HICON bitmaps.
@@ -26,17 +27,48 @@ Buttons:
 - Network -> `ms-availablenetworks:`
 - Sound -> Control Center, sound output picker or volume mixer
 - Control Center -> `ms-controlcenter:`
+- Battery -> Control Center, or a custom action
+
+Use **Toggle buttons visibility** to choose which buttons appear. Drag items in
+**Button order** to arrange all five buttons, including Battery. The battery
+button appears only when Windows reports a battery.
 
 Sound supports:
 
 - Mouse wheel: unmute first, then volume up/down
 - Middle click: mute toggle
 
-Injected glyphs use the default tray icon size. Battery settings offer a smaller battery icon. The separate battery follows the Windows percentage preference and adapts to its content.
+Sound can show currently playing media in its tooltip and use an output-device
+glyph. Muted audio uses the standard mute glyph. Bluetooth can show connected
+devices in its tooltip and change appearance when switched off. Network can
+show Wi-Fi signal strength and open a custom URL for **Perform speed test**.
+
+## Battery
+
+Battery is an independent button with its own highlight, tooltip, and WinUI
+context menu. Its percentage display follows the Windows setting, including
+changes made outside the mod, and its width adjusts when the percentage is
+shown or hidden. Button and highlight height follow taskbar size changes.
+
+Right-click Battery for:
+
+- **Power mode**: choose the mode for the current plugged-in or on-battery state.
+- **Enable/Disable Energy saver**: toggle Windows' **Always use energy saver** setting.
+- **Battery percentage**: toggle percentage display; a checkmark shows when it is enabled.
+- **Power and sleep settings**: open the corresponding Windows Settings page.
+
+Energy saver uses an amber charge-level fill (#EAA300). Charging retains its
+charging indicator and green fill, even when energy saver is enabled.
+
+In the **Battery** settings, **Use small battery icon** switches between small
+and default glyph sizes without changing percentage text size. **Battery click
+action** can open Control Center or run a custom action. Control Center also
+has its own glyph and default/custom action settings.
 
 ## Action formats
 
-Custom actions avaiable for **Grouped button replacement action**.
+Select **Custom** for **Control Center action** or **Battery click action**, then
+enter an action in that group's **Custom action** field.
 
 | Prefix | Example | Description |
 |--------|---------|-------------|
@@ -63,10 +95,12 @@ needed, the mod logs the actual control class; the button names stay the same.
 | `SystemTray.OmniButton#SeparateQuickSettingsXamlNetwork` | Network button. |
 | `SystemTray.OmniButton#SeparateQuickSettingsXamlSound` | Sound button, including wheel and middle-click handling. |
 | `SystemTray.OmniButton#SeparateQuickSettingsXamlControlCenter` | Separate Control Center button; the original grouped button is always hidden. |
-| `Grid#SeparateTrayIconLayers` | Centered 16-by-16 glyph host inside each injected button. |
+| `SystemTray.OmniButton#SeparateQuickSettingsXamlBattery` | Separate battery button, including its highlight and click handling. |
+| `TextBlock#SeparateTrayBatteryPercentage` | Battery percentage text. |
+| `Grid#SeparateTrayIconLayers` | Glyph host; battery uses natural dimensions, other buttons use a 16-by-16 host. |
 | `FontIcon#SeparateTrayIconPrimary` | Main status or output-device glyph. |
 | `FontIcon#SeparateTrayIconUnderlay` | Theme-aware grey underlying glyph, where applicable. |
-| `FontIcon#SeparateTrayIconOverlay` | Disabled Bluetooth slash or muted sound overlay, where applicable. |
+| `FontIcon#SeparateTrayIconOverlay` | Additional status layer, including Bluetooth's unavailable indicator and battery charge-level fill. |
 | `MenuFlyoutPresenter#SeparateTrayContextMenuPresenter` | WinUI context menu presenter, named when the menu opens. |
 
 The layer names are shared across buttons. An unqualified layer selector affects
@@ -94,7 +128,7 @@ The mod refreshes glyphs, foreground colors, visibility, overlay font sizes,
 and button dimensions as state changes. Styles for those properties can be
 overwritten by the next update. Stable names provide selectors, but external
 stylers may not observe every dynamically created element. In particular, the
-menu presenter receives its name after creation. Battery uses the SeparateQuickSettingsXamlBattery target.
+menu presenter receives its name after creation.
 */
 // ==/WindhawkModReadme==
 
