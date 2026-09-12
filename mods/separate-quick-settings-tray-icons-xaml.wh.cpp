@@ -5272,6 +5272,20 @@ static void RepositionNativeBatteryInPanel(wuc::Panel const& panel) {
     }
 }
 
+static void ShowNativeBatteryHost() {
+    if (!g_originalGroupedButton) return;
+    try {
+        g_originalGroupedButton.Visibility(wux::Visibility::Visible);
+        g_originalGroupedButton.Opacity(1.0);
+        g_originalGroupedButton.Width(NAN);
+        g_originalGroupedButton.MinWidth(0);
+        g_originalGroupedButton.MaxWidth(INFINITY);
+    } catch (...) {
+        Wh_Log(L"Failed to show native battery host: 0x%08X.",
+               winrt::to_hresult());
+    }
+}
+
 static void RepositionNativeBatteryInGrid(wuc::Grid const& grid, int insertCol) {
     if (!grid || !g_nativeBatteryButton || !g_settings.showBatteryButton) return;
     try {
@@ -5444,7 +5458,11 @@ static bool TryInjectBesideControlCenterButton(wux::FrameworkElement const& root
         // Keep the native grouped control alive only when it contains the
         // native battery. On battery-less devices it must stay hidden, or
         // the grouped network/sound content becomes visible again.
-        HideOriginalGroupedButton(controlCenterButton);
+        if (g_nativeBatteryButton && g_settings.showBatteryButton) {
+            ShowNativeBatteryHost();
+        } else {
+            HideOriginalGroupedButton(controlCenterButton);
+        }
 
         auto children = parentPanel.Children();
         uint32_t insertIndex = children.Size();
@@ -5609,7 +5627,11 @@ static bool ApplyXamlButtons() {
     UpdateNativeBatteryVisibility();
     AttachTaskbarSizeRefreshHandlers(trayGrid, controlCenterButton);
 
-    HideOriginalGroupedButton(controlCenterButton);
+    if (g_nativeBatteryButton && g_settings.showBatteryButton) {
+        ShowNativeBatteryHost();
+    } else {
+        HideOriginalGroupedButton(controlCenterButton);
+    }
 
     int insertCol = static_cast<int>(trayGrid.ColumnDefinitions().Size());
     if (controlCenterButton) {
