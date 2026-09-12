@@ -100,35 +100,41 @@ menu presenter receives its name after creation. Battery has no injected target.
 
 // ==WindhawkModSettings==
 /*
-- soundClickAction: sound_output
-  $name: Sound click action
-  $description: "What happens when the separated sound icon is clicked."
-  $options:
-  - quick_settings: Open Control Center
-  - sound_output: Open sound output picker
-  - sndvol: Open volume mixer
-- showControlCenterButton: true
-  $name: Show Control Center button
-- controlCenterGlyph: F4C3
-  $name: Control Center glyph
-- controlCenterAction: "ms-controlcenter:"
-  $name: Control Center action
-- showBluetoothButton: true
-  $name: Show Bluetooth button
-- showNetworkButton: true
-  $name: Show network button
-- showSoundButton: true
-  $name: Show sound button
-- showBatteryButton: true
-  $name: Show battery button
+- visibility:
+    - showSoundButton: true
+      $name: Sound
+    - showBluetoothButton: true
+      $name: Bluetooth
+    - showNetworkButton: true
+      $name: Network
+    - showControlCenterButton: true
+      $name: Control Center
+    - showBatteryButton: true
+      $name: Battery
+  $name: Toggle buttons visibility
+- controlCenter:
+    - controlCenterGlyph: F4C3
+      $name: Control Center glyph
+    - controlCenterAction: "ms-controlcenter:"
+      $name: Control Center action
+  $name: Control Center
+- sound:
+    - soundClickAction: sound_output
+      $name: Sound click action
+      $description: "What happens when the separated sound icon is clicked."
+      $options:
+      - quick_settings: Open Control Center
+      - sound_output: Open sound output picker
+      - sndvol: Open volume mixer
+    - showCurrentlyPlayingInSoundTooltip: true
+      $name: Show currently playing in sound tooltip
+    - soundIconFollowsOutputDevice: false
+      $name: Sound icon follows output device
+      $description: "When enabled, the sound icon uses an output-device glyph for headphones, speakers, display audio, etc. Muted/unavailable audio still uses the normal mute glyph."
+  $name: Sound
 - keepBatteryGlyphSize: false
   $name: Keep default tray icon size
   $description: Keep system tray icons at their default size when using a small taskbar. Turn off to let Windows use smaller icons.
-- showCurrentlyPlayingInSoundTooltip: true
-  $name: Show currently playing in sound tooltip
-- soundIconFollowsOutputDevice: false
-  $name: Sound icon follows output device
-  $description: "When enabled, the sound icon uses an output-device glyph for headphones, speakers, display audio, etc. Muted/unavailable audio still uses the normal mute glyph."
 - buttonOrder: sound,bluetooth,network,controlcenter
   $name: Button order
   $description: "Comma-separated order: sound, bluetooth, network, controlcenter. Battery stays in its native position. Hidden and unavailable buttons are skipped; missing visible buttons are appended."
@@ -352,31 +358,31 @@ static std::wstring GetStringSettingWithDefault(PCWSTR name,
 
 static void LoadSettings() {
     g_settings.soundClickAction =
-        GetStringSettingWithDefault(L"soundClickAction", L"sound_output");
+        GetStringSettingWithDefault(L"sound.soundClickAction", L"sound_output");
     g_settings.controlCenterGlyph =
-        GetStringSettingWithDefault(L"controlCenterGlyph", L"F4C3");
+        GetStringSettingWithDefault(L"controlCenter.controlCenterGlyph", L"F4C3");
     g_settings.controlCenterAction =
-        GetStringSettingWithDefault(L"controlCenterAction",
+        GetStringSettingWithDefault(L"controlCenter.controlCenterAction",
                                     L"ms-controlcenter:");
     g_settings.groupedButtonMode = L"compact";
     g_settings.compactGroupedButtonGlyph = g_settings.controlCenterGlyph;
     g_settings.groupedButtonAction = g_settings.controlCenterAction;
     g_settings.showBluetoothButton =
-        Wh_GetIntSetting(L"showBluetoothButton") != 0;
+        Wh_GetIntSetting(L"visibility.showBluetoothButton") != 0;
     g_settings.showNetworkButton =
-        Wh_GetIntSetting(L"showNetworkButton") != 0;
+        Wh_GetIntSetting(L"visibility.showNetworkButton") != 0;
     g_settings.showSoundButton =
-        Wh_GetIntSetting(L"showSoundButton") != 0;
+        Wh_GetIntSetting(L"visibility.showSoundButton") != 0;
     g_settings.showControlCenterButton =
-        Wh_GetIntSetting(L"showControlCenterButton") != 0;
+        Wh_GetIntSetting(L"visibility.showControlCenterButton") != 0;
     g_settings.showBatteryButton =
-        Wh_GetIntSetting(L"showBatteryButton") != 0;
+        Wh_GetIntSetting(L"visibility.showBatteryButton") != 0;
     // Preserve the existing stored toggle when upgrading from battery-only sizing.
     g_settings.keepDefaultTrayIconSize = Wh_GetIntSetting(L"keepBatteryGlyphSize") != 0;
     g_settings.showCurrentlyPlayingInSoundTooltip =
-        Wh_GetIntSetting(L"showCurrentlyPlayingInSoundTooltip") != 0;
+        Wh_GetIntSetting(L"sound.showCurrentlyPlayingInSoundTooltip") != 0;
     g_settings.soundIconFollowsOutputDevice =
-        Wh_GetIntSetting(L"soundIconFollowsOutputDevice") != 0;
+        Wh_GetIntSetting(L"sound.soundIconFollowsOutputDevice") != 0;
     g_settings.buttonOrder =
         GetStringSettingWithDefault(L"buttonOrder",
                                     L"sound,bluetooth,network,controlcenter");
