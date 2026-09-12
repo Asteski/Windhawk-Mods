@@ -253,6 +253,7 @@ static HWND g_taskbarWnd = nullptr;
 static wux::FrameworkElement g_bluetoothButton{nullptr};
 static wux::FrameworkElement g_networkButton{nullptr};
 static wux::FrameworkElement g_soundButton{nullptr};
+static wux::FrameworkElement g_batteryButton{nullptr};
 static wux::FrameworkElement g_compactGroupedButton{nullptr};
 static wux::FrameworkElement g_nativeBatteryButton{nullptr};
 static wuc::Panel g_nativeBatteryParent{nullptr};
@@ -2339,9 +2340,12 @@ static void KeepOnlyNativeBattery(wux::FrameworkElement const& controlCenter) {
 static void UpdateNativeBatteryVisibility() {
     if (!g_nativeBatteryButton) return;
     try {
-        g_nativeBatteryButton.Visibility(g_settings.showBatteryButton
-                                             ? wux::Visibility::Visible
-                                             : wux::Visibility::Collapsed);
+        if (g_batteryButton) {
+            g_batteryButton.Visibility(g_settings.showBatteryButton
+                                           ? wux::Visibility::Visible
+                                           : wux::Visibility::Collapsed);
+        }
+        g_nativeBatteryButton.Visibility(wux::Visibility::Visible);
     } catch (...) {
         Wh_Log(L"Failed to update native battery visibility: 0x%08X.",
                winrt::to_hresult());
@@ -3158,6 +3162,7 @@ static void RemoveInjectedControls(wuc::Panel const& parent) {
     g_bluetoothButton = nullptr;
     g_networkButton = nullptr;
     g_soundButton = nullptr;
+    g_batteryButton = nullptr;
     g_compactGroupedButton = nullptr;
     g_nativeBatteryButton = nullptr;
     g_nativeBatteryParent = nullptr;
@@ -4664,7 +4669,7 @@ static bool IsButtonKindVisible(ButtonKind kind) {
         case ButtonKind::QuickSettings:
             return g_settings.showControlCenterButton;
         case ButtonKind::Battery:
-            return g_settings.showBatteryButton && g_nativeBatteryButton;
+            return g_settings.showBatteryButton && g_batteryButton;
         default:
             return false;
     }
@@ -5302,7 +5307,7 @@ static wux::FrameworkElement ButtonElementForKind(ButtonKind kind) {
         case ButtonKind::QuickSettings:
             return g_compactGroupedButton;
         case ButtonKind::Battery:
-            return nullptr;
+            return g_batteryButton;
         default:
             return nullptr;
     }
@@ -5310,6 +5315,32 @@ static wux::FrameworkElement ButtonElementForKind(ButtonKind kind) {
 
 static OrderedTrayButtons CreateTrayButtons() {
     OrderedTrayButtons buttons;
+
+    g_batteryButton = nullptr;
+    if (g_settings.showBatteryButton && g_nativeBatteryButton) {
+        g_batteryButton = CreateTrayButton(ButtonKind::Battery, L"\xE850",
+                                           L"SeparateQuickSettingsXamlBattery",
+                                           L"Battery");
+        try {
+            auto parent = FindAncestorFrameworkElement(g_nativeBatteryButton);
+            auto panel = parent ? parent.try_as<wuc::Panel>() : nullptr;
+            while (parent && !panel) {
+                parent = FindAncestorFrameworkElement(parent);
+                panel = parent ? parent.try_as<wuc::Panel>() : nullptr;
+            }
+            if (panel) {
+                uint32_t index = 0;
+                if (panel.Children().IndexOf(g_nativeBatteryButton.as<wux::UIElement>(), index)) {
+                    panel.Children().RemoveAt(index);
+                }
+            }
+            SetElementIcon(g_batteryButton, g_nativeBatteryButton.as<wux::UIElement>());
+            Wh_Log(L"Native battery content rehosted in dedicated tray button.");
+        } catch (...) {
+            Wh_Log(L"Native battery rehosting failed: 0x%08X.", winrt::to_hresult());
+            g_batteryButton = nullptr;
+        }
+    }
 
     if (g_settings.showBluetoothButton) {
         g_bluetoothButton =
@@ -5416,11 +5447,7 @@ static bool TryInjectBesideControlCenterButton(wux::FrameworkElement const& root
         // Keep the native grouped control alive only when it contains the
         // native battery. On battery-less devices it must stay hidden, or
         // the grouped network/sound content becomes visible again.
-        if (g_nativeBatteryButton && g_settings.showBatteryButton) {
-            RestoreOriginalGroupedButton();
-        } else {
-            HideOriginalGroupedButton(controlCenterButton);
-        }
+        HideOriginalGroupedButton(controlCenterButton);
 
         auto children = parentPanel.Children();
         uint32_t insertIndex = children.Size();
@@ -5585,11 +5612,7 @@ static bool ApplyXamlButtons() {
     UpdateNativeBatteryVisibility();
     AttachTaskbarSizeRefreshHandlers(trayGrid, controlCenterButton);
 
-    if (g_nativeBatteryButton && g_settings.showBatteryButton) {
-        RestoreOriginalGroupedButton();
-    } else {
-        HideOriginalGroupedButton(controlCenterButton);
-    }
+    HideOriginalGroupedButton(controlCenterButton);
 
     int insertCol = static_cast<int>(trayGrid.ColumnDefinitions().Size());
     if (controlCenterButton) {
