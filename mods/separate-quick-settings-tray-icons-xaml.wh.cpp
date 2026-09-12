@@ -2,7 +2,7 @@
 // @id              separate-system-tray-icons
 // @name            Separate System Tray Icons
 // @description     Adds native-looking Bluetooth, network, and sound buttons to the Windows 11 taskbar tray.
-// @version         0.5.0
+// @version         0.5.9
 // @author          Asteski
 // @github          https://www.github.com/Asteski
 // @include         explorer.exe
@@ -31,6 +31,8 @@ Sound supports:
 
 - Mouse wheel: unmute first, then volume up/down
 - Middle click: mute toggle
+
+Injected glyphs use size 16. Windows controls native battery and chevron sizing. The battery button adapts to its content.
 
 ## Action formats
 
@@ -119,6 +121,9 @@ menu presenter receives its name after creation. Battery has no injected target.
   $name: Show sound button
 - showBatteryButton: true
   $name: Show battery button
+- keepBatteryGlyphSize: false
+  $name: Keep battery glyph size at 16
+  $description: Force only the native battery glyph to size 16, including on the small taskbar. Disabled uses Windows sizing.
 - showCurrentlyPlayingInSoundTooltip: true
   $name: Show currently playing in sound tooltip
 - soundIconFollowsOutputDevice: false
@@ -127,12 +132,6 @@ menu presenter receives its name after creation. Battery has no injected target.
 - buttonOrder: sound,bluetooth,network,controlcenter,battery
   $name: Button order
   $description: "Comma-separated order: sound, bluetooth, network, controlcenter, battery. Hidden and unavailable buttons are skipped; missing visible buttons are appended."
-- contextMenuFramework: winui
-  $name: Context menu framework
-  $description: "Framework used for right-click menus on the Bluetooth, network, and sound buttons. WinUI follows the taskbar theme; Win32 uses the classic native popup menu."
-  $options:
-  - winui: WinUI
-  - win32: Win32
 */
 // ==/WindhawkModSettings==
 
@@ -211,10 +210,10 @@ struct Settings {
     bool showSoundButton = true;
     bool showControlCenterButton = true;
     bool showBatteryButton = true;
+    bool keepBatteryGlyphSize = false;
     bool showCurrentlyPlayingInSoundTooltip = true;
     bool soundIconFollowsOutputDevice = false;
     std::wstring buttonOrder = L"sound,bluetooth,network,controlcenter,battery";
-    std::wstring contextMenuFramework = L"winui";
 };
 
 enum class NetworkKind {
@@ -312,7 +311,9 @@ static wux::Visibility g_originalGroupedVisibility = wux::Visibility::Visible;
 static double g_originalGroupedWidth = NAN;
 static double g_originalGroupedMinWidth = 0;
 static double g_originalGroupedMaxWidth = INFINITY;
-static double g_trayButtonWidth = 32;
+// Match the compact tray's individual icon width before any ordinary
+// NotifyIconView is available. A visible native icon overrides this fallback.
+static double g_trayButtonWidth = 28;
 static double g_trayButtonHeight = 32;
 static int g_notifyMetricDiagnosticCount = 0;
 static wux::DispatcherTimer g_updateTimer{nullptr};
@@ -368,6 +369,7 @@ static void LoadSettings() {
         Wh_GetIntSetting(L"showControlCenterButton") != 0;
     g_settings.showBatteryButton =
         Wh_GetIntSetting(L"showBatteryButton") != 0;
+    g_settings.keepBatteryGlyphSize = Wh_GetIntSetting(L"keepBatteryGlyphSize") != 0;
     g_settings.showCurrentlyPlayingInSoundTooltip =
         Wh_GetIntSetting(L"showCurrentlyPlayingInSoundTooltip") != 0;
     g_settings.soundIconFollowsOutputDevice =
@@ -375,8 +377,6 @@ static void LoadSettings() {
     g_settings.buttonOrder =
         GetStringSettingWithDefault(L"buttonOrder",
                                     L"sound,bluetooth,network,controlcenter,battery");
-    g_settings.contextMenuFramework =
-        GetStringSettingWithDefault(L"contextMenuFramework", L"winui");
     Wh_Log(L"Tray button settings: bluetooth=%d network=%d sound=%d order=[%s].",
            g_settings.showBluetoothButton, g_settings.showNetworkButton,
            g_settings.showSoundButton, g_settings.buttonOrder.c_str());
@@ -3177,7 +3177,98 @@ static void RemoveInjectedControls(wuc::Panel const& parent) {
     g_soundTooltipCache.clear();
 }
 
+struct NativeTrayPropertyOverride {
+    winrt::weak_ref<wux::DependencyObject> element;
+    wux::DependencyProperty property;
+    wf::IInspectable originalValue;
+};
+static std::vector<NativeTrayPropertyOverride> g_nativeTrayPropertyOverrides;
+static void RestoreNativeBatteryMenus();
+
+static void AttachNativeBatteryContextMenu();
+
+static void SetNativeTrayDouble(wux::DependencyObject const& element,
+                                wux::DependencyProperty const& property,
+                                double value) {
+    for (auto it = g_nativeTrayPropertyOverrides.begin();
+         it != g_nativeTrayPropertyOverrides.end();) {
+        auto existing = it->element.get();
+        if (!existing) {
+            it = g_nativeTrayPropertyOverrides.erase(it);
+        } else {
+            if (existing == element && it->property == property) {
+                if (winrt::unbox_value<double>(element.GetValue(property)) != value)
+                    element.SetValue(property, winrt::box_value(value));
+                return;
+            }
+            ++it;
+        }
+    }
+    g_nativeTrayPropertyOverrides.push_back(
+        {winrt::make_weak(element), property, element.ReadLocalValue(property)});
+    element.SetValue(property, winrt::box_value(value));
+}
+
+static wux::FrameworkElement FindDirectTrayChild(
+    wux::DependencyObject const& parent, PCWSTR klass, PCWSTR name = nullptr) {
+    if (!parent) return nullptr;
+    const int count = wuxm::VisualTreeHelper::GetChildrenCount(parent);
+    for (int i = 0; i < count; ++i) {
+        auto element = wuxm::VisualTreeHelper::GetChild(parent, i)
+                           .try_as<wux::FrameworkElement>();
+        if (element && winrt::get_class_name(element) == klass &&
+            (!name || element.Name() == name)) return element;
+    }
+    return nullptr;
+}
+
+static void RefreshNativeBatteryStyling() {
+    if (!g_originalGroupedButton) return;
+    // Follow the exact native template path; don't change other StackPanels.
+    auto grid = FindDirectTrayChild(g_originalGroupedButton, L"Windows.UI.Xaml.Controls.Grid");
+    auto content = FindDirectTrayChild(grid, L"Windows.UI.Xaml.Controls.ContentPresenter", L"ContentPresenter");
+    auto items = FindDirectTrayChild(content, L"Windows.UI.Xaml.Controls.ItemsPresenter");
+    auto panel = FindDirectTrayChild(items, L"Windows.UI.Xaml.Controls.StackPanel");
+    if (panel)
+        SetNativeTrayDouble(panel, wuc::StackPanel::SpacingProperty(), 0);
+
+    if (!g_settings.keepBatteryGlyphSize) return;
+    struct Entry { wux::DependencyObject element; bool battery; };
+    std::vector<Entry> stack{{g_originalGroupedButton, false}};
+    while (!stack.empty()) {
+        auto entry = stack.back();
+        stack.pop_back();
+        if (winrt::get_class_name(entry.element) == L"SystemTray.BatteryIconContent")
+            entry.battery = true;
+        if (entry.battery) {
+            if (auto icon = entry.element.try_as<wuc::FontIcon>()) {
+                SetNativeTrayDouble(icon, wuc::FontIcon::FontSizeProperty(), 16);
+            } else if (auto text = entry.element.try_as<wuc::TextBlock>()) {
+                const auto glyph = text.Text();
+                // Leave the percentage text at its native size.
+                if (!glyph.empty() && glyph[0] >= 0xE000 && glyph[0] <= 0xF8FF)
+                    SetNativeTrayDouble(text, wuc::TextBlock::FontSizeProperty(), 16);
+            }
+        }
+        const int count = wuxm::VisualTreeHelper::GetChildrenCount(entry.element);
+        for (int i = 0; i < count; ++i)
+            stack.push_back({wuxm::VisualTreeHelper::GetChild(entry.element, i), entry.battery});
+    }
+}
+
 static void RestoreOriginalGroupedButton() {
+    RestoreNativeBatteryMenus();
+    for (auto const& saved : g_nativeTrayPropertyOverrides) {
+        try {
+            if (auto element = saved.element.get()) {
+                if (saved.originalValue == wux::DependencyProperty::UnsetValue())
+                    element.ClearValue(saved.property);
+                else
+                    element.SetValue(saved.property, saved.originalValue);
+            }
+        } catch (...) {}
+    }
+    g_nativeTrayPropertyOverrides.clear();
     if (g_originalGroupedButton) {
         g_originalGroupedButton.Visibility(g_originalGroupedVisibility);
         g_originalGroupedButton.Width(g_originalGroupedWidth);
@@ -3186,7 +3277,7 @@ static void RestoreOriginalGroupedButton() {
     }
 }
 
-static void HideOriginalGroupedButton(wux::FrameworkElement const& button) {
+static void CaptureOriginalGroupedButton(wux::FrameworkElement const& button) {
     if (!button) {
         return;
     }
@@ -3209,6 +3300,11 @@ static void HideOriginalGroupedButton(wux::FrameworkElement const& button) {
         }
     }
 
+}
+
+static void HideOriginalGroupedButton(wux::FrameworkElement const& button) {
+    if (!button) return;
+    CaptureOriginalGroupedButton(button);
     button.Visibility(wux::Visibility::Collapsed);
     button.Width(0);
     button.MinWidth(0);
@@ -3386,6 +3482,8 @@ static void CaptureTrayButtonMetricsFromPanel(
     Wh_Log(L"No nearby single tray button metrics found; using fallback %.1fx%.1f.",
            g_trayButtonWidth, g_trayButtonHeight);
 }
+
+
 
 static void ApplyTrayButtonMetrics(wux::FrameworkElement const& element) {
     if (!element) {
@@ -3589,7 +3687,11 @@ static void EnsureUpdateTimer() {
         if (!RefreshTaskbarLayoutIfRebuilt()) {
             RefreshInjectedButtonMetrics();
         }
-        if (!GroupedButtonModeIs(L"native") && g_originalGroupedButton) {
+        // The grouped host still owns the native battery even in compact
+        // mode. Hiding it here fights ShowNativeBatteryHost on each layout
+        // refresh and makes the battery flash at the update timer interval.
+        if (g_originalGroupedButton &&
+            !(g_nativeBatteryButton && g_settings.showBatteryButton)) {
             HideOriginalGroupedButton(g_originalGroupedButton);
         }
     });
@@ -3972,6 +4074,8 @@ static std::wstring GetSoundTooltip(SoundState const& state) {
 
 static void UpdateDynamicXamlIcons() {
     try {
+        RefreshNativeBatteryStyling();
+        AttachNativeBatteryContextMenu();
         auto primaryBrush = MakeIconBrush();
         auto underlayBrush = MakeUnderlayBrush();
 
@@ -4031,14 +4135,11 @@ static void UpdateDynamicXamlIcons() {
         if (g_soundIcon.primary) {
             SoundState state = GetSoundState();
             const bool useOutputDeviceGlyph =
-                g_settings.soundIconFollowsOutputDevice && state.available;
-            const bool layerMuteOverOutput =
-                useOutputDeviceGlyph && state.muted;
-            g_soundIcon.primary.Glyph(layerMuteOverOutput
+                g_settings.soundIconFollowsOutputDevice && state.available && !state.muted;
+            g_soundIcon.primary.Glyph(useOutputDeviceGlyph
                                           ? GetSoundOutputDeviceGlyph(state)
                                           : GetSoundGlyph(state));
-            g_soundIcon.primary.Foreground(layerMuteOverOutput ? underlayBrush
-                                                               : primaryBrush);
+            g_soundIcon.primary.Foreground(primaryBrush);
             SetCachedTrayToolTip(g_soundButton, g_soundTooltipCache,
                                  GetSoundTooltip(state));
             if (g_soundIcon.underlay) {
@@ -4052,9 +4153,7 @@ static void UpdateDynamicXamlIcons() {
             if (g_soundIcon.overlay) {
                 g_soundIcon.overlay.Glyph(L"\xE74F");
                 g_soundIcon.overlay.Foreground(primaryBrush);
-                g_soundIcon.overlay.Visibility(
-                    layerMuteOverOutput ? wux::Visibility::Visible
-                                        : wux::Visibility::Collapsed);
+                g_soundIcon.overlay.Visibility(wux::Visibility::Collapsed);
             }
         }
     } catch (...) {
@@ -4115,6 +4214,8 @@ enum class TrayContextCommand : UINT {
     SoundTroubleshoot,
     QuickSettingsTaskManager,
     QuickSettingsTaskbarSettings,
+    QuickSettingsSystemSettings,
+    BatteryPowerSettings,
 };
 
 struct TrayContextMenuItem {
@@ -4216,6 +4317,12 @@ static void ExecuteTrayContextCommand(TrayContextCommand command) {
             break;
         case TrayContextCommand::QuickSettingsTaskbarSettings:
             ExecuteAction(L"ms-settings:taskbar");
+            break;
+        case TrayContextCommand::QuickSettingsSystemSettings:
+            ExecuteAction(L"ms-settings:");
+            break;
+        case TrayContextCommand::BatteryPowerSettings:
+            ExecuteAction(L"ms-settings:powersleep");
             break;
         default:
             break;
@@ -4450,7 +4557,7 @@ static void AppendWinUiNetworkContextMenu(wuc::MenuFlyout const& flyout) {
                            L"\xEA18");
     AppendWinUiSeparator(items);
     AppendWinUiContextItem(items, L"Perform speed test",
-                           TrayContextCommand::NetworkSpeedTest, L"\xEC4A");
+                           TrayContextCommand::NetworkSpeedTest, L"\xF42F");
 
     wuc::MenuFlyoutItem airplaneItem;
     airplaneItem.Text(airplaneEnabled ? L"Disable Airplane mode"
@@ -4477,19 +4584,71 @@ static void AppendWinUiQuickSettingsContextMenu(wuc::MenuFlyout const& flyout) {
                            TrayContextCommand::QuickSettingsTaskManager,
                            L"\xE9D9");
     AppendWinUiSeparator(items);
-    AppendWinUiContextItem(items, L"System settings",
+    AppendWinUiContextItem(items, L"Taskbar settings",
                            TrayContextCommand::QuickSettingsTaskbarSettings,
+                           L"\xE713");
+    AppendWinUiContextItem(items, L"System settings",
+                           TrayContextCommand::QuickSettingsSystemSettings,
                            L"\xE713");
 }
 
+static void AppendWinUiBatteryContextMenu(wuc::MenuFlyout const& flyout) {
+    // Separate user preferences for AC and DC, not legacy power-plan GUIDs.
+    using GetMode = DWORD(WINAPI*)(GUID*);
+    using SetMode = DWORD(WINAPI*)(const GUID*);
+    static HMODULE powerModule = LoadLibraryExW(L"powrprof.dll", nullptr,
+                                                LOAD_LIBRARY_SEARCH_SYSTEM32);
+    const GUID modes[] = {
+        {0x961cc777, 0x2547, 0x4f9d, {0x81,0x74,0x7d,0x86,0x18,0x1b,0x8a,0x7a}},
+        {},
+        {0xded574b5, 0x45a0, 0x4f42, {0x87,0x37,0x46,0x34,0x5c,0x09,0xc2,0x38}},
+    };
+    const PCWSTR labels[] = {L"Best power efficiency", L"Balanced", L"Best performance"};
+    wuc::MenuFlyoutSubItem powerMode;
+    powerMode.Text(L"Power mode");
+    for (bool ac : {true, false}) {
+        auto getMode = powerModule ? reinterpret_cast<GetMode>(GetProcAddress(powerModule,
+            ac ? "PowerGetUserConfiguredACPowerMode" : "PowerGetUserConfiguredDCPowerMode")) : nullptr;
+        auto setMode = powerModule ? reinterpret_cast<SetMode>(GetProcAddress(powerModule,
+            ac ? "PowerSetUserConfiguredACPowerMode" : "PowerSetUserConfiguredDCPowerMode")) : nullptr;
+        wuc::MenuFlyoutSubItem supply;
+        supply.Text(ac ? L"Plugged in" : L"On battery");
+        GUID current{};
+        const bool readable = getMode && getMode(&current) == ERROR_SUCCESS;
+        supply.IsEnabled(readable && setMode);
+        for (int i = 0; i < 3; ++i) {
+            wuc::ToggleMenuFlyoutItem item;
+            item.Text(labels[i]);
+            item.IsChecked(readable && IsEqualGUID(current, modes[i]));
+            const GUID mode = modes[i];
+            item.Click([setMode, mode](auto const&, auto const&) {
+                const DWORD error = setMode ? setMode(&mode) : ERROR_NOT_SUPPORTED;
+                if (error != ERROR_SUCCESS) {
+                    Wh_Log(L"Changing power mode failed: %lu", error);
+                    MessageBoxW(nullptr, L"Windows could not change the power mode. Check Power and sleep settings.",
+                                L"Power mode", MB_OK | MB_ICONWARNING);
+                }
+            });
+            supply.Items().Append(item);
+        }
+        powerMode.Items().Append(supply);
+    }
+    flyout.Items().Append(powerMode);
+    AppendWinUiSeparator(flyout.Items());
+    AppendWinUiContextItem(flyout.Items(), L"Power and sleep settings",
+                           TrayContextCommand::BatteryPowerSettings, L"\xE713");
+}
+
 static void PositionTrayMenuPopup(wux::XamlRoot const& root,
-                                 wuc::MenuFlyout const& flyout) {
+                                 wuc::MenuFlyout const& flyout,
+                                 wux::FrameworkElement const& target) {
     RECT bar{}, host{};
     bool horizontal{}, first{};
     if (!root || !GetTaskbarGeometry(&bar, &host, &horizontal, &first)) return;
     MONITORINFO mi{sizeof(mi)};
     if (!GetMonitorInfoW(MonitorFromRect(&bar, MONITOR_DEFAULTTONEAREST), &mi)) return;
     const double scale = root.RasterizationScale();
+    const double gap = 12.0 * scale;
     for (auto const& popup : wuxm::VisualTreeHelper::GetOpenPopupsForXamlRoot(root)) {
         auto presenter = popup.Child().try_as<wuc::MenuFlyoutPresenter>();
         if (!presenter || presenter.Items().Size() == 0 || flyout.Items().Size() == 0 ||
@@ -4504,18 +4663,20 @@ static void PositionTrayMenuPopup(wux::XamlRoot const& root,
         double y = host.top + origin.Y * scale;
         const double oldX = x, oldY = y;
         if (horizontal) {
-            // Tray menus open inward from the screen's tray corner, with
-            // their right edge inset from the monitor rather than the icon.
-            x = mi.rcMonitor.right - 12.0 - width;
-            y = first ? bar.bottom + 12.0 : bar.top - 12.0 - height;
+            // Align with the button; the monitor clamp below keeps menus
+            // inside the existing edge inset when there is insufficient room.
+            auto targetOrigin = target.TransformToVisual(root.Content())
+                                    .TransformPoint({0, 0});
+            x = host.left + targetOrigin.X * scale;
+            y = first ? bar.bottom + gap : bar.top - gap - height;
         } else {
-            x = first ? bar.right + 12.0 : bar.left - 12.0 - width;
-            y = mi.rcMonitor.bottom - 12.0 - height;
+            x = first ? bar.right + gap : bar.left - gap - width;
+            y = mi.rcMonitor.bottom - gap - height;
         }
-        x = (std::max)(mi.rcMonitor.left + 12.0,
-                       (std::min)(x, mi.rcMonitor.right - 12.0 - width));
-        y = (std::max)(mi.rcMonitor.top + 12.0,
-                       (std::min)(y, mi.rcMonitor.bottom - 12.0 - height));
+        x = (std::max)(mi.rcMonitor.left + gap,
+                       (std::min)(x, mi.rcMonitor.right - gap - width));
+        y = (std::max)(mi.rcMonitor.top + gap,
+                       (std::min)(y, mi.rcMonitor.bottom - gap - height));
         popup.HorizontalOffset(popup.HorizontalOffset() + (x - oldX) / scale);
         popup.VerticalOffset(popup.VerticalOffset() + (y - oldY) / scale);
     }
@@ -4564,9 +4725,13 @@ static void ShowWinUiFlyoutNearTaskbar(wuc::MenuFlyout const& flyout,
     // Position the measured native presenter, rather than relying on ShowAt's
     // anchor, whose final placement includes framework offsets and clamping.
     auto weakRoot = winrt::make_weak(target.XamlRoot());
-    flyout.Opened([weakRoot](auto const& sender, auto const&) {
+    auto weakTarget = winrt::make_weak(target);
+    flyout.Opened([weakRoot, weakTarget](auto const& sender, auto const&) {
         try {
-            if (auto root = weakRoot.get()) PositionTrayMenuPopup(root, sender.template as<wuc::MenuFlyout>());
+            auto root = weakRoot.get();
+            auto target = weakTarget.get();
+            if (root && target)
+                PositionTrayMenuPopup(root, sender.template as<wuc::MenuFlyout>(), target);
         } catch (...) {
             Wh_Log(L"Menu placement failed: 0x%08X", winrt::to_hresult());
         }
@@ -4590,6 +4755,8 @@ static bool ShowWinUiTrayContextMenu(wux::FrameworkElement const& target,
             AppendWinUiNetworkContextMenu(flyout);
         } else if (kind == ButtonKind::QuickSettings) {
             AppendWinUiQuickSettingsContextMenu(flyout);
+        } else if (kind == ButtonKind::Battery) {
+            AppendWinUiBatteryContextMenu(flyout);
         } else {
             for (auto const& item : GetTrayContextMenuItems(kind)) {
                 AppendWinUiContextItem(flyout.Items(), item.text, item.command);
@@ -4606,13 +4773,126 @@ static bool ShowWinUiTrayContextMenu(wux::FrameworkElement const& target,
     }
 }
 
+struct BatteryMenuDecoration {
+    winrt::weak_ref<wuc::MenuFlyout> flyout;
+    winrt::weak_ref<wuc::MenuFlyoutPresenter> presenter;
+    wf::IInspectable originalSource{nullptr};
+    wuc::MenuFlyoutItemBase power{nullptr};
+    wuc::MenuFlyoutItemBase separator{nullptr};
+    winrt::event_token opening{};
+    bool usedSource = false;
+};
+static std::vector<BatteryMenuDecoration> g_batteryMenuDecorations;
+
+static bool IsBatterySettingsItem(wf::IInspectable const& value) {
+    auto item = value.try_as<wuc::MenuFlyoutItem>();
+    return item && item.Text() == L"Power and sleep settings";
+}
+
+static void RestoreNativeBatteryMenus() {
+    for (auto const& saved : g_batteryMenuDecorations) {
+        try {
+            if (auto flyout = saved.flyout.get()) {
+                flyout.Opening(saved.opening);
+                uint32_t index;
+                if (flyout.Items().IndexOf(saved.power, index)) flyout.Items().RemoveAt(index);
+                if (flyout.Items().IndexOf(saved.separator, index)) flyout.Items().RemoveAt(index);
+            }
+            if (auto presenter = saved.presenter.get()) {
+                if (saved.usedSource) presenter.ItemsSource(saved.originalSource);
+                else {
+                    uint32_t index;
+                    if (presenter.Items().IndexOf(saved.power, index)) presenter.Items().RemoveAt(index);
+                    if (presenter.Items().IndexOf(saved.separator, index)) presenter.Items().RemoveAt(index);
+                }
+            }
+        } catch (...) {}
+    }
+    g_batteryMenuDecorations.clear();
+}
+
+static void AttachNativeBatteryContextMenu() {
+    if (!g_originalGroupedButton || !g_settings.showBatteryButton) return;
+    // Extend an exposed native ContextFlyout, preserving its settings item,
+    // built-in positioning, and native pointer/keyboard activation.
+    std::vector<wux::DependencyObject> nodes{g_originalGroupedButton};
+    while (!nodes.empty()) {
+        auto node = nodes.back(); nodes.pop_back();
+        if (auto element = node.try_as<wux::UIElement>()) {
+            if (auto flyout = element.ContextFlyout().try_as<wuc::MenuFlyout>()) {
+                if (flyout.Items().Size() == 1 && IsBatterySettingsItem(flyout.Items().GetAt(0))) {
+                    wuc::MenuFlyout extension;
+                    AppendWinUiBatteryContextMenu(extension);
+                    BatteryMenuDecoration saved;
+                    saved.flyout = winrt::make_weak(flyout);
+                    saved.power = extension.Items().GetAt(0);
+                    saved.separator = extension.Items().GetAt(1);
+                    extension.Items().Clear();
+                    flyout.Items().InsertAt(0, saved.separator);
+                    flyout.Items().InsertAt(0, saved.power);
+                    auto weakPower = winrt::make_weak(saved.power.as<wuc::MenuFlyoutSubItem>());
+                    saved.opening = flyout.Opening([weakPower](auto const&, auto const&) {
+                        if (auto power = weakPower.get()) {
+                            wuc::MenuFlyout fresh;
+                            AppendWinUiBatteryContextMenu(fresh);
+                            auto updated = fresh.Items().GetAt(0).as<wuc::MenuFlyoutSubItem>();
+                            power.Items().Clear();
+                            while (updated.Items().Size()) {
+                                auto item = updated.Items().GetAt(0);
+                                updated.Items().RemoveAt(0);
+                                power.Items().Append(item);
+                            }
+                        }
+                    });
+                    g_batteryMenuDecorations.push_back(saved);
+                    Wh_Log(L"Extended native battery ContextFlyout.");
+                }
+            }
+        }
+        const int count = wuxm::VisualTreeHelper::GetChildrenCount(node);
+        for (int i=0; i<count; ++i) nodes.push_back(wuxm::VisualTreeHelper::GetChild(node,i));
+    }
+    // Some private controls create the flyout internally. Its live presenter
+    // is still exposed in the XAML popup tree; extend that one-item menu in place.
+    auto root = g_originalGroupedButton.XamlRoot();
+    if (!root) return;
+    for (auto const& popup : wuxm::VisualTreeHelper::GetOpenPopupsForXamlRoot(root)) {
+        if (popup.Child()) nodes.push_back(popup.Child());
+    }
+    while (!nodes.empty()) {
+        auto node = nodes.back(); nodes.pop_back();
+        if (auto presenter = node.try_as<wuc::MenuFlyoutPresenter>()) {
+            if (presenter.Items().Size() == 1 && IsBatterySettingsItem(presenter.Items().GetAt(0))) {
+                wuc::MenuFlyout extension;
+                AppendWinUiBatteryContextMenu(extension);
+                BatteryMenuDecoration saved;
+                saved.presenter = winrt::make_weak(presenter);
+                saved.power = extension.Items().GetAt(0);
+                saved.separator = extension.Items().GetAt(1);
+                extension.Items().Clear();
+                saved.originalSource = presenter.ItemsSource();
+                saved.usedSource = !!saved.originalSource;
+                if (saved.usedSource) {
+                    auto items = winrt::single_threaded_observable_vector<wf::IInspectable>();
+                    items.Append(saved.power);
+                    items.Append(saved.separator);
+                    items.Append(presenter.Items().GetAt(0));
+                    presenter.ItemsSource(items);
+                } else {
+                    presenter.Items().InsertAt(0, saved.separator);
+                    presenter.Items().InsertAt(0, saved.power);
+                }
+                g_batteryMenuDecorations.push_back(saved);
+                Wh_Log(L"Extended open native battery MenuFlyoutPresenter.");
+            }
+        }
+        const int count = wuxm::VisualTreeHelper::GetChildrenCount(node);
+        for (int i=0; i<count; ++i) nodes.push_back(wuxm::VisualTreeHelper::GetChild(node,i));
+    }
+}
 static void ShowTrayContextMenu(wux::FrameworkElement const& target,
                                 ButtonKind kind) {
-    const bool useWin32 =
-        _wcsicmp(g_settings.contextMenuFramework.c_str(), L"win32") == 0;
-    if (useWin32 || !ShowWinUiTrayContextMenu(target, kind)) {
-        ShowWin32TrayContextMenu(kind);
-    }
+    ShowWinUiTrayContextMenu(target, kind);
 }
 
 static std::wstring const& TooltipCacheForButtonKind(ButtonKind kind) {
@@ -5272,20 +5552,19 @@ static void RepositionNativeBatteryInPanel(wuc::Panel const& panel) {
     }
 }
 
-static void ShowNativeBatteryHost() {
+static void ShowNativeBatteryHost(wux::FrameworkElement const& button) {
+    // The battery path never hides the host. Capture its original geometry
+    // and native hover style here too, before creating the injected buttons.
+    CaptureOriginalGroupedButton(button);
     if (!g_originalGroupedButton) return;
     try {
         g_originalGroupedButton.Visibility(wux::Visibility::Visible);
         g_originalGroupedButton.Opacity(1.0);
-        double batteryWidth = g_nativeBatteryButton
-                                  ? g_nativeBatteryButton.ActualWidth()
-                                  : 0;
-        if (!(batteryWidth > 1.0 && batteryWidth < 256.0)) {
-            batteryWidth = g_trayButtonWidth;
-        }
-        g_originalGroupedButton.Width(batteryWidth);
-        g_originalGroupedButton.MinWidth(batteryWidth);
-        g_originalGroupedButton.MaxWidth(batteryWidth);
+        // Let the native content drive measurement. Pinning ActualWidth here
+        // prevents percentage visibility changes from growing/shrinking the host.
+        g_originalGroupedButton.Width(NAN);
+        g_originalGroupedButton.MinWidth(0);
+        g_originalGroupedButton.MaxWidth(INFINITY);
     } catch (...) {
         Wh_Log(L"Failed to show native battery host: 0x%08X.",
                winrt::to_hresult());
@@ -5465,7 +5744,7 @@ static bool TryInjectBesideControlCenterButton(wux::FrameworkElement const& root
         // native battery. On battery-less devices it must stay hidden, or
         // the grouped network/sound content becomes visible again.
         if (g_nativeBatteryButton && g_settings.showBatteryButton) {
-            ShowNativeBatteryHost();
+            ShowNativeBatteryHost(controlCenterButton);
         } else {
             HideOriginalGroupedButton(controlCenterButton);
         }
@@ -5634,7 +5913,7 @@ static bool ApplyXamlButtons() {
     AttachTaskbarSizeRefreshHandlers(trayGrid, controlCenterButton);
 
     if (g_nativeBatteryButton && g_settings.showBatteryButton) {
-        ShowNativeBatteryHost();
+        ShowNativeBatteryHost(controlCenterButton);
     } else {
         HideOriginalGroupedButton(controlCenterButton);
     }

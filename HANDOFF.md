@@ -87,3 +87,48 @@ The syntax check currently passes.
 ## Next likely debugging step
 
 If highlights remain broken on the laptop, log the grouped host's `ActualWidth`, `ActualHeight`, `Visibility`, `IsHitTestVisible`, Grid column, and visual-tree path for `SystemTray.BatteryIconContent` and its nearest `OmniButton`/panel ancestors. The key design decision is whether the native battery can be isolated by collapsing only the grouped content presenters while keeping the native battery host clickable.
+
+## Current laptop implementation (v0.5.3)
+
+The active source is `mods/separate-quick-settings-tray-icons-xaml.wh.cpp`,
+mod ID `separate-system-tray-icons` (installed as `local@separate-system-tray-icons`).
+The root-level source is older. Earlier battery-width notes above are historical:
+the native battery host now uses automatic content sizing, and the refresh timer
+must never hide that host while `showBatteryButton` is enabled and a battery exists.
+Capture the grouped host/style on the battery path as well as the hidden-host path.
+
+The four injected buttons use 24-unit widths for 12-unit glyphs and 28 for
+16-unit glyphs. Native battery and chevron widths are not overridden. Prefer
+live XamlRoot height for size classification; HWND/DPI calculations are a fallback.
+`retainDefaultGlyphSize` defaults to false and forces 16-unit glyphs when enabled.
+
+### Restoring optional Win32 context menus
+
+WinUI is now the only reachable context-menu framework. The setting and the
+Win32 fallback were removed from `ShowTrayContextMenu`. Legacy stored
+`contextMenuFramework` values have no effect. Win32 construction and command
+helpers, including `ShowWin32TrayContextMenu`, remain in the source but are dormant.
+
+To restore the choice:
+1. Add `contextMenuFramework: winui` to the Windhawk settings block with `winui`
+   and `win32` options.
+2. Add `std::wstring contextMenuFramework = L"winui"` to `Settings` and load it
+   with `GetStringSettingWithDefault` in `LoadSettings`.
+3. In `ShowTrayContextMenu`, dispatch to `ShowWin32TrayContextMenu(kind)` for
+   `win32`, otherwise call `ShowWinUiTrayContextMenu(target, kind)`. Restore an
+   automatic Win32 fallback only if explicitly desired; it is currently absent.
+4. Compile and test all menu commands, both taskbar edges, DPI scales, and
+   sound-output submenus. WinUI button-left alignment is in `PositionTrayMenuPopup`.
+
+## v0.5.4 rollback
+Removed retainDefaultGlyphSize and automatic glyph-dependent widths at user request due to instability. Injected glyphs are fixed at 16; widths again follow native tray metrics with a 28-unit fallback. Battery and chevron glyph sizing is Windows-owned. Battery content-based width, native mute glyph, left-aligned WinUI menus, and permanent WinUI are retained. The v0.5.3 sizing notes above are superseded.
+
+## v0.5.5 battery-only styling
+Added keepBatteryGlyphSize (default false): forces only native BatteryIconContent glyphs to FontSize 16; percentage text and chevron are untouched. No taskbar-size detection or injected-button resizing was reintroduced. The exact ControlCenterButton > Grid > ContentPresenter#ContentPresenter > ItemsPresenter > StackPanel path always receives Spacing=0 while the mod is active, regardless of battery visibility. Native property overrides are restored when the mod unloads or settings are reapplied.
+
+## v0.5.6 context menus
+Control Center now has Taskbar settings above System settings, with distinct ms-settings:taskbar and ms-settings: actions. Menu edge/taskbar gaps use 12 XAML units multiplied by XamlRoot.RasterizationScale rather than 12 physical pixels; left-button alignment and monitor clamping remain.
+BatteryIconContent receives a removable RightTapped handler that displays a WinUI Power mode submenu with separate Plugged in and On battery submenus, followed by a separator and Power and sleep settings. Native battery rendering/left click remain Windows-owned. Uses dynamically resolved PowerGet/SetUserConfiguredACPowerMode and DCPowerMode APIs from powrprof.dll. Unsupported or unreadable state is disabled. API setters only run on user selection. Validate native-event routing and visual gap matching on the laptop.
+
+## v0.5.8 battery menu routing
+The content RightTapped handler and handled-events host handler did not expose the extended menu in user testing. Added guarded TrackPopupMenu/TrackPopupMenuEx interception for the English one-item Power and sleep settings menu on the taskbar UI thread. This path is runtime-matched, but whether the laptop invokes it still needs verification. Other menus pass through. Perform speed test now uses glyph F42F.
