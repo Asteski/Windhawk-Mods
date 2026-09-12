@@ -4046,10 +4046,9 @@ static void UpdateSeparateBatteryButton() {
     wchar_t overlay = static_cast<wchar_t>(0xF8D0 + level);
     // SysBatt Fluent Icons layer mapping from the trashpanda fork.
     if (saver && !charging) {
-        base = 0xF849;
-        overlay = level <= 2 ? static_cast<wchar_t>(0xF8D0 + level)
-                             : static_cast<wchar_t>(0xF84A + level - 3);
-        fill = BatteryStatusBrush(L"SystemFillColorCautionBrush", {255, 157, 93, 0});
+        base = 0xF8D0;
+        overlay = static_cast<wchar_t>(0xF8D0 + level);
+        fill = wuxm::SolidColorBrush(wu::Color{255, 234, 163, 0});
     } else if (charging) {
         base = 0xF8DB;
         overlay = level <= 2 ? static_cast<wchar_t>(0xF8D0 + level)
