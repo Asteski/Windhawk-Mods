@@ -2393,6 +2393,9 @@ static bool IsInjectedElement(wux::FrameworkElement const& element) {
     }
 
     PCWSTR name = element.Name().c_str();
+    if (_wcsicmp(name, L"SeparateQuickSettingsXamlBattery") == 0) {
+        return false;
+    }
     return wcsncmp(name, L"SeparateQuickSettingsXaml", 25) == 0;
 }
 
@@ -3162,10 +3165,7 @@ static void RemoveInjectedControls(wuc::Panel const& parent) {
     g_bluetoothButton = nullptr;
     g_networkButton = nullptr;
     g_soundButton = nullptr;
-    g_batteryButton = nullptr;
     g_compactGroupedButton = nullptr;
-    g_nativeBatteryButton = nullptr;
-    g_nativeBatteryParent = nullptr;
     g_bluetoothIcon = {};
     g_networkIcon = {};
     g_soundIcon = {};
@@ -5316,8 +5316,7 @@ static wux::FrameworkElement ButtonElementForKind(ButtonKind kind) {
 static OrderedTrayButtons CreateTrayButtons() {
     OrderedTrayButtons buttons;
 
-    g_batteryButton = nullptr;
-    if (g_settings.showBatteryButton && g_nativeBatteryButton) {
+    if (g_settings.showBatteryButton && g_nativeBatteryButton && !g_batteryButton) {
         g_batteryButton = CreateTrayButton(ButtonKind::Battery, L"\xE850",
                                            L"SeparateQuickSettingsXamlBattery",
                                            L"Battery");
