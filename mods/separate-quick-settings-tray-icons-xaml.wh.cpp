@@ -5406,14 +5406,21 @@ static bool TryInjectBesideControlCenterButton(wux::FrameworkElement const& root
                    winrt::get_class_name(g_nativeBatteryButton).c_str(),
                    g_nativeBatteryButton.Name().c_str());
         }
-        KeepOnlyNativeBattery(controlCenterButton);
+        if (g_nativeBatteryButton) {
+            KeepOnlyNativeBattery(controlCenterButton);
+        }
         UpdateNativeBatteryVisibility();
         CaptureTrayButtonMetricsFromPanel(parentPanel, controlCenterButton);
         AttachTaskbarSizeRefreshHandlers(parentElement, controlCenterButton);
 
-        // Keep the native grouped control alive so the battery remains
-        // clickable; only its non-battery siblings are collapsed.
-        RestoreOriginalGroupedButton();
+        // Keep the native grouped control alive only when it contains the
+        // native battery. On battery-less devices it must stay hidden, or
+        // the grouped network/sound content becomes visible again.
+        if (g_nativeBatteryButton && g_settings.showBatteryButton) {
+            RestoreOriginalGroupedButton();
+        } else {
+            HideOriginalGroupedButton(controlCenterButton);
+        }
 
         auto children = parentPanel.Children();
         uint32_t insertIndex = children.Size();
@@ -5572,12 +5579,17 @@ static bool ApplyXamlButtons() {
                winrt::get_class_name(g_nativeBatteryButton).c_str(),
                g_nativeBatteryButton.Name().c_str());
     }
-    KeepOnlyNativeBattery(controlCenterButton);
+    if (g_nativeBatteryButton) {
+        KeepOnlyNativeBattery(controlCenterButton);
+    }
     UpdateNativeBatteryVisibility();
     AttachTaskbarSizeRefreshHandlers(trayGrid, controlCenterButton);
 
-    // Keep the native grouped control alive so the battery remains clickable.
-    RestoreOriginalGroupedButton();
+    if (g_nativeBatteryButton && g_settings.showBatteryButton) {
+        RestoreOriginalGroupedButton();
+    } else {
+        HideOriginalGroupedButton(controlCenterButton);
+    }
 
     int insertCol = static_cast<int>(trayGrid.ColumnDefinitions().Size());
     if (controlCenterButton) {
