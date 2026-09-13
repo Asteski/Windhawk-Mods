@@ -7,7 +7,7 @@
 // @github          https://www.github.com/Asteski
 // @include         explorer.exe
 // @architecture    x86-64
-// @compilerOptions -lshell32 -lole32 -loleaut32 -lruntimeobject -luuid -liphlpapi -lwlanapi -lbthprops
+// @compilerOptions -lshell32 -lole32 -loleaut32 -lruntimeobject -luuid -liphlpapi -lwlanapi -lbthprops -lcomctl32
 // ==/WindhawkMod==
 
 // ==WindhawkModReadme==
@@ -244,6 +244,9 @@ menu presenter receives its name after creation.
 #include <cstring>
 #include <new>
 #include <unordered_map>
+#include <memory>
+#include <mutex>
+#include <commctrl.h>
 #include <string>
 #include <thread>
 #include <vector>
@@ -342,12 +345,12 @@ using Std_Ref_Decref_t = void(WINAPI*)(void*);
 using TrayUI_StartTaskbar_t = void(WINAPI*)(void*);
 
 static Settings g_settings;
-static HWND g_taskbarWnd = nullptr;
-static wux::FrameworkElement g_bluetoothButton{nullptr};
-static wux::FrameworkElement g_networkButton{nullptr};
-static wux::FrameworkElement g_soundButton{nullptr};
-static wux::FrameworkElement g_batteryButton{nullptr};
-static wux::FrameworkElement g_compactGroupedButton{nullptr};
+
+
+
+
+
+
 struct IconLayers {
     wuc::Grid host{nullptr};
     wuc::FontIcon underlay{nullptr};
@@ -355,14 +358,14 @@ struct IconLayers {
     wuc::FontIcon overlay{nullptr};
 };
 
-static IconLayers g_bluetoothIcon;
-static IconLayers g_networkIcon;
-static IconLayers g_soundIcon;
-static IconLayers g_compactGroupedIcon;
-static IconLayers g_batteryIcon;
-static wuc::TextBlock g_batteryPercentageText{nullptr};
+
+
+
+
+
+
 static std::atomic<int> g_batteryPercentageEnabled{-1};
-static std::wstring g_batteryTooltipCache;
+
 
 struct NativeMirrorSource {
     wuc::FontIcon icon{nullptr};
@@ -381,56 +384,149 @@ struct MediaTooltipInfo {
     std::wstring artist;
 };
 
-static NativeMirrorSource g_nativeNetworkSource;
-static NativeMirrorSource g_nativeSoundSource;
-static bool g_nativeMirrorSourcesResolved = false;
-static int g_nativeMirrorDiagnosticCount = 0;
-static ULONGLONG g_nextNativeMirrorRetryTick = 0;
-static std::wstring g_bluetoothTooltipCache;
-static std::wstring g_networkTooltipCache;
-static std::wstring g_soundTooltipCache;
+
+
+
+
+
+
+
+
 // The taskbar host ignores the placement properties of ToolTipService for
 // injected controls and falls back to mouse-relative placement. Keep one
 // XAML Popup for our three controls instead, positioned from the taskbar edge.
-static wucp::Popup g_fixedTrayTooltipPopup{nullptr};
-static wuc::Border g_fixedTrayTooltipBorder{nullptr};
-static wuc::TextBlock g_fixedTrayTooltipText{nullptr};
-static wux::FrameworkElement g_fixedTrayTooltipTarget{nullptr};
-static bool g_fixedTrayTooltipOpened = false;
-static wuc::MenuFlyout g_activeTrayContextFlyout{nullptr};
-static wuc::Panel g_trayPanel{nullptr};
-static wux::FrameworkElement g_trayControlCenterButton{nullptr};
-static wux::FrameworkElement g_originalGroupedButton{nullptr};
-static wux::Style g_nativeGroupedButtonStyle{nullptr};
-static wux::Style g_nativeNotifyIconStyle{nullptr};
-static wux::Visibility g_originalGroupedVisibility = wux::Visibility::Visible;
-static double g_originalGroupedWidth = NAN;
-static double g_originalGroupedMinWidth = 0;
-static double g_originalGroupedMaxWidth = INFINITY;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Match the compact tray's individual icon width before any ordinary
 // NotifyIconView is available. A visible native icon overrides this fallback.
-static double g_trayButtonWidth = 28;
-static double g_trayButtonHeight = 32;
-static int g_notifyMetricDiagnosticCount = 0;
-static wux::DispatcherTimer g_updateTimer{nullptr};
-static wux::DispatcherTimer g_retryTimer{nullptr};
-static wux::DispatcherTimer g_metricRefreshTimer{nullptr};
-static int g_retryCount = 0;
-static bool g_unloading = false;
-static bool g_dumpedTree = false;
-static int g_wifiConnectingFrame = 0;
+
+
+
+
+
+
+
+static std::atomic<bool> g_unloading{false};
+
+
 static SRWLOCK g_mediaTooltipLock = SRWLOCK_INIT;
 static MediaTooltipInfo g_mediaTooltipInfo;
 static std::atomic<ULONGLONG> g_lastMediaTooltipQueryTick{0};
 static std::atomic<bool> g_mediaTooltipQueryInProgress{false};
-static bool g_metricRefreshPending = false;
-static int g_metricRefreshSettlePasses = 0;
-static wux::FrameworkElement g_sizeRefreshTrayElement{nullptr};
-static wux::FrameworkElement g_sizeRefreshControlCenterButton{nullptr};
-static winrt::event_token g_sizeRefreshTrayToken{};
-static winrt::event_token g_sizeRefreshControlCenterToken{};
+
+
+
+
+
+
+
+struct NativeTrayPropertyOverride {
+    winrt::weak_ref<wux::DependencyObject> element;
+    wux::DependencyProperty property;
+    wf::IInspectable originalValue;
+};
+
+// XAML objects belong to one taskbar and its owning UI thread.
+struct TaskbarState {
+    HWND g_taskbarWnd = nullptr;
+    wux::FrameworkElement g_bluetoothButton{nullptr};
+    wux::FrameworkElement g_networkButton{nullptr};
+    wux::FrameworkElement g_soundButton{nullptr};
+    wux::FrameworkElement g_batteryButton{nullptr};
+    wux::FrameworkElement g_compactGroupedButton{nullptr};
+    IconLayers g_bluetoothIcon;
+    IconLayers g_networkIcon;
+    IconLayers g_soundIcon;
+    IconLayers g_compactGroupedIcon;
+    IconLayers g_batteryIcon;
+    wuc::TextBlock g_batteryPercentageText{nullptr};
+    std::wstring g_batteryTooltipCache;
+    NativeMirrorSource g_nativeNetworkSource;
+    NativeMirrorSource g_nativeSoundSource;
+    bool g_nativeMirrorSourcesResolved = false;
+    int g_nativeMirrorDiagnosticCount = 0;
+    ULONGLONG g_nextNativeMirrorRetryTick = 0;
+    std::wstring g_bluetoothTooltipCache;
+    std::wstring g_networkTooltipCache;
+    std::wstring g_soundTooltipCache;
+    wucp::Popup g_fixedTrayTooltipPopup{nullptr};
+    wuc::Border g_fixedTrayTooltipBorder{nullptr};
+    wuc::TextBlock g_fixedTrayTooltipText{nullptr};
+    wux::FrameworkElement g_fixedTrayTooltipTarget{nullptr};
+    bool g_fixedTrayTooltipOpened = false;
+    wuc::MenuFlyout g_activeTrayContextFlyout{nullptr};
+    wuc::Panel g_trayPanel{nullptr};
+    wux::FrameworkElement g_trayControlCenterButton{nullptr};
+    wux::FrameworkElement g_originalGroupedButton{nullptr};
+    wux::Style g_nativeGroupedButtonStyle{nullptr};
+    wux::Style g_nativeNotifyIconStyle{nullptr};
+    wux::Visibility g_originalGroupedVisibility = wux::Visibility::Visible;
+    double g_originalGroupedWidth = NAN;
+    double g_originalGroupedMinWidth = 0;
+    double g_originalGroupedMaxWidth = INFINITY;
+    double g_trayButtonWidth = 28;
+    double g_trayButtonHeight = 32;
+    int g_notifyMetricDiagnosticCount = 0;
+    wux::DispatcherTimer g_updateTimer{nullptr};
+    wux::DispatcherTimer g_retryTimer{nullptr};
+    wux::DispatcherTimer g_metricRefreshTimer{nullptr};
+    int g_retryCount = 0;
+    bool g_dumpedTree = false;
+    int g_wifiConnectingFrame = 0;
+    bool g_metricRefreshPending = false;
+    int g_metricRefreshSettlePasses = 0;
+    wux::FrameworkElement g_sizeRefreshTrayElement{nullptr};
+    wux::FrameworkElement g_sizeRefreshControlCenterButton{nullptr};
+    winrt::event_token g_sizeRefreshTrayToken{};
+    winrt::event_token g_sizeRefreshControlCenterToken{};
+    std::vector<NativeTrayPropertyOverride> g_nativeTrayPropertyOverrides;
+    wf::IAsyncOperation<winrt::Windows::Devices::Enumeration::DeviceInformationCollection> g_btQueries[2]{nullptr, nullptr};
+    std::wstring g_btConnectedNames;
+    size_t g_btConnectedCount = 0;
+    ULONGLONG g_btQueryTick = 0;
+    int g_lastOpenedFlyoutButton = -1;
+    ULONGLONG g_lastOpenedFlyoutTick = 0;
+    ULONGLONG g_suppressTapUntil[5]{};
+    bool active = true;
+    NetworkState networkCache{};
+    bool bluetoothCache = false;
+    ULONGLONG networkPollTick = 0;
+    ULONGLONG bluetoothPollTick = 0;
+};
+static std::mutex g_taskbarsMutex;
+static std::unordered_map<HWND, std::shared_ptr<TaskbarState>> g_taskbars;
+static thread_local TaskbarState* g_currentTaskbar = nullptr;
+struct TaskbarScope {
+    TaskbarState* previous;
+    explicit TaskbarScope(TaskbarState* state) : previous(g_currentTaskbar) { g_currentTaskbar = state; }
+    ~TaskbarScope() { g_currentTaskbar = previous; }
+};
+static std::shared_ptr<TaskbarState> CaptureTaskbarState() {
+    std::lock_guard<std::mutex> lock(g_taskbarsMutex);
+    auto it = g_taskbars.find(g_currentTaskbar->g_taskbarWnd);
+    return it == g_taskbars.end() ? nullptr : it->second;
+}
 
 static CTaskBand_GetTaskbarHost_t CTaskBand_GetTaskbarHost_Original = nullptr;
+static CTaskBand_GetTaskbarHost_t CSecondaryTaskBand_GetTaskbarHost_Original = nullptr;
+static void* CSecondaryTaskBand_ITaskListWndSite_vftable = nullptr;
+using SecondaryInit_t = void(WINAPI*)(void*, void*);
+using SecondaryWindow_t = HWND(WINAPI*)(void*);
+static SecondaryInit_t g_secondaryInit = nullptr;
+static SecondaryWindow_t g_secondaryWindow = nullptr;
 static TaskbarHost_FrameHeight_t TaskbarHost_FrameHeight_Original = nullptr;
 static Std_Ref_Decref_t Std_Ref_Decref_Original = nullptr;
 static TrayUI_StartTaskbar_t TrayUI_StartTaskbar_Original = nullptr;
@@ -2031,8 +2127,18 @@ static wux::XamlRoot GetTaskbarXamlRoot(HWND taskbarWnd) {
         return nullptr;
     }
 
+    wchar_t taskbarClass[64]{};
+    GetClassNameW(taskbarWnd, taskbarClass, ARRAYSIZE(taskbarClass));
+    const bool secondary = !_wcsicmp(taskbarClass, L"Shell_SecondaryTrayWnd");
+    auto hostGetter = secondary ? CSecondaryTaskBand_GetTaskbarHost_Original
+                               : CTaskBand_GetTaskbarHost_Original;
+    void* hostVtable = secondary ? CSecondaryTaskBand_ITaskListWndSite_vftable
+                                : CTaskBand_ITaskListWndSite_vftable;
+    if (!hostGetter || !hostVtable) return nullptr;
     HWND taskSwWnd = reinterpret_cast<HWND>(
         GetPropW(taskbarWnd, L"TaskbandHWND"));
+    if (!taskSwWnd && secondary)
+        taskSwWnd = FindWindowExW(taskbarWnd, nullptr, L"WorkerW", nullptr);
     if (!taskSwWnd) {
         Wh_Log(L"GetTaskbarXamlRoot: TaskbandHWND not found.");
         return nullptr;
@@ -2046,7 +2152,7 @@ static wux::XamlRoot GetTaskbarXamlRoot(HWND taskbarWnd) {
 
     void* taskBandForTaskListWndSite = taskBand;
     for (int i = 0; *reinterpret_cast<void**>(taskBandForTaskListWndSite) !=
-                    CTaskBand_ITaskListWndSite_vftable;
+                    hostVtable;
          ++i) {
         if (i == 20) {
             Wh_Log(L"GetTaskbarXamlRoot: ITaskListWndSite vftable not found.");
@@ -2057,7 +2163,7 @@ static wux::XamlRoot GetTaskbarXamlRoot(HWND taskbarWnd) {
     }
 
     void* taskbarHostSharedPtr[2]{};
-    CTaskBand_GetTaskbarHost_Original(taskBandForTaskListWndSite,
+    hostGetter(taskBandForTaskListWndSite,
                                       taskbarHostSharedPtr);
     if (!taskbarHostSharedPtr[0] && !taskbarHostSharedPtr[1]) {
         Wh_Log(L"GetTaskbarXamlRoot: TaskbarHost shared_ptr is empty.");
@@ -2269,13 +2375,13 @@ static void LogVisualStateGroups(wux::FrameworkElement const& root) {
 }
 
 static double GetTargetHighlightHeight() {
-    if (g_trayButtonHeight <= 34) {
+    if (g_currentTaskbar->g_trayButtonHeight <= 34) {
         return 28;
     }
-    if (g_trayButtonHeight >= 44) {
+    if (g_currentTaskbar->g_trayButtonHeight >= 44) {
         return 40;
     }
-    const double fallback = g_trayButtonHeight - 4;
+    const double fallback = g_currentTaskbar->g_trayButtonHeight - 4;
     return fallback > 0 ? fallback : 0;
 }
 
@@ -2306,7 +2412,7 @@ static void ApplyHoverBackgroundMetrics(wux::FrameworkElement const& button) {
 
         Wh_Log(L"Applied hover BackgroundBorder height %.1f for %s#%s at tray height %.1f.",
                targetHeight, winrt::get_class_name(button).c_str(),
-               button.Name().c_str(), g_trayButtonHeight);
+               button.Name().c_str(), g_currentTaskbar->g_trayButtonHeight);
     } catch (...) {
         Wh_Log(L"ApplyHoverBackgroundMetrics failed for %s#%s: 0x%08X",
                winrt::get_class_name(button).c_str(), button.Name().c_str(),
@@ -2542,7 +2648,7 @@ static std::wstring BuildNativeCandidatePath(wux::DependencyObject const& start)
             }
             parts.push_back(part);
 
-            if (element == g_trayControlCenterButton) {
+            if (element == g_currentTaskbar->g_trayControlCenterButton) {
                 break;
             }
         }
@@ -2600,7 +2706,7 @@ static NativeGlyphCandidate InspectNativeGlyphCandidate(
                 candidate.tooltip = GetElementToolTipText(element);
             }
 
-            if (element == g_trayControlCenterButton) {
+            if (element == g_currentTaskbar->g_trayControlCenterButton) {
                 break;
             }
         }
@@ -2673,7 +2779,7 @@ static NativeGlyphCandidate InspectNativeTextBlockCandidate(
                 candidate.tooltip = GetElementToolTipText(element);
             }
 
-            if (element == g_trayControlCenterButton) {
+            if (element == g_currentTaskbar->g_trayControlCenterButton) {
                 break;
             }
         }
@@ -2706,17 +2812,17 @@ static NativeGlyphCandidate InspectNativeTextBlockCandidate(
 }
 
 static void ResolveNativeMirrorSources() {
-    g_nativeMirrorSourcesResolved = true;
-    g_nativeNetworkSource = {};
-    g_nativeSoundSource = {};
+    g_currentTaskbar->g_nativeMirrorSourcesResolved = true;
+    g_currentTaskbar->g_nativeNetworkSource = {};
+    g_currentTaskbar->g_nativeSoundSource = {};
 
-    if (!g_trayControlCenterButton) {
+    if (!g_currentTaskbar->g_trayControlCenterButton) {
         return;
     }
 
     std::vector<NativeGlyphCandidate> candidates;
     std::vector<wux::DependencyObject> stack;
-    stack.push_back(g_trayControlCenterButton);
+    stack.push_back(g_currentTaskbar->g_trayControlCenterButton);
 
     while (!stack.empty()) {
         auto current = stack.back();
@@ -2774,9 +2880,9 @@ static void ResolveNativeMirrorSources() {
         }
     }
 
-    const bool logDiagnostics = g_nativeMirrorDiagnosticCount < 8;
+    const bool logDiagnostics = g_currentTaskbar->g_nativeMirrorDiagnosticCount < 8;
     if (logDiagnostics) {
-        ++g_nativeMirrorDiagnosticCount;
+        ++g_currentTaskbar->g_nativeMirrorDiagnosticCount;
         Wh_Log(L"Native mirror scan found %u glyph candidate(s) under ControlCenterButton.",
                static_cast<unsigned>(candidates.size()));
         for (size_t i = 0; i < candidates.size() && i < 32; ++i) {
@@ -2791,12 +2897,12 @@ static void ResolveNativeMirrorSources() {
     }
 
     if (bestNetwork && bestNetwork->networkScore >= 35) {
-        g_nativeNetworkSource.icon = bestNetwork->icon;
-        g_nativeNetworkSource.textBlock = bestNetwork->textBlock;
-        g_nativeNetworkSource.tooltip = bestNetwork->tooltip;
-        g_nativeNetworkSource.name = bestNetwork->name;
-        g_nativeNetworkSource.automationName = bestNetwork->automationName;
-        g_nativeNetworkSource.path = bestNetwork->path;
+        g_currentTaskbar->g_nativeNetworkSource.icon = bestNetwork->icon;
+        g_currentTaskbar->g_nativeNetworkSource.textBlock = bestNetwork->textBlock;
+        g_currentTaskbar->g_nativeNetworkSource.tooltip = bestNetwork->tooltip;
+        g_currentTaskbar->g_nativeNetworkSource.name = bestNetwork->name;
+        g_currentTaskbar->g_nativeNetworkSource.automationName = bestNetwork->automationName;
+        g_currentTaskbar->g_nativeNetworkSource.path = bestNetwork->path;
         if (logDiagnostics) {
             Wh_Log(L"Native mirror selected network source: type=%s glyph=%s score=%d tooltip=[%s] path=[%s]",
                    bestNetwork->sourceType.c_str(), bestNetwork->glyphHex.c_str(),
@@ -2809,12 +2915,12 @@ static void ResolveNativeMirrorSources() {
         (!bestNetwork || NativeCandidateObject(*bestSound) !=
                              NativeCandidateObject(*bestNetwork) ||
          bestSound->soundScore > bestNetwork->networkScore)) {
-        g_nativeSoundSource.icon = bestSound->icon;
-        g_nativeSoundSource.textBlock = bestSound->textBlock;
-        g_nativeSoundSource.tooltip = bestSound->tooltip;
-        g_nativeSoundSource.name = bestSound->name;
-        g_nativeSoundSource.automationName = bestSound->automationName;
-        g_nativeSoundSource.path = bestSound->path;
+        g_currentTaskbar->g_nativeSoundSource.icon = bestSound->icon;
+        g_currentTaskbar->g_nativeSoundSource.textBlock = bestSound->textBlock;
+        g_currentTaskbar->g_nativeSoundSource.tooltip = bestSound->tooltip;
+        g_currentTaskbar->g_nativeSoundSource.name = bestSound->name;
+        g_currentTaskbar->g_nativeSoundSource.automationName = bestSound->automationName;
+        g_currentTaskbar->g_nativeSoundSource.path = bestSound->path;
         if (logDiagnostics) {
             Wh_Log(L"Native mirror selected sound source: type=%s glyph=%s score=%d tooltip=[%s] path=[%s]",
                    bestSound->sourceType.c_str(), bestSound->glyphHex.c_str(),
@@ -2830,18 +2936,18 @@ static void ResolveNativeMirrorSources() {
 // in-process with XAML and is deliberately non-interactive.
 static void HideFixedTrayTooltip() {
     try {
-        if (g_fixedTrayTooltipPopup) {
-            g_fixedTrayTooltipPopup.IsOpen(false);
+        if (g_currentTaskbar->g_fixedTrayTooltipPopup) {
+            g_currentTaskbar->g_fixedTrayTooltipPopup.IsOpen(false);
         }
     } catch (...) {
     }
-    g_fixedTrayTooltipOpened = false;
-    g_fixedTrayTooltipTarget = nullptr;
+    g_currentTaskbar->g_fixedTrayTooltipOpened = false;
+    g_currentTaskbar->g_fixedTrayTooltipTarget = nullptr;
 }
 
 static bool GetTaskbarGeometry(RECT* taskbarRect, RECT* hostRect,
                                bool* horizontal, bool* nearFirstEdge) {
-    HWND taskbar = g_taskbarWnd ? g_taskbarWnd
+    HWND taskbar = g_currentTaskbar->g_taskbarWnd ? g_currentTaskbar->g_taskbarWnd
                                 : FindWindowW(L"Shell_TrayWnd", nullptr);
     if (!taskbar || !GetWindowRect(taskbar, taskbarRect) ||
         !GetWindowRect(taskbar, hostRect)) {
@@ -2869,7 +2975,7 @@ static bool GetTaskbarGeometry(RECT* taskbarRect, RECT* hostRect,
 }
 
 static void EnsureFixedTrayTooltip() {
-    if (g_fixedTrayTooltipPopup) {
+    if (g_currentTaskbar->g_fixedTrayTooltipPopup) {
         return;
     }
 
@@ -2885,42 +2991,44 @@ static void EnsureFixedTrayTooltip() {
     foreground.G = light ? 0x1A : 0xF5;
     foreground.B = light ? 0x1A : 0xF5;
 
-    g_fixedTrayTooltipText = wuc::TextBlock();
-    g_fixedTrayTooltipText.FontSize(12);
-    g_fixedTrayTooltipText.Foreground(wuxm::SolidColorBrush(foreground));
-    g_fixedTrayTooltipText.IsHitTestVisible(false);
+    g_currentTaskbar->g_fixedTrayTooltipText = wuc::TextBlock();
+    g_currentTaskbar->g_fixedTrayTooltipText.FontSize(12);
+    g_currentTaskbar->g_fixedTrayTooltipText.Foreground(wuxm::SolidColorBrush(foreground));
+    g_currentTaskbar->g_fixedTrayTooltipText.IsHitTestVisible(false);
 
-    g_fixedTrayTooltipBorder = wuc::Border();
-    g_fixedTrayTooltipBorder.Background(wuxm::SolidColorBrush(background));
-    g_fixedTrayTooltipBorder.BorderThickness({1, 1, 1, 1});
-    g_fixedTrayTooltipBorder.BorderBrush(
+    g_currentTaskbar->g_fixedTrayTooltipBorder = wuc::Border();
+    g_currentTaskbar->g_fixedTrayTooltipBorder.Background(wuxm::SolidColorBrush(background));
+    g_currentTaskbar->g_fixedTrayTooltipBorder.BorderThickness({1, 1, 1, 1});
+    g_currentTaskbar->g_fixedTrayTooltipBorder.BorderBrush(
         wuxm::SolidColorBrush(light ? wu::Color{255, 224, 224, 224}
                                : wu::Color{255, 70, 70, 70}));
-    g_fixedTrayTooltipBorder.CornerRadius({4, 4, 4, 4});
-    g_fixedTrayTooltipBorder.Padding({10, 7, 10, 7});
-    g_fixedTrayTooltipBorder.IsHitTestVisible(false);
-    g_fixedTrayTooltipBorder.Child(g_fixedTrayTooltipText);
+    g_currentTaskbar->g_fixedTrayTooltipBorder.CornerRadius({4, 4, 4, 4});
+    g_currentTaskbar->g_fixedTrayTooltipBorder.Padding({10, 7, 10, 7});
+    g_currentTaskbar->g_fixedTrayTooltipBorder.IsHitTestVisible(false);
+    g_currentTaskbar->g_fixedTrayTooltipBorder.Child(g_currentTaskbar->g_fixedTrayTooltipText);
 
-    g_fixedTrayTooltipPopup = wucp::Popup();
-    g_fixedTrayTooltipPopup.Child(g_fixedTrayTooltipBorder);
-    g_fixedTrayTooltipPopup.IsLightDismissEnabled(false);
-    g_fixedTrayTooltipPopup.Opened([](wf::IInspectable const&,
+    g_currentTaskbar->g_fixedTrayTooltipPopup = wucp::Popup();
+    g_currentTaskbar->g_fixedTrayTooltipPopup.Child(g_currentTaskbar->g_fixedTrayTooltipBorder);
+    g_currentTaskbar->g_fixedTrayTooltipPopup.IsLightDismissEnabled(false);
+    g_currentTaskbar->g_fixedTrayTooltipPopup.Opened([taskbarState = CaptureTaskbarState()](wf::IInspectable const&,
                                       wf::IInspectable const&) {
-        g_fixedTrayTooltipOpened = true;
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
+        g_currentTaskbar->g_fixedTrayTooltipOpened = true;
         Wh_Log(L"Fixed tray tooltip popup opened for %s#%s.",
-               g_fixedTrayTooltipTarget
-                   ? winrt::get_class_name(g_fixedTrayTooltipTarget).c_str()
+               g_currentTaskbar->g_fixedTrayTooltipTarget
+                   ? winrt::get_class_name(g_currentTaskbar->g_fixedTrayTooltipTarget).c_str()
                    : L"(none)",
-               g_fixedTrayTooltipTarget
-                   ? g_fixedTrayTooltipTarget.Name().c_str()
+               g_currentTaskbar->g_fixedTrayTooltipTarget
+                   ? g_currentTaskbar->g_fixedTrayTooltipTarget.Name().c_str()
                    : L"");
         // The stock tooltip is retained as a fallback until this event proves
         // the Popup was attached to Shell's XAML popup root.
-        if (g_fixedTrayTooltipTarget) {
-            wuc::ToolTipService::SetToolTip(g_fixedTrayTooltipTarget, nullptr);
+        if (g_currentTaskbar->g_fixedTrayTooltipTarget) {
+            wuc::ToolTipService::SetToolTip(g_currentTaskbar->g_fixedTrayTooltipTarget, nullptr);
         }
     });
-    if (auto popup3 = g_fixedTrayTooltipPopup.try_as<wucp::IPopup3>()) {
+    if (auto popup3 = g_currentTaskbar->g_fixedTrayTooltipPopup.try_as<wucp::IPopup3>()) {
         popup3.ShouldConstrainToRootBounds(false);
     }
 }
@@ -2942,9 +3050,9 @@ static void ShowFixedTrayTooltip(wux::FrameworkElement const& targetButton,
 
     try {
         EnsureFixedTrayTooltip();
-        g_fixedTrayTooltipText.Text(tooltip);
-        g_fixedTrayTooltipBorder.Measure({640.0f, 320.0f});
-        const wf::Size desired = g_fixedTrayTooltipBorder.DesiredSize();
+        g_currentTaskbar->g_fixedTrayTooltipText.Text(tooltip);
+        g_currentTaskbar->g_fixedTrayTooltipBorder.Measure({640.0f, 320.0f});
+        const wf::Size desired = g_currentTaskbar->g_fixedTrayTooltipBorder.DesiredSize();
 
         RECT taskbarRect{};
         RECT hostRect{};
@@ -2955,7 +3063,7 @@ static void ShowFixedTrayTooltip(wux::FrameworkElement const& targetButton,
             return;
         }
 
-        HWND taskbar = g_taskbarWnd ? g_taskbarWnd
+        HWND taskbar = g_currentTaskbar->g_taskbarWnd ? g_currentTaskbar->g_taskbarWnd
                                     : FindWindowW(L"Shell_TrayWnd", nullptr);
         const double scale = GetTaskbarDpiScale(taskbar);
         const auto transform = targetButton.TransformToVisual(nullptr);
@@ -2978,11 +3086,11 @@ static void ShowFixedTrayTooltip(wux::FrameworkElement const& targetButton,
                               : taskbarEdge - desired.Width - kGap;
         }
 
-        g_fixedTrayTooltipPopup.HorizontalOffset(x);
-        g_fixedTrayTooltipPopup.VerticalOffset(y);
-        g_fixedTrayTooltipTarget = targetButton;
-        g_fixedTrayTooltipOpened = false;
-        g_fixedTrayTooltipPopup.IsOpen(true);
+        g_currentTaskbar->g_fixedTrayTooltipPopup.HorizontalOffset(x);
+        g_currentTaskbar->g_fixedTrayTooltipPopup.VerticalOffset(y);
+        g_currentTaskbar->g_fixedTrayTooltipTarget = targetButton;
+        g_currentTaskbar->g_fixedTrayTooltipOpened = false;
+        g_currentTaskbar->g_fixedTrayTooltipPopup.IsOpen(true);
         Wh_Log(L"Requested fixed tray tooltip for %s#%s at %.1f,%.1f.",
                winrt::get_class_name(targetButton).c_str(),
                targetButton.Name().c_str(), x, y);
@@ -3042,8 +3150,10 @@ static void SetTrayToolTip(wux::FrameworkElement const& targetButton,
         wuc::ToolTip tip;
         tip.Content(winrt::box_value(tooltip));
         ApplyNativeTrayToolTipPlacement(tip, targetButton);
-        tip.Opened([targetButton](wf::IInspectable const& sender,
+        tip.Opened([targetButton, taskbarState = CaptureTaskbarState()](wf::IInspectable const& sender,
                                  wux::RoutedEventArgs const&) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
             if (auto openedTip = sender.try_as<wuc::ToolTip>()) {
                 ApplyNativeTrayToolTipPlacement(openedTip, targetButton);
             }
@@ -3080,8 +3190,8 @@ static void SetCachedTrayToolTip(wux::FrameworkElement const& targetButton,
             SetTrayToolTip(targetButton, tooltip);
         }
         wuxa::AutomationProperties::SetName(targetButton, tooltip);
-        if (g_fixedTrayTooltipTarget == targetButton &&
-            g_fixedTrayTooltipPopup && g_fixedTrayTooltipPopup.IsOpen()) {
+        if (g_currentTaskbar->g_fixedTrayTooltipTarget == targetButton &&
+            g_currentTaskbar->g_fixedTrayTooltipPopup && g_currentTaskbar->g_fixedTrayTooltipPopup.IsOpen()) {
             ShowFixedTrayTooltip(targetButton, tooltip);
         }
         Wh_Log(L"Updated tray tooltip for %s#%s: [%s]",
@@ -3099,17 +3209,17 @@ static bool ApplyNativeMirrorSource(NativeMirrorSource& source,
                                     wux::FrameworkElement const& targetButton,
                                     std::wstring& tooltipCache,
                                     wuxm::Brush const& primaryBrush) {
-    if (!source.icon && !source.textBlock && g_nativeMirrorSourcesResolved) {
+    if (!source.icon && !source.textBlock && g_currentTaskbar->g_nativeMirrorSourcesResolved) {
         ULONGLONG now = GetTickCount64();
-        if (now < g_nextNativeMirrorRetryTick) {
+        if (now < g_currentTaskbar->g_nextNativeMirrorRetryTick) {
             return false;
         }
 
-        g_nextNativeMirrorRetryTick = now + 5000;
-        g_nativeMirrorSourcesResolved = false;
+        g_currentTaskbar->g_nextNativeMirrorRetryTick = now + 5000;
+        g_currentTaskbar->g_nativeMirrorSourcesResolved = false;
     }
 
-    if (!g_nativeMirrorSourcesResolved) {
+    if (!g_currentTaskbar->g_nativeMirrorSourcesResolved) {
         ResolveNativeMirrorSources();
     }
 
@@ -3140,7 +3250,7 @@ static bool ApplyNativeMirrorSource(NativeMirrorSource& source,
         Wh_Log(L"Native mirror source became unavailable; falling back: 0x%08X",
                winrt::to_hresult());
         source = {};
-        g_nativeMirrorSourcesResolved = false;
+        g_currentTaskbar->g_nativeMirrorSourcesResolved = false;
         return false;
     }
 }
@@ -3161,44 +3271,40 @@ static void RemoveInjectedControls(wuc::Panel const& parent) {
         }
     }
 
-    g_bluetoothButton = nullptr;
-    g_networkButton = nullptr;
-    g_soundButton = nullptr;
-    g_batteryButton = nullptr;
-    g_batteryIcon = {};
-    g_batteryPercentageText = nullptr;
-    g_batteryTooltipCache.clear();
-    g_compactGroupedButton = nullptr;
-    g_bluetoothIcon = {};
-    g_networkIcon = {};
-    g_soundIcon = {};
-    g_compactGroupedIcon = {};
-    g_nativeMirrorSourcesResolved = false;
-    g_nextNativeMirrorRetryTick = 0;
-    g_nativeNetworkSource = {};
-    g_nativeSoundSource = {};
-    g_bluetoothTooltipCache.clear();
-    g_networkTooltipCache.clear();
-    g_soundTooltipCache.clear();
+    g_currentTaskbar->g_bluetoothButton = nullptr;
+    g_currentTaskbar->g_networkButton = nullptr;
+    g_currentTaskbar->g_soundButton = nullptr;
+    g_currentTaskbar->g_batteryButton = nullptr;
+    g_currentTaskbar->g_batteryIcon = {};
+    g_currentTaskbar->g_batteryPercentageText = nullptr;
+    g_currentTaskbar->g_batteryTooltipCache.clear();
+    g_currentTaskbar->g_compactGroupedButton = nullptr;
+    g_currentTaskbar->g_bluetoothIcon = {};
+    g_currentTaskbar->g_networkIcon = {};
+    g_currentTaskbar->g_soundIcon = {};
+    g_currentTaskbar->g_compactGroupedIcon = {};
+    g_currentTaskbar->g_nativeMirrorSourcesResolved = false;
+    g_currentTaskbar->g_nextNativeMirrorRetryTick = 0;
+    g_currentTaskbar->g_nativeNetworkSource = {};
+    g_currentTaskbar->g_nativeSoundSource = {};
+    g_currentTaskbar->g_bluetoothTooltipCache.clear();
+    g_currentTaskbar->g_networkTooltipCache.clear();
+    g_currentTaskbar->g_soundTooltipCache.clear();
 }
 
-struct NativeTrayPropertyOverride {
-    winrt::weak_ref<wux::DependencyObject> element;
-    wux::DependencyProperty property;
-    wf::IInspectable originalValue;
-};
-static std::vector<NativeTrayPropertyOverride> g_nativeTrayPropertyOverrides;
+
+
 
 
 
 static void SetNativeTrayDouble(wux::DependencyObject const& element,
                                 wux::DependencyProperty const& property,
                                 double value) {
-    for (auto it = g_nativeTrayPropertyOverrides.begin();
-         it != g_nativeTrayPropertyOverrides.end();) {
+    for (auto it = g_currentTaskbar->g_nativeTrayPropertyOverrides.begin();
+         it != g_currentTaskbar->g_nativeTrayPropertyOverrides.end();) {
         auto existing = it->element.get();
         if (!existing) {
-            it = g_nativeTrayPropertyOverrides.erase(it);
+            it = g_currentTaskbar->g_nativeTrayPropertyOverrides.erase(it);
         } else {
             if (existing == element && it->property == property) {
                 if (winrt::unbox_value<double>(element.GetValue(property)) != value)
@@ -3208,7 +3314,7 @@ static void SetNativeTrayDouble(wux::DependencyObject const& element,
             ++it;
         }
     }
-    g_nativeTrayPropertyOverrides.push_back(
+    g_currentTaskbar->g_nativeTrayPropertyOverrides.push_back(
         {winrt::make_weak(element), property, element.ReadLocalValue(property)});
     element.SetValue(property, winrt::box_value(value));
 }
@@ -3227,9 +3333,9 @@ static wux::FrameworkElement FindDirectTrayChild(
 }
 
 static void RefreshNativeTrayStyling() {
-    if (!g_originalGroupedButton) return;
+    if (!g_currentTaskbar->g_originalGroupedButton) return;
     // Follow the exact native template path; don't change other StackPanels.
-    auto grid = FindDirectTrayChild(g_originalGroupedButton, L"Windows.UI.Xaml.Controls.Grid");
+    auto grid = FindDirectTrayChild(g_currentTaskbar->g_originalGroupedButton, L"Windows.UI.Xaml.Controls.Grid");
     auto content = FindDirectTrayChild(grid, L"Windows.UI.Xaml.Controls.ContentPresenter", L"ContentPresenter");
     auto items = FindDirectTrayChild(content, L"Windows.UI.Xaml.Controls.ItemsPresenter");
     auto panel = FindDirectTrayChild(items, L"Windows.UI.Xaml.Controls.StackPanel");
@@ -3239,7 +3345,7 @@ static void RefreshNativeTrayStyling() {
 }
 
 static void RestoreOriginalGroupedButton() {
-    for (auto const& saved : g_nativeTrayPropertyOverrides) {
+    for (auto const& saved : g_currentTaskbar->g_nativeTrayPropertyOverrides) {
         try {
             if (auto element = saved.element.get()) {
                 if (saved.originalValue == wux::DependencyProperty::UnsetValue())
@@ -3249,12 +3355,12 @@ static void RestoreOriginalGroupedButton() {
             }
         } catch (...) {}
     }
-    g_nativeTrayPropertyOverrides.clear();
-    if (g_originalGroupedButton) {
-        g_originalGroupedButton.Visibility(g_originalGroupedVisibility);
-        g_originalGroupedButton.Width(g_originalGroupedWidth);
-        g_originalGroupedButton.MinWidth(g_originalGroupedMinWidth);
-        g_originalGroupedButton.MaxWidth(g_originalGroupedMaxWidth);
+    g_currentTaskbar->g_nativeTrayPropertyOverrides.clear();
+    if (g_currentTaskbar->g_originalGroupedButton) {
+        g_currentTaskbar->g_originalGroupedButton.Visibility(g_currentTaskbar->g_originalGroupedVisibility);
+        g_currentTaskbar->g_originalGroupedButton.Width(g_currentTaskbar->g_originalGroupedWidth);
+        g_currentTaskbar->g_originalGroupedButton.MinWidth(g_currentTaskbar->g_originalGroupedMinWidth);
+        g_currentTaskbar->g_originalGroupedButton.MaxWidth(g_currentTaskbar->g_originalGroupedMaxWidth);
     }
 }
 
@@ -3263,18 +3369,18 @@ static void CaptureOriginalGroupedButton(wux::FrameworkElement const& button) {
         return;
     }
 
-    if (!g_originalGroupedButton || g_originalGroupedButton != button) {
-        g_originalGroupedButton = button;
-        g_originalGroupedVisibility = button.Visibility();
-        g_originalGroupedWidth = button.Width();
-        g_originalGroupedMinWidth = button.MinWidth();
-        g_originalGroupedMaxWidth = button.MaxWidth();
+    if (!g_currentTaskbar->g_originalGroupedButton || g_currentTaskbar->g_originalGroupedButton != button) {
+        g_currentTaskbar->g_originalGroupedButton = button;
+        g_currentTaskbar->g_originalGroupedVisibility = button.Visibility();
+        g_currentTaskbar->g_originalGroupedWidth = button.Width();
+        g_currentTaskbar->g_originalGroupedMinWidth = button.MinWidth();
+        g_currentTaskbar->g_originalGroupedMaxWidth = button.MaxWidth();
 
         if (auto control = button.try_as<wuc::Control>()) {
-            g_nativeGroupedButtonStyle = control.Style();
+            g_currentTaskbar->g_nativeGroupedButtonStyle = control.Style();
             Wh_Log(L"Captured grouped button class=%s style=%p.",
                    winrt::get_class_name(button).c_str(),
-                   winrt::get_abi(g_nativeGroupedButtonStyle));
+                   winrt::get_abi(g_currentTaskbar->g_nativeGroupedButtonStyle));
         } else {
             Wh_Log(L"Grouped button is not projected as Windows.UI.Xaml.Controls.Control: %s.",
                    winrt::get_class_name(button).c_str());
@@ -3322,11 +3428,11 @@ static bool TryCaptureTrayButtonMetricsFromElement(
         return false;
     }
 
-    g_trayButtonWidth = width;
-    g_trayButtonHeight = height;
+    g_currentTaskbar->g_trayButtonWidth = width;
+    g_currentTaskbar->g_trayButtonHeight = height;
     Wh_Log(L"Captured single tray button metrics from %s#%s: %.1fx%.1f%s.",
            winrt::get_class_name(reference).c_str(), reference.Name().c_str(),
-           g_trayButtonWidth, g_trayButtonHeight,
+           g_currentTaskbar->g_trayButtonWidth, g_currentTaskbar->g_trayButtonHeight,
            usedDeclaredSize ? L" (declared)" : L"");
     return true;
 }
@@ -3355,18 +3461,18 @@ static bool TryCaptureNativeNotifyIconMetrics(
             const bool isNotifyIcon =
                 _wcsicmp(className.c_str(), L"SystemTray.NotifyIconView") == 0 ||
                 _wcsicmp(name.c_str(), L"NotifyItemIcon") == 0;
-            if (isNotifyIcon && g_notifyMetricDiagnosticCount < 8) {
+            if (isNotifyIcon && g_currentTaskbar->g_notifyMetricDiagnosticCount < 8) {
                 Wh_Log(L"NotifyIcon candidate %s#%s actual=%.1fx%.1f declared=%.1fx%.1f.",
                        className.c_str(), name.c_str(), element.ActualWidth(),
                        element.ActualHeight(), element.Width(), element.Height());
-                ++g_notifyMetricDiagnosticCount;
+                ++g_currentTaskbar->g_notifyMetricDiagnosticCount;
             }
             if (isNotifyIcon && TryCaptureTrayButtonMetricsFromElement(element)) {
                 if (auto control = element.try_as<wuc::Control>()) {
                     try {
                         auto style = control.Style();
                         if (style) {
-                            g_nativeNotifyIconStyle = style;
+                            g_currentTaskbar->g_nativeNotifyIconStyle = style;
                             Wh_Log(L"Captured live NotifyIconView style from %s#%s.",
                                    className.c_str(), name.c_str());
                         }
@@ -3408,9 +3514,9 @@ static wux::FrameworkElement TryCreateNativeNotifyIcon(PCWSTR name) {
 
         element.Name(name);
         if (auto control = element.try_as<wuc::Control>()) {
-            if (g_nativeNotifyIconStyle) {
+            if (g_currentTaskbar->g_nativeNotifyIconStyle) {
                 try {
-                    control.Style(g_nativeNotifyIconStyle);
+                    control.Style(g_currentTaskbar->g_nativeNotifyIconStyle);
                     Wh_Log(L"Applied live NotifyIconView style to %s#%s.",
                            winrt::get_class_name(element).c_str(), name);
                 } catch (winrt::hresult_error const& e) {
@@ -3461,7 +3567,7 @@ static void CaptureTrayButtonMetricsFromPanel(
     // individual tray buttons. Retain the last valid metrics if none exist.
 
     Wh_Log(L"No nearby single tray button metrics found; using fallback %.1fx%.1f.",
-           g_trayButtonWidth, g_trayButtonHeight);
+           g_currentTaskbar->g_trayButtonWidth, g_currentTaskbar->g_trayButtonHeight);
 }
 
 
@@ -3484,10 +3590,10 @@ static void ApplyTrayButtonMetrics(wux::FrameworkElement const& element) {
                winrt::to_hresult());
     }
 
-    element.Width(g_trayButtonWidth);
-    element.Height(g_trayButtonHeight);
+    element.Width(g_currentTaskbar->g_trayButtonWidth);
+    element.Height(g_currentTaskbar->g_trayButtonHeight);
     element.MinWidth(0);
-    element.MaxWidth(g_trayButtonWidth);
+    element.MaxWidth(g_currentTaskbar->g_trayButtonWidth);
     if (element.Name() == L"SeparateQuickSettingsXamlBattery") {
         // Icon-only layout must not depend on repeated glyph measurements.
         element.Width(g_batteryPercentageEnabled.load() == 1
@@ -3496,7 +3602,7 @@ static void ApplyTrayButtonMetrics(wux::FrameworkElement const& element) {
         element.MaxWidth(INFINITY);
     }
     element.MinHeight(0);
-    element.MaxHeight(g_trayButtonHeight);
+    element.MaxHeight(g_currentTaskbar->g_trayButtonHeight);
     element.HorizontalAlignment(wux::HorizontalAlignment::Center);
     element.VerticalAlignment(wux::VerticalAlignment::Center);
 
@@ -3509,73 +3615,75 @@ static void ApplyTrayButtonMetrics(wux::FrameworkElement const& element) {
 static bool ApplyXamlButtons();
 
 static void ScheduleMetricRefresh() {
-    if (g_unloading || g_metricRefreshPending) {
+    if (g_unloading || g_currentTaskbar->g_metricRefreshPending) {
         return;
     }
 
-    g_metricRefreshPending = true;
-    g_metricRefreshSettlePasses = 0;
-    if (!g_metricRefreshTimer) {
-        g_metricRefreshTimer = wux::DispatcherTimer();
-        g_metricRefreshTimer.Interval(std::chrono::milliseconds(250));
-        g_metricRefreshTimer.Tick([](wf::IInspectable const&,
+    g_currentTaskbar->g_metricRefreshPending = true;
+    g_currentTaskbar->g_metricRefreshSettlePasses = 0;
+    if (!g_currentTaskbar->g_metricRefreshTimer) {
+        g_currentTaskbar->g_metricRefreshTimer = wux::DispatcherTimer();
+        g_currentTaskbar->g_metricRefreshTimer.Interval(std::chrono::milliseconds(250));
+        g_currentTaskbar->g_metricRefreshTimer.Tick([taskbarState = CaptureTaskbarState()](wf::IInspectable const&,
                                      wf::IInspectable const&) {
-            if (g_metricRefreshTimer) {
-                g_metricRefreshTimer.Stop();
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
+            if (g_currentTaskbar->g_metricRefreshTimer) {
+                g_currentTaskbar->g_metricRefreshTimer.Stop();
             }
-            g_metricRefreshPending = false;
-            ++g_metricRefreshSettlePasses;
+            g_currentTaskbar->g_metricRefreshPending = false;
+            ++g_currentTaskbar->g_metricRefreshSettlePasses;
             Wh_Log(L"Running delayed tray metric refresh.");
             ApplyXamlButtons();
-            ApplyHoverBackgroundMetrics(g_bluetoothButton);
-            ApplyHoverBackgroundMetrics(g_networkButton);
-            ApplyHoverBackgroundMetrics(g_soundButton);
-            ApplyHoverBackgroundMetrics(g_compactGroupedButton);
-            ApplyHoverBackgroundMetrics(g_batteryButton);
-            if (g_trayPanel) {
-                g_trayPanel.InvalidateMeasure();
-                g_trayPanel.InvalidateArrange();
-                g_trayPanel.UpdateLayout();
+            ApplyHoverBackgroundMetrics(g_currentTaskbar->g_bluetoothButton);
+            ApplyHoverBackgroundMetrics(g_currentTaskbar->g_networkButton);
+            ApplyHoverBackgroundMetrics(g_currentTaskbar->g_soundButton);
+            ApplyHoverBackgroundMetrics(g_currentTaskbar->g_compactGroupedButton);
+            ApplyHoverBackgroundMetrics(g_currentTaskbar->g_batteryButton);
+            if (g_currentTaskbar->g_trayPanel) {
+                g_currentTaskbar->g_trayPanel.InvalidateMeasure();
+                g_currentTaskbar->g_trayPanel.InvalidateArrange();
+                g_currentTaskbar->g_trayPanel.UpdateLayout();
             }
-            if (g_metricRefreshSettlePasses < 3) {
-                g_metricRefreshPending = true;
-                g_metricRefreshTimer.Start();
+            if (g_currentTaskbar->g_metricRefreshSettlePasses < 3) {
+                g_currentTaskbar->g_metricRefreshPending = true;
+                g_currentTaskbar->g_metricRefreshTimer.Start();
             }
         });
     }
-    g_metricRefreshTimer.Start();
+    g_currentTaskbar->g_metricRefreshTimer.Start();
 }
 
 static void RefreshInjectedButtonMetrics() {
-    if (!g_trayPanel || !g_trayControlCenterButton) {
+    if (!g_currentTaskbar->g_trayPanel || !g_currentTaskbar->g_trayControlCenterButton) {
         return;
     }
 
-    const double oldWidth = g_trayButtonWidth;
-    const double oldHeight = g_trayButtonHeight;
-    CaptureTrayButtonMetricsFromPanel(g_trayPanel,
-                                      g_trayControlCenterButton);
-    if (oldWidth == g_trayButtonWidth && oldHeight == g_trayButtonHeight) {
+    const double oldWidth = g_currentTaskbar->g_trayButtonWidth;
+    const double oldHeight = g_currentTaskbar->g_trayButtonHeight;
+    CaptureTrayButtonMetricsFromPanel(g_currentTaskbar->g_trayPanel,
+                                      g_currentTaskbar->g_trayControlCenterButton);
+    if (oldWidth == g_currentTaskbar->g_trayButtonWidth && oldHeight == g_currentTaskbar->g_trayButtonHeight) {
         return;
     }
 
     Wh_Log(L"Tray metrics changed %.1fx%.1f -> %.1fx%.1f; updating injected "
-           L"buttons.", oldWidth, oldHeight, g_trayButtonWidth,
-           g_trayButtonHeight);
-    ApplyTrayButtonMetrics(g_bluetoothButton);
-    ApplyTrayButtonMetrics(g_networkButton);
-    ApplyTrayButtonMetrics(g_soundButton);
-    ApplyTrayButtonMetrics(g_compactGroupedButton);
-    ApplyTrayButtonMetrics(g_batteryButton);
-    ApplyHoverBackgroundMetrics(g_bluetoothButton);
-    ApplyHoverBackgroundMetrics(g_networkButton);
-    ApplyHoverBackgroundMetrics(g_soundButton);
-    ApplyHoverBackgroundMetrics(g_compactGroupedButton);
-    ApplyHoverBackgroundMetrics(g_batteryButton);
-    if (g_trayPanel) {
-        g_trayPanel.InvalidateMeasure();
-        g_trayPanel.InvalidateArrange();
-        g_trayPanel.UpdateLayout();
+           L"buttons.", oldWidth, oldHeight, g_currentTaskbar->g_trayButtonWidth,
+           g_currentTaskbar->g_trayButtonHeight);
+    ApplyTrayButtonMetrics(g_currentTaskbar->g_bluetoothButton);
+    ApplyTrayButtonMetrics(g_currentTaskbar->g_networkButton);
+    ApplyTrayButtonMetrics(g_currentTaskbar->g_soundButton);
+    ApplyTrayButtonMetrics(g_currentTaskbar->g_compactGroupedButton);
+    ApplyTrayButtonMetrics(g_currentTaskbar->g_batteryButton);
+    ApplyHoverBackgroundMetrics(g_currentTaskbar->g_bluetoothButton);
+    ApplyHoverBackgroundMetrics(g_currentTaskbar->g_networkButton);
+    ApplyHoverBackgroundMetrics(g_currentTaskbar->g_soundButton);
+    ApplyHoverBackgroundMetrics(g_currentTaskbar->g_compactGroupedButton);
+    ApplyHoverBackgroundMetrics(g_currentTaskbar->g_batteryButton);
+    if (g_currentTaskbar->g_trayPanel) {
+        g_currentTaskbar->g_trayPanel.InvalidateMeasure();
+        g_currentTaskbar->g_trayPanel.InvalidateArrange();
+        g_currentTaskbar->g_trayPanel.UpdateLayout();
     }
     // Explorer updates the taskbar size and the private tray template in
     // separate layout passes.  Recreate our injected controls after the native
@@ -3586,8 +3694,10 @@ static void RefreshInjectedButtonMetrics() {
 static void AttachTaskbarSizeRefreshHandlers(
     wux::FrameworkElement const& trayElement,
     wux::FrameworkElement const& controlCenterButton) {
-    auto handler = [](wf::IInspectable const& sender,
+    auto handler = [taskbarState = CaptureTaskbarState()](wf::IInspectable const& sender,
                       wux::SizeChangedEventArgs const& args) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
         const auto oldSize = args.PreviousSize();
         const auto newSize = args.NewSize();
         if (oldSize.Width == newSize.Width && oldSize.Height == newSize.Height) {
@@ -3603,25 +3713,25 @@ static void AttachTaskbarSizeRefreshHandlers(
     };
 
     try {
-        if (g_sizeRefreshTrayElement) {
-            g_sizeRefreshTrayElement.SizeChanged(g_sizeRefreshTrayToken);
-            g_sizeRefreshTrayElement = nullptr;
-            g_sizeRefreshTrayToken = {};
+        if (g_currentTaskbar->g_sizeRefreshTrayElement) {
+            g_currentTaskbar->g_sizeRefreshTrayElement.SizeChanged(g_currentTaskbar->g_sizeRefreshTrayToken);
+            g_currentTaskbar->g_sizeRefreshTrayElement = nullptr;
+            g_currentTaskbar->g_sizeRefreshTrayToken = {};
         }
-        if (g_sizeRefreshControlCenterButton) {
-            g_sizeRefreshControlCenterButton.SizeChanged(
-                g_sizeRefreshControlCenterToken);
-            g_sizeRefreshControlCenterButton = nullptr;
-            g_sizeRefreshControlCenterToken = {};
+        if (g_currentTaskbar->g_sizeRefreshControlCenterButton) {
+            g_currentTaskbar->g_sizeRefreshControlCenterButton.SizeChanged(
+                g_currentTaskbar->g_sizeRefreshControlCenterToken);
+            g_currentTaskbar->g_sizeRefreshControlCenterButton = nullptr;
+            g_currentTaskbar->g_sizeRefreshControlCenterToken = {};
         }
         if (trayElement) {
-            g_sizeRefreshTrayToken = trayElement.SizeChanged(handler);
-            g_sizeRefreshTrayElement = trayElement;
+            g_currentTaskbar->g_sizeRefreshTrayToken = trayElement.SizeChanged(handler);
+            g_currentTaskbar->g_sizeRefreshTrayElement = trayElement;
         }
         if (controlCenterButton) {
-            g_sizeRefreshControlCenterToken =
+            g_currentTaskbar->g_sizeRefreshControlCenterToken =
                 controlCenterButton.SizeChanged(handler);
-            g_sizeRefreshControlCenterButton = controlCenterButton;
+            g_currentTaskbar->g_sizeRefreshControlCenterButton = controlCenterButton;
         }
     } catch (...) {
         Wh_Log(L"AttachTaskbarSizeRefreshHandlers failed: 0x%08X",
@@ -3632,7 +3742,7 @@ static void AttachTaskbarSizeRefreshHandlers(
 static void UpdateDynamicXamlIcons();
 
 static bool RefreshTaskbarLayoutIfRebuilt() {
-    HWND taskbarWnd = g_taskbarWnd ? g_taskbarWnd : FindCurrentProcessTaskbarWnd();
+    HWND taskbarWnd = g_currentTaskbar->g_taskbarWnd ? g_currentTaskbar->g_taskbarWnd : FindCurrentProcessTaskbarWnd();
     if (!taskbarWnd) {
         return false;
     }
@@ -3656,32 +3766,34 @@ static bool RefreshTaskbarLayoutIfRebuilt() {
         return false;
     }
 
-    if (currentPanel == g_trayPanel &&
-        currentButton == g_trayControlCenterButton) {
+    if (currentPanel == g_currentTaskbar->g_trayPanel &&
+        currentButton == g_currentTaskbar->g_trayControlCenterButton) {
         return false;
     }
 
     Wh_Log(L"Detected taskbar tray XAML rebuild; reinjecting separated buttons.");
-    g_taskbarWnd = taskbarWnd;
+    g_currentTaskbar->g_taskbarWnd = taskbarWnd;
     return ApplyXamlButtons();
 }
 
 static void EnsureUpdateTimer() {
-    if (g_updateTimer) {
+    if (g_currentTaskbar->g_updateTimer) {
         return;
     }
 
-    g_updateTimer = wux::DispatcherTimer();
-    g_updateTimer.Interval(std::chrono::milliseconds(500));
-    g_updateTimer.Tick([](wf::IInspectable const&, wf::IInspectable const&) {
+    g_currentTaskbar->g_updateTimer = wux::DispatcherTimer();
+    g_currentTaskbar->g_updateTimer.Interval(std::chrono::milliseconds(500));
+    g_currentTaskbar->g_updateTimer.Tick([taskbarState = CaptureTaskbarState()](wf::IInspectable const&, wf::IInspectable const&) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
         UpdateDynamicXamlIcons();
         if (!RefreshTaskbarLayoutIfRebuilt()) {
             RefreshInjectedButtonMetrics();
         }
-        if (g_originalGroupedButton)
-            HideOriginalGroupedButton(g_originalGroupedButton);
+        if (g_currentTaskbar->g_originalGroupedButton)
+            HideOriginalGroupedButton(g_currentTaskbar->g_originalGroupedButton);
     });
-    g_updateTimer.Start();
+    g_currentTaskbar->g_updateTimer.Start();
 }
 
 static winrt::hstring GetNetworkGlyph(NetworkState const& state) {
@@ -3701,9 +3813,9 @@ static winrt::hstring GetNetworkGlyph(NetworkState const& state) {
             return L"\xE701";
         case NetworkKind::WifiConnecting: {
             static PCWSTR frames[] = {L"\xE873", L"\xEAA5", L"\xEAA8"};
-            winrt::hstring glyph = frames[g_wifiConnectingFrame %
+            winrt::hstring glyph = frames[g_currentTaskbar->g_wifiConnectingFrame %
                                           ARRAYSIZE(frames)];
-            ++g_wifiConnectingFrame;
+            ++g_currentTaskbar->g_wifiConnectingFrame;
             return glyph;
         }
         case NetworkKind::WifiDisconnected:
@@ -3800,28 +3912,28 @@ static std::wstring GetNetworkTooltip(NetworkState const& state) {
 
 namespace bt = winrt::Windows::Devices::Bluetooth;
 namespace de = winrt::Windows::Devices::Enumeration;
-static wf::IAsyncOperation<de::DeviceInformationCollection> g_btQueries[2]{nullptr, nullptr};
-static std::wstring g_btConnectedNames;
-static size_t g_btConnectedCount = 0;
-static ULONGLONG g_btQueryTick = 0;
+
+
+
+
 
 static std::wstring GetBluetoothTooltip(bool available) {
     if (!available || !g_settings.showConnectedDevicesInTooltip) {
-        for (auto& query : g_btQueries) {
+        for (auto& query : g_currentTaskbar->g_btQueries) {
             if (query) query.Cancel();
             query = nullptr;
         }
-        g_btConnectedNames.clear();
-        g_btConnectedCount = 0;
-        g_btQueryTick = 0;
+        g_currentTaskbar->g_btConnectedNames.clear();
+        g_currentTaskbar->g_btConnectedCount = 0;
+        g_currentTaskbar->g_btQueryTick = 0;
         return available ? L"Bluetooth" : L"Bluetooth is off";
     }
     try {
-        if (g_btQueries[0] && g_btQueries[1] &&
-            g_btQueries[0].Status() != wf::AsyncStatus::Started &&
-            g_btQueries[1].Status() != wf::AsyncStatus::Started) {
+        if (g_currentTaskbar->g_btQueries[0] && g_currentTaskbar->g_btQueries[1] &&
+            g_currentTaskbar->g_btQueries[0].Status() != wf::AsyncStatus::Started &&
+            g_currentTaskbar->g_btQueries[1].Status() != wf::AsyncStatus::Started) {
             std::unordered_map<std::wstring, std::wstring> devices;
-            for (auto& query : g_btQueries) {
+            for (auto& query : g_currentTaskbar->g_btQueries) {
                 if (query.Status() == wf::AsyncStatus::Completed) {
                     for (auto const& device : query.GetResults()) {
                         auto props = device.Properties();
@@ -3837,8 +3949,8 @@ static std::wstring GetBluetoothTooltip(bool available) {
                 }
                 query = nullptr;
             }
-            g_btConnectedNames.clear();
-            g_btConnectedCount = devices.size();
+            g_currentTaskbar->g_btConnectedNames.clear();
+            g_currentTaskbar->g_btConnectedCount = devices.size();
             for (auto const& entry : devices) {
                 std::wstring name = entry.second;
                 for (auto& character : name) {
@@ -3848,36 +3960,36 @@ static std::wstring GetBluetoothTooltip(bool available) {
                     }
                 }
                 name = Trim(name);
-                g_btConnectedNames += L"\n- " +
+                g_currentTaskbar->g_btConnectedNames += L"\n- " +
                     (name.empty() ? std::wstring(L"Bluetooth device") : name);
             }
         }
-        if (!g_btQueries[0] && GetTickCount64() - g_btQueryTick >= 1000) {
+        if (!g_currentTaskbar->g_btQueries[0] && GetTickCount64() - g_currentTaskbar->g_btQueryTick >= 2000) {
             auto properties = winrt::single_threaded_vector<winrt::hstring>({
                 L"System.Devices.Aep.IsConnected", L"System.Devices.Aep.DeviceAddress"});
-            g_btQueries[0] = de::DeviceInformation::FindAllAsync(
+            g_currentTaskbar->g_btQueries[0] = de::DeviceInformation::FindAllAsync(
                 bt::BluetoothDevice::GetDeviceSelectorFromConnectionStatus(bt::BluetoothConnectionStatus::Connected),
                 properties, de::DeviceInformationKind::AssociationEndpoint);
-            g_btQueries[1] = de::DeviceInformation::FindAllAsync(
+            g_currentTaskbar->g_btQueries[1] = de::DeviceInformation::FindAllAsync(
                 bt::BluetoothLEDevice::GetDeviceSelectorFromConnectionStatus(bt::BluetoothConnectionStatus::Connected),
                 properties, de::DeviceInformationKind::AssociationEndpoint);
-            g_btQueryTick = GetTickCount64();
+            g_currentTaskbar->g_btQueryTick = GetTickCount64();
         }
     } catch (...) {
-        for (auto& query : g_btQueries) query = nullptr;
-        g_btConnectedNames.clear();
-        g_btConnectedCount = 0;
-        g_btQueryTick = GetTickCount64();
+        for (auto& query : g_currentTaskbar->g_btQueries) query = nullptr;
+        g_currentTaskbar->g_btConnectedNames.clear();
+        g_currentTaskbar->g_btConnectedCount = 0;
+        g_currentTaskbar->g_btQueryTick = GetTickCount64();
         Wh_Log(L"Bluetooth tooltip query failed: 0x%08X", winrt::to_hresult());
     }
-    if (g_btConnectedNames.empty()) {
+    if (g_currentTaskbar->g_btConnectedNames.empty()) {
         return L"Bluetooth\n\nNo devices connected";
     }
-    return g_btConnectedCount == 1
-               ? L"Bluetooth\n\nConnected device:" + g_btConnectedNames
+    return g_currentTaskbar->g_btConnectedCount == 1
+               ? L"Bluetooth\n\nConnected device:" + g_currentTaskbar->g_btConnectedNames
                : L"Bluetooth\n\nConnected devices (" +
-                     std::to_wstring(g_btConnectedCount) + L"):" +
-                     g_btConnectedNames;
+                     std::to_wstring(g_currentTaskbar->g_btConnectedCount) + L"):" +
+                     g_currentTaskbar->g_btConnectedNames;
 }
 
 static std::wstring GetFriendlyMediaAppName(std::wstring appId) {
@@ -4071,7 +4183,7 @@ static wuxm::Brush BatteryStatusBrush(PCWSTR resource, wu::Color fallback) {
 }
 
 static void UpdateSeparateBatteryButton() {
-    if (!g_batteryButton || !g_batteryIcon.primary) return;
+    if (!g_currentTaskbar->g_batteryButton || !g_currentTaskbar->g_batteryIcon.primary) return;
     // Verified against the Windows Settings handler on this build. Read the
     // user's preference directly so external Settings changes aren't gated by
     // an unrelated Energy saver COM operation.
@@ -4085,7 +4197,7 @@ static void UpdateSeparateBatteryButton() {
     SYSTEM_POWER_STATUS status{};
     const bool known = GetSystemPowerStatus(&status) != FALSE;
     const bool present = known && status.BatteryFlag != 255 && !(status.BatteryFlag & 128);
-    g_batteryButton.Visibility(present && g_settings.showBatteryButton
+    g_currentTaskbar->g_batteryButton.Visibility(present && g_settings.showBatteryButton
         ? wux::Visibility::Visible : wux::Visibility::Collapsed);
     if (!present) return;
     const bool percentKnown = status.BatteryLifePercent <= 100;
@@ -4114,15 +4226,15 @@ static void UpdateSeparateBatteryButton() {
     } else if (percent <= 20) {
         fill = BatteryStatusBrush(L"SystemFillColorCautionBrush", {255, 157, 93, 0});
     }
-    g_batteryIcon.primary.Glyph(std::wstring(1, base));
-    g_batteryIcon.primary.Foreground(foreground);
-    g_batteryIcon.overlay.Glyph(std::wstring(1, overlay));
-    g_batteryIcon.overlay.Foreground(fill);
-    g_batteryIcon.overlay.Visibility(percentKnown && percent > 0
+    g_currentTaskbar->g_batteryIcon.primary.Glyph(std::wstring(1, base));
+    g_currentTaskbar->g_batteryIcon.primary.Foreground(foreground);
+    g_currentTaskbar->g_batteryIcon.overlay.Glyph(std::wstring(1, overlay));
+    g_currentTaskbar->g_batteryIcon.overlay.Foreground(fill);
+    g_currentTaskbar->g_batteryIcon.overlay.Visibility(percentKnown && percent > 0
         ? wux::Visibility::Visible : wux::Visibility::Collapsed);
-    g_batteryIcon.underlay.Visibility(wux::Visibility::Collapsed);
+    g_currentTaskbar->g_batteryIcon.underlay.Visibility(wux::Visibility::Collapsed);
     const bool showPercent = percentKnown && g_batteryPercentageEnabled.load() == 1;
-    if (auto content = wuxm::VisualTreeHelper::GetParent(g_batteryPercentageText)
+    if (auto content = wuxm::VisualTreeHelper::GetParent(g_currentTaskbar->g_batteryPercentageText)
             .try_as<wuc::StackPanel>()) {
         // The fixed icon-only button already gets its inset from the native
         // OmniButton template. Extra content margins consume the glyph's space
@@ -4134,18 +4246,18 @@ static void UpdateSeparateBatteryButton() {
     }
     const double batteryWidth = showPercent
         ? NAN : (g_settings.smallBatteryGlyph ? 31.0 : 36.0);
-    const double currentWidth = g_batteryButton.Width();
+    const double currentWidth = g_currentTaskbar->g_batteryButton.Width();
     if (showPercent ? !std::isnan(currentWidth) : currentWidth != batteryWidth)
-        g_batteryButton.Width(batteryWidth);
+        g_currentTaskbar->g_batteryButton.Width(batteryWidth);
     // Center the visible SysBatt outline, whose ink is offset in its font box.
-    if (auto offset = g_batteryIcon.host.RenderTransform().try_as<wuxm::TranslateTransform>()) {
+    if (auto offset = g_currentTaskbar->g_batteryIcon.host.RenderTransform().try_as<wuxm::TranslateTransform>()) {
         const double x = showPercent ? 0 : 2;
         if (offset.X() != x) offset.X(x);
     }
     const std::wstring label = percentKnown ? std::to_wstring(percent) + L"%" : L"";
-    if (g_batteryPercentageText.Text() != label) g_batteryPercentageText.Text(label);
-    g_batteryPercentageText.Foreground(foreground);
-    g_batteryPercentageText.Visibility(showPercent ? wux::Visibility::Visible : wux::Visibility::Collapsed);
+    if (g_currentTaskbar->g_batteryPercentageText.Text() != label) g_currentTaskbar->g_batteryPercentageText.Text(label);
+    g_currentTaskbar->g_batteryPercentageText.Foreground(foreground);
+    g_currentTaskbar->g_batteryPercentageText.Visibility(showPercent ? wux::Visibility::Visible : wux::Visibility::Collapsed);
     std::wstring tooltip = percentKnown ? L"Battery: " + label : L"Battery";
     tooltip += charging ? L" (Charging)" : saver ? L" (Energy saver)" :
         status.ACLineStatus == 1 ? L" (Plugged in)" : L" (On battery)";
@@ -4154,7 +4266,7 @@ static void UpdateSeparateBatteryButton() {
         tooltip += L"\n" + std::to_wstring(minutes / 60) + L" hr " +
                    std::to_wstring(minutes % 60) + L" min remaining";
     }
-    SetCachedTrayToolTip(g_batteryButton, g_batteryTooltipCache, tooltip);
+    SetCachedTrayToolTip(g_currentTaskbar->g_batteryButton, g_currentTaskbar->g_batteryTooltipCache, tooltip);
 }
 
 static void UpdateDynamicXamlIcons() {
@@ -4165,81 +4277,93 @@ static void UpdateDynamicXamlIcons() {
         auto primaryBrush = MakeIconBrush();
         auto underlayBrush = MakeUnderlayBrush();
 
-        if (g_bluetoothIcon.primary) {
-            const bool bluetoothAvailable = IsBluetoothAvailable();
-            if (g_bluetoothButton) {
-                g_bluetoothButton.Visibility(wux::Visibility::Visible);
-                g_bluetoothButton.Opacity(1.0);
+        if (g_currentTaskbar->g_bluetoothIcon.primary) {
+            const auto now = GetTickCount64();
+            if (!g_currentTaskbar->bluetoothPollTick ||
+                now - g_currentTaskbar->bluetoothPollTick >= 2000) {
+                g_currentTaskbar->bluetoothCache = IsBluetoothAvailable();
+                g_currentTaskbar->bluetoothPollTick = now;
             }
-            g_bluetoothIcon.primary.Visibility(wux::Visibility::Visible);
-            g_bluetoothIcon.primary.Opacity(1.0);
+            const bool bluetoothAvailable = g_currentTaskbar->bluetoothCache;
+            if (g_currentTaskbar->g_bluetoothButton) {
+                g_currentTaskbar->g_bluetoothButton.Visibility(wux::Visibility::Visible);
+                g_currentTaskbar->g_bluetoothButton.Opacity(1.0);
+            }
+            g_currentTaskbar->g_bluetoothIcon.primary.Visibility(wux::Visibility::Visible);
+            g_currentTaskbar->g_bluetoothIcon.primary.Opacity(1.0);
             // Keep the Bluetooth glyph visible when disabled; the overlay is
             // responsible for marking the unavailable state.
-            g_bluetoothIcon.primary.Glyph(L"\xE702");
-            g_bluetoothIcon.primary.Foreground((bluetoothAvailable || !g_settings.changeBluetoothGlyphWhenDisabled)
+            g_currentTaskbar->g_bluetoothIcon.primary.Glyph(L"\xE702");
+            g_currentTaskbar->g_bluetoothIcon.primary.Foreground((bluetoothAvailable || !g_settings.changeBluetoothGlyphWhenDisabled)
                                                    ? primaryBrush
                                                    : underlayBrush);
             SetCachedTrayToolTip(
-                g_bluetoothButton, g_bluetoothTooltipCache,
+                g_currentTaskbar->g_bluetoothButton, g_currentTaskbar->g_bluetoothTooltipCache,
                 GetBluetoothTooltip(bluetoothAvailable));
-            if (g_bluetoothIcon.underlay) {
-                g_bluetoothIcon.underlay.Visibility(wux::Visibility::Collapsed);
+            if (g_currentTaskbar->g_bluetoothIcon.underlay) {
+                g_currentTaskbar->g_bluetoothIcon.underlay.Visibility(wux::Visibility::Collapsed);
             }
-            if (g_bluetoothIcon.overlay) {
-                g_bluetoothIcon.overlay.Glyph(L"\xE871");
-                g_bluetoothIcon.overlay.FontFamily(
+            if (g_currentTaskbar->g_bluetoothIcon.overlay) {
+                g_currentTaskbar->g_bluetoothIcon.overlay.Glyph(L"\xE871");
+                g_currentTaskbar->g_bluetoothIcon.overlay.FontFamily(
                     wuxm::FontFamily(L"Segoe Fluent Icons"));
-                g_bluetoothIcon.overlay.FontSize(16);
-                g_bluetoothIcon.overlay.FontWeight({400});
-                g_bluetoothIcon.overlay.Foreground(primaryBrush);
-                g_bluetoothIcon.overlay.Visibility(
+                g_currentTaskbar->g_bluetoothIcon.overlay.FontSize(16);
+                g_currentTaskbar->g_bluetoothIcon.overlay.FontWeight({400});
+                g_currentTaskbar->g_bluetoothIcon.overlay.Foreground(primaryBrush);
+                g_currentTaskbar->g_bluetoothIcon.overlay.Visibility(
                     (bluetoothAvailable || !g_settings.changeBluetoothGlyphWhenDisabled) ? wux::Visibility::Collapsed
                                        : wux::Visibility::Visible);
             }
         }
 
-        if (g_networkIcon.primary) {
-            NetworkState state = GetNetworkState();
-            g_networkIcon.primary.Glyph(GetNetworkGlyph(state));
-            g_networkIcon.primary.Foreground(primaryBrush);
-            SetCachedTrayToolTip(g_networkButton, g_networkTooltipCache,
+        if (g_currentTaskbar->g_networkIcon.primary) {
+            const auto now = GetTickCount64();
+            if (!g_currentTaskbar->networkPollTick ||
+                now - g_currentTaskbar->networkPollTick >= 2000) {
+                g_currentTaskbar->networkCache = GetNetworkState();
+                g_currentTaskbar->networkPollTick = now;
+            }
+            const NetworkState& state = g_currentTaskbar->networkCache;
+            g_currentTaskbar->g_networkIcon.primary.Glyph(GetNetworkGlyph(state));
+            g_currentTaskbar->g_networkIcon.primary.Foreground(primaryBrush);
+            SetCachedTrayToolTip(g_currentTaskbar->g_networkButton, g_currentTaskbar->g_networkTooltipCache,
                                  GetNetworkTooltip(state));
-            if (g_networkIcon.underlay) {
-                g_networkIcon.underlay.Glyph(L"\xE701");
-                g_networkIcon.underlay.Foreground(underlayBrush);
-                g_networkIcon.underlay.Visibility(
+            if (g_currentTaskbar->g_networkIcon.underlay) {
+                g_currentTaskbar->g_networkIcon.underlay.Glyph(L"\xE701");
+                g_currentTaskbar->g_networkIcon.underlay.Foreground(underlayBrush);
+                g_currentTaskbar->g_networkIcon.underlay.Visibility(
                     state.kind == NetworkKind::Wifi ||
                             state.kind == NetworkKind::WifiConnecting
                         ? wux::Visibility::Visible
                         : wux::Visibility::Collapsed);
             }
-            if (g_networkIcon.overlay) {
-                g_networkIcon.overlay.Visibility(wux::Visibility::Collapsed);
+            if (g_currentTaskbar->g_networkIcon.overlay) {
+                g_currentTaskbar->g_networkIcon.overlay.Visibility(wux::Visibility::Collapsed);
             }
         }
 
-        if (g_soundIcon.primary) {
+        if (g_currentTaskbar->g_soundIcon.primary) {
             SoundState state = GetSoundState();
             const bool useOutputDeviceGlyph =
                 g_settings.soundIconFollowsOutputDevice && state.available && !state.muted;
-            g_soundIcon.primary.Glyph(useOutputDeviceGlyph
+            g_currentTaskbar->g_soundIcon.primary.Glyph(useOutputDeviceGlyph
                                           ? GetSoundOutputDeviceGlyph(state)
                                           : GetSoundGlyph(state));
-            g_soundIcon.primary.Foreground(primaryBrush);
-            SetCachedTrayToolTip(g_soundButton, g_soundTooltipCache,
+            g_currentTaskbar->g_soundIcon.primary.Foreground(primaryBrush);
+            SetCachedTrayToolTip(g_currentTaskbar->g_soundButton, g_currentTaskbar->g_soundTooltipCache,
                                  GetSoundTooltip(state));
-            if (g_soundIcon.underlay) {
-                g_soundIcon.underlay.Glyph(L"\xEBC5");
-                g_soundIcon.underlay.Foreground(underlayBrush);
-                g_soundIcon.underlay.Visibility(
+            if (g_currentTaskbar->g_soundIcon.underlay) {
+                g_currentTaskbar->g_soundIcon.underlay.Glyph(L"\xEBC5");
+                g_currentTaskbar->g_soundIcon.underlay.Foreground(underlayBrush);
+                g_currentTaskbar->g_soundIcon.underlay.Visibility(
                     state.available && !state.muted && !useOutputDeviceGlyph
                         ? wux::Visibility::Visible
                         : wux::Visibility::Collapsed);
             }
-            if (g_soundIcon.overlay) {
-                g_soundIcon.overlay.Glyph(L"\xE74F");
-                g_soundIcon.overlay.Foreground(primaryBrush);
-                g_soundIcon.overlay.Visibility(wux::Visibility::Collapsed);
+            if (g_currentTaskbar->g_soundIcon.overlay) {
+                g_currentTaskbar->g_soundIcon.overlay.Glyph(L"\xE74F");
+                g_currentTaskbar->g_soundIcon.overlay.Foreground(primaryBrush);
+                g_currentTaskbar->g_soundIcon.overlay.Visibility(wux::Visibility::Collapsed);
             }
         }
     } catch (...) {
@@ -4378,6 +4502,8 @@ static void ExecuteTrayContextCommand(TrayContextCommand command) {
             break;
         case TrayContextCommand::NetworkToggleAirplaneMode:
             SetAirplaneModeLikelyEnabled(!IsAirplaneModeLikelyEnabled());
+            g_currentTaskbar->networkPollTick = 0;
+            g_currentTaskbar->bluetoothPollTick = 0;
             break;
         case TrayContextCommand::NetworkFirewallProtection:
             ExecuteAction(L"windowsdefender://Network/");
@@ -4528,7 +4654,7 @@ static void ShowWin32TrayContextMenu(ButtonKind kind) {
 
     POINT point{};
     GetCursorPos(&point);
-    HWND owner = g_taskbarWnd ? g_taskbarWnd : FindWindowW(L"Shell_TrayWnd", nullptr);
+    HWND owner = g_currentTaskbar->g_taskbarWnd ? g_currentTaskbar->g_taskbarWnd : FindWindowW(L"Shell_TrayWnd", nullptr);
     if (owner) {
         SetForegroundWindow(owner);
     }
@@ -4560,8 +4686,10 @@ static void AppendWinUiContextItem(
         icon.FontSize(16);
         item.Icon(icon);
     }
-    item.Click([command](wf::IInspectable const&,
+    item.Click([command, taskbarState = CaptureTaskbarState()](wf::IInspectable const&,
                          wux::RoutedEventArgs const&) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
         ExecuteTrayContextCommand(command);
     });
     items.Append(item);
@@ -4622,8 +4750,10 @@ static void AppendWinUiSoundContextMenu(wuc::MenuFlyout const& flyout) {
             wuc::ToggleMenuFlyoutItem outputItem;
             outputItem.Text(output.name);
             outputItem.IsChecked(output.isDefault);
-            outputItem.Click([id = output.id](wf::IInspectable const&,
+            outputItem.Click([id = output.id, taskbarState = CaptureTaskbarState()](wf::IInspectable const&,
                                               wux::RoutedEventArgs const&) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
                 SetDefaultAudioOutput(id);
             });
             outputSubmenu.Items().Append(outputItem);
@@ -4663,8 +4793,10 @@ static void AppendWinUiNetworkContextMenu(wuc::MenuFlyout const& flyout) {
         icon.FontSize(16);
         airplaneItem.Icon(icon);
     }
-    airplaneItem.Click([](wf::IInspectable const&,
+    airplaneItem.Click([taskbarState = CaptureTaskbarState()](wf::IInspectable const&,
                           wux::RoutedEventArgs const&) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
         ExecuteTrayContextCommand(TrayContextCommand::NetworkToggleAirplaneMode);
     });
     items.Append(airplaneItem);
@@ -4831,7 +4963,9 @@ static void AppendWinUiEnergySaverItem(wuc::MenuFlyout const& flyout) {
     const int state = g_energySaverState.load();
     item.Text(state == 1 ? L"Disable Energy saver" : L"Enable Energy saver");
     item.IsEnabled(state >= 0 && !g_energySaverBusy.load());
-    item.Click([](auto const&, auto const&) {
+    item.Click([taskbarState = CaptureTaskbarState()](auto const&, auto const&) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
         QueueEnergySaverWork(true);
     });
     flyout.Items().Append(item);
@@ -4855,7 +4989,9 @@ static void AppendWinUiBatteryPercentageItem(wuc::MenuFlyout const& flyout) {
     const int state = g_batteryPercentageEnabled.load();
     SetBatteryPercentageCheck(item, state == 1);
     item.IsEnabled(state >= 0 && !g_energySaverBusy.load());
-    item.Click([](auto const&, auto const&) {
+    item.Click([taskbarState = CaptureTaskbarState()](auto const&, auto const&) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
         QueueEnergySaverWork(2);
     });
     flyout.Items().Append(item);
@@ -4899,7 +5035,9 @@ static void AppendWinUiBatteryContextMenu(wuc::MenuFlyout const& flyout) {
             item.Text(labels[i]);
             item.IsChecked(readable && IsEqualGUID(current, modes[i]));
             const GUID mode = modes[i];
-            item.Click([setMode, mode](auto const&, auto const&) {
+            item.Click([setMode, mode, taskbarState = CaptureTaskbarState()](auto const&, auto const&) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
                 const DWORD error = setMode ? setMode(&mode) : ERROR_NOT_SUPPORTED;
                 if (error != ERROR_SUCCESS) {
                     Wh_Log(L"Changing power mode failed: %lu", error);
@@ -5006,7 +5144,9 @@ static void ShowWinUiFlyoutNearTaskbar(wuc::MenuFlyout const& flyout,
     // anchor, whose final placement includes framework offsets and clamping.
     auto weakRoot = winrt::make_weak(target.XamlRoot());
     auto weakTarget = winrt::make_weak(target);
-    flyout.Opened([weakRoot, weakTarget](auto const& sender, auto const&) {
+    flyout.Opened([weakRoot, weakTarget, taskbarState = CaptureTaskbarState()](auto const& sender, auto const&) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
         try {
             auto root = weakRoot.get();
             auto target = weakTarget.get();
@@ -5043,7 +5183,7 @@ static bool ShowWinUiTrayContextMenu(wux::FrameworkElement const& target,
             }
         }
 
-        g_activeTrayContextFlyout = flyout;
+        g_currentTaskbar->g_activeTrayContextFlyout = flyout;
         ShowWinUiFlyoutNearTaskbar(flyout, target);
         return true;
     } catch (...) {
@@ -5063,11 +5203,11 @@ static std::wstring const& TooltipCacheForButtonKind(ButtonKind kind) {
     static const std::wstring kEmptyTooltip;
     switch (kind) {
         case ButtonKind::Bluetooth:
-            return g_bluetoothTooltipCache;
+            return g_currentTaskbar->g_bluetoothTooltipCache;
         case ButtonKind::Network:
-            return g_networkTooltipCache;
+            return g_currentTaskbar->g_networkTooltipCache;
         case ButtonKind::Sound:
-            return g_soundTooltipCache;
+            return g_currentTaskbar->g_soundTooltipCache;
         case ButtonKind::QuickSettings:
             return kQuickSettingsTooltip;
         default:
@@ -5175,8 +5315,8 @@ static std::vector<ButtonKind> GetVisibleButtonOrder() {
     return order;
 }
 
-static int g_lastOpenedFlyoutButton = -1;
-static ULONGLONG g_lastOpenedFlyoutTick = 0;
+
+
 constexpr ULONGLONG kFlyoutToggleLifetimeMs = 5 * 60 * 1000;
 
 struct ShellFlyoutSearch {
@@ -5272,21 +5412,21 @@ static bool HandleTrayButtonClick(ButtonKind kind) {
         return true;
     }
 
-    if (canToggle && g_lastOpenedFlyoutButton == buttonIndex &&
-        now - g_lastOpenedFlyoutTick <= kFlyoutToggleLifetimeMs) {
+    if (canToggle && g_currentTaskbar->g_lastOpenedFlyoutButton == buttonIndex &&
+        now - g_currentTaskbar->g_lastOpenedFlyoutTick <= kFlyoutToggleLifetimeMs) {
         if (HWND flyout = FindVisibleShellFlyoutWindow()) {
             Wh_Log(L"Repeated %d tray click: dismissing visible shell flyout %p.",
                    buttonIndex, flyout);
             SendEscapeToDismissFlyout(flyout);
-            g_lastOpenedFlyoutButton = -1;
-            g_lastOpenedFlyoutTick = 0;
+            g_currentTaskbar->g_lastOpenedFlyoutButton = -1;
+            g_currentTaskbar->g_lastOpenedFlyoutTick = 0;
             return true;
         }
 
         // The panel was dismissed independently, so this click should open it
         // again rather than treating a stale last-click record as a toggle.
-        g_lastOpenedFlyoutButton = -1;
-        g_lastOpenedFlyoutTick = 0;
+        g_currentTaskbar->g_lastOpenedFlyoutButton = -1;
+        g_currentTaskbar->g_lastOpenedFlyoutTick = 0;
     }
 
     if (kind == ButtonKind::Bluetooth) {
@@ -5302,11 +5442,11 @@ static bool HandleTrayButtonClick(ButtonKind kind) {
     }
 
     if (canToggle) {
-        g_lastOpenedFlyoutButton = buttonIndex;
-        g_lastOpenedFlyoutTick = now;
+        g_currentTaskbar->g_lastOpenedFlyoutButton = buttonIndex;
+        g_currentTaskbar->g_lastOpenedFlyoutTick = now;
     } else {
-        g_lastOpenedFlyoutButton = -1;
-        g_lastOpenedFlyoutTick = 0;
+        g_currentTaskbar->g_lastOpenedFlyoutButton = -1;
+        g_currentTaskbar->g_lastOpenedFlyoutTick = 0;
     }
     return true;
 }
@@ -5314,18 +5454,18 @@ static bool HandleTrayButtonClick(ButtonKind kind) {
 // PointerPressed is handled for a middle click, but the private tray control
 // can still raise Tapped afterwards. Keep a short per-button suppression
 // window so middle-click never falls through to the normal click action.
-static ULONGLONG g_suppressTapUntil[4]{};
+
 
 static size_t ButtonKindIndex(ButtonKind kind) {
     return static_cast<size_t>(kind);
 }
 
 static void SuppressMiddleClickTap(ButtonKind kind) {
-    g_suppressTapUntil[ButtonKindIndex(kind)] = GetTickCount64() + 750;
+    g_currentTaskbar->g_suppressTapUntil[ButtonKindIndex(kind)] = GetTickCount64() + 750;
 }
 
 static bool ConsumeSuppressedTap(ButtonKind kind) {
-    auto& until = g_suppressTapUntil[ButtonKindIndex(kind)];
+    auto& until = g_currentTaskbar->g_suppressTapUntil[ButtonKindIndex(kind)];
     if (until && GetTickCount64() <= until) {
         until = 0;
         return true;
@@ -5392,9 +5532,9 @@ static wux::FrameworkElement TryCreateNativeOmniButton(PCWSTR name) {
         // Styler can target.
         if (auto control = element.try_as<wuc::Control>()) {
             bool styleApplied = false;
-            if (g_nativeGroupedButtonStyle) {
+            if (g_currentTaskbar->g_nativeGroupedButtonStyle) {
                 try {
-                    control.Style(g_nativeGroupedButtonStyle);
+                    control.Style(g_currentTaskbar->g_nativeGroupedButtonStyle);
                     styleApplied = true;
                     Wh_Log(L"Applied the live ControlCenterButton style to OmniButton#%s.",
                            name);
@@ -5406,9 +5546,9 @@ static wux::FrameworkElement TryCreateNativeOmniButton(PCWSTR name) {
                            name, winrt::to_hresult());
                 }
             }
-            if (!styleApplied && g_nativeNotifyIconStyle) {
+            if (!styleApplied && g_currentTaskbar->g_nativeNotifyIconStyle) {
                 try {
-                    control.Style(g_nativeNotifyIconStyle);
+                    control.Style(g_currentTaskbar->g_nativeNotifyIconStyle);
                     styleApplied = true;
                     Wh_Log(L"Applied the live NotifyIconView style to OmniButton#%s.",
                            name);
@@ -5452,9 +5592,9 @@ static wux::FrameworkElement CreateFallbackButton(PCWSTR name) {
     button.HorizontalContentAlignment(wux::HorizontalAlignment::Center);
     button.VerticalContentAlignment(wux::VerticalAlignment::Center);
 
-    if (g_nativeGroupedButtonStyle) {
+    if (g_currentTaskbar->g_nativeGroupedButtonStyle) {
         try {
-            button.Style(g_nativeGroupedButtonStyle);
+            button.Style(g_currentTaskbar->g_nativeGroupedButtonStyle);
             Wh_Log(L"Applied captured grouped-button style to fallback Button#%s.",
                    name);
         } catch (winrt::hresult_error const& e) {
@@ -5561,8 +5701,10 @@ static void AttachTrayButtonHandlers(wux::FrameworkElement const& element,
     auto uiElement = element.as<wux::UIElement>();
 
     uiElement.RightTapped(
-        [kind](wf::IInspectable const& sender,
+        [kind, taskbarState = CaptureTaskbarState()](wf::IInspectable const& sender,
                wuxi::RightTappedRoutedEventArgs const& args) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
             auto element = sender.try_as<wux::FrameworkElement>();
             if (element) {
                 ShowTrayContextMenu(element, kind);
@@ -5570,8 +5712,10 @@ static void AttachTrayButtonHandlers(wux::FrameworkElement const& element,
             args.Handled(true);
         });
 
-    uiElement.Tapped([kind](wf::IInspectable const&,
+    uiElement.Tapped([kind, taskbarState = CaptureTaskbarState()](wf::IInspectable const&,
                             wuxi::TappedRoutedEventArgs const& args) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
         if (ConsumeSuppressedTap(kind)) {
             args.Handled(true);
             return;
@@ -5582,8 +5726,10 @@ static void AttachTrayButtonHandlers(wux::FrameworkElement const& element,
     });
 
     uiElement.PointerPressed(
-        [kind](wf::IInspectable const& sender,
+        [kind, taskbarState = CaptureTaskbarState()](wf::IInspectable const& sender,
                wuxi::PointerRoutedEventArgs const& args) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
             auto element = sender.try_as<wux::UIElement>();
             auto point = args.GetCurrentPoint(element);
             if (!point.Properties().IsMiddleButtonPressed()) {
@@ -5600,8 +5746,10 @@ static void AttachTrayButtonHandlers(wux::FrameworkElement const& element,
 
     if (kind == ButtonKind::Sound) {
         uiElement.PointerWheelChanged(
-            [](wf::IInspectable const& sender,
+            [taskbarState = CaptureTaskbarState()](wf::IInspectable const& sender,
                wuxi::PointerRoutedEventArgs const& args) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
                 auto element = sender.try_as<wux::UIElement>();
                 auto point = args.GetCurrentPoint(element);
                 int delta = point.Properties().MouseWheelDelta();
@@ -5642,15 +5790,15 @@ static wux::FrameworkElement CreateTrayButton(ButtonKind kind,
     }
 
     if (kind == ButtonKind::Bluetooth) {
-        g_bluetoothIcon = icon;
+        g_currentTaskbar->g_bluetoothIcon = icon;
     } else if (kind == ButtonKind::Network) {
-        g_networkIcon = icon;
+        g_currentTaskbar->g_networkIcon = icon;
     } else if (kind == ButtonKind::Sound) {
-        g_soundIcon = icon;
+        g_currentTaskbar->g_soundIcon = icon;
     } else if (kind == ButtonKind::QuickSettings) {
-        g_compactGroupedIcon = icon;
+        g_currentTaskbar->g_compactGroupedIcon = icon;
     } else if (kind == ButtonKind::Battery) {
-        g_batteryIcon = icon;
+        g_currentTaskbar->g_batteryIcon = icon;
     }
 
     AttachTrayButtonHandlers(element, kind);
@@ -5660,8 +5808,10 @@ static wux::FrameworkElement CreateTrayButton(ButtonKind kind,
                  L"SystemTray.OmniButton") == 0) {
         // The private control's visual tree exists only once it is in the live
         // taskbar. Do this on Loaded rather than offsetting the FontIcon itself.
-        element.Loaded([](wf::IInspectable const& sender,
+        element.Loaded([taskbarState = CaptureTaskbarState()](wf::IInspectable const& sender,
                           wux::RoutedEventArgs const&) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
             if (auto button = sender.try_as<wux::FrameworkElement>()) {
                 ApplyTrayButtonMetrics(button);
                 CenterNativeOmniButtonItemHost(button);
@@ -5688,15 +5838,15 @@ static wux::FrameworkElement ButtonElementForKind(ButtonKind kind);
 static wux::FrameworkElement ButtonElementForKind(ButtonKind kind) {
     switch (kind) {
         case ButtonKind::Bluetooth:
-            return g_bluetoothButton;
+            return g_currentTaskbar->g_bluetoothButton;
         case ButtonKind::Network:
-            return g_networkButton;
+            return g_currentTaskbar->g_networkButton;
         case ButtonKind::Sound:
-            return g_soundButton;
+            return g_currentTaskbar->g_soundButton;
         case ButtonKind::QuickSettings:
-            return g_compactGroupedButton;
+            return g_currentTaskbar->g_compactGroupedButton;
         case ButtonKind::Battery:
-            return g_batteryButton;
+            return g_currentTaskbar->g_batteryButton;
         default:
             return nullptr;
     }
@@ -5705,24 +5855,24 @@ static wux::FrameworkElement ButtonElementForKind(ButtonKind kind) {
 static OrderedTrayButtons CreateTrayButtons() {
     OrderedTrayButtons buttons;
     if (g_settings.showBatteryButton) {
-        g_batteryButton = CreateTrayButton(ButtonKind::Battery, L"\xF8D0",
+        g_currentTaskbar->g_batteryButton = CreateTrayButton(ButtonKind::Battery, L"\xF8D0",
             L"SeparateQuickSettingsXamlBattery", L"Battery");
-        auto host = g_batteryIcon.host;
+        auto host = g_currentTaskbar->g_batteryIcon.host;
         // SysBatt includes side bearings outside the visible battery outline.
         // Let the glyph measure naturally; the outer icon-only button supplies
         // the stable width without clipping its font layout box.
         host.Width(NAN);
         host.Height(NAN);
         host.RenderTransform(wuxm::TranslateTransform());
-        for (auto const& glyph : {g_batteryIcon.primary, g_batteryIcon.overlay, g_batteryIcon.underlay}) {
+        for (auto const& glyph : {g_currentTaskbar->g_batteryIcon.primary, g_currentTaskbar->g_batteryIcon.overlay, g_currentTaskbar->g_batteryIcon.underlay}) {
             glyph.FontFamily(wuxm::FontFamily(L"SysBatt Fluent Icons"));
             glyph.FontSize(g_settings.smallBatteryGlyph ? 12 : 16);
             glyph.Width(NAN);
             glyph.Height(NAN);
         }
         // Replace the original icon content before reparenting its grid.
-        if (auto items = g_batteryButton.try_as<wuc::ItemsControl>()) items.Items().Clear();
-        else if (auto control = g_batteryButton.try_as<wuc::ContentControl>()) control.Content(nullptr);
+        if (auto items = g_currentTaskbar->g_batteryButton.try_as<wuc::ItemsControl>()) items.Items().Clear();
+        else if (auto control = g_currentTaskbar->g_batteryButton.try_as<wuc::ContentControl>()) control.Content(nullptr);
         wuc::StackPanel content;
         content.Orientation(wuc::Orientation::Horizontal);
         content.VerticalAlignment(wux::VerticalAlignment::Center);
@@ -5730,72 +5880,72 @@ static OrderedTrayButtons CreateTrayButtons() {
         // Native battery content has breathing room inside its hover surface.
         content.Margin({8, 0, 8, 0});
         content.Children().Append(host);
-        g_batteryPercentageText = wuc::TextBlock();
-        g_batteryPercentageText.Name(L"SeparateTrayBatteryPercentage");
+        g_currentTaskbar->g_batteryPercentageText = wuc::TextBlock();
+        g_currentTaskbar->g_batteryPercentageText.Name(L"SeparateTrayBatteryPercentage");
         // Percentage is caption text, not a 16-DIP icon glyph. Let the tray's
         // caption style supply typography; retain a 12-DIP fallback if absent.
-        g_batteryPercentageText.FontSize(12);
+        g_currentTaskbar->g_batteryPercentageText.FontSize(12);
         try {
             auto style = wux::Application::Current().Resources().TryLookup(
                 winrt::box_value(L"CaptionTextBlockStyle")).try_as<wux::Style>();
             if (style) {
-                g_batteryPercentageText.Style(style);
-                g_batteryPercentageText.ClearValue(wuc::TextBlock::FontSizeProperty());
+                g_currentTaskbar->g_batteryPercentageText.Style(style);
+                g_currentTaskbar->g_batteryPercentageText.ClearValue(wuc::TextBlock::FontSizeProperty());
             }
         } catch (...) {
             // The taskbar can be created before application resources exist.
         }
-        g_batteryPercentageText.VerticalAlignment(wux::VerticalAlignment::Center);
+        g_currentTaskbar->g_batteryPercentageText.VerticalAlignment(wux::VerticalAlignment::Center);
         wuxm::TranslateTransform percentageOffset;
         // Keep the full inter-item gap; only a small baseline correction is
         // needed. These are XAML DIPs, scaled by the monitor's DPI.
         percentageOffset.Y(-1);
-        g_batteryPercentageText.RenderTransform(percentageOffset);
-        g_batteryPercentageText.Visibility(wux::Visibility::Collapsed);
-        content.Children().Append(g_batteryPercentageText);
-        SetElementIcon(g_batteryButton, content);
-        ApplyTrayButtonMetrics(g_batteryButton);
+        g_currentTaskbar->g_batteryPercentageText.RenderTransform(percentageOffset);
+        g_currentTaskbar->g_batteryPercentageText.Visibility(wux::Visibility::Collapsed);
+        content.Children().Append(g_currentTaskbar->g_batteryPercentageText);
+        SetElementIcon(g_currentTaskbar->g_batteryButton, content);
+        ApplyTrayButtonMetrics(g_currentTaskbar->g_batteryButton);
         UpdateSeparateBatteryButton();
     }
 
     if (g_settings.showBluetoothButton) {
-        g_bluetoothButton =
+        g_currentTaskbar->g_bluetoothButton =
             CreateTrayButton(ButtonKind::Bluetooth, L"\xE702",
                              L"SeparateQuickSettingsXamlBluetooth",
                              L"Bluetooth");
         Wh_Log(L"Bluetooth tray button created: element=%p icon=%p.",
-               winrt::get_abi(g_bluetoothButton),
-               winrt::get_abi(g_bluetoothIcon.primary));
+               winrt::get_abi(g_currentTaskbar->g_bluetoothButton),
+               winrt::get_abi(g_currentTaskbar->g_bluetoothIcon.primary));
     } else {
-        g_bluetoothButton = nullptr;
+        g_currentTaskbar->g_bluetoothButton = nullptr;
     }
 
     if (g_settings.showNetworkButton) {
-        g_networkButton =
+        g_currentTaskbar->g_networkButton =
             CreateTrayButton(ButtonKind::Network, L"\xE701",
                              L"SeparateQuickSettingsXamlNetwork",
                              L"Network");
     } else {
-        g_networkButton = nullptr;
+        g_currentTaskbar->g_networkButton = nullptr;
     }
 
     if (g_settings.showSoundButton) {
-        g_soundButton = CreateTrayButton(ButtonKind::Sound, L"\xE767",
+        g_currentTaskbar->g_soundButton = CreateTrayButton(ButtonKind::Sound, L"\xE767",
                                          L"SeparateQuickSettingsXamlSound",
                                          L"Sound");
     } else {
-        g_soundButton = nullptr;
+        g_currentTaskbar->g_soundButton = nullptr;
     }
 
     if (g_settings.showControlCenterButton) {
         auto compactGlyph =
             GlyphFromHexSetting(g_settings.compactGroupedButtonGlyph, L'\xF4C3');
-        g_compactGroupedButton =
+        g_currentTaskbar->g_compactGroupedButton =
             CreateTrayButton(ButtonKind::QuickSettings, compactGlyph.c_str(),
                              L"SeparateQuickSettingsXamlControlCenter",
                              L"Control Center");
     } else {
-        g_compactGroupedButton = nullptr;
+        g_currentTaskbar->g_compactGroupedButton = nullptr;
     }
 
     bool nativeQuickSettingsSeen = false;
@@ -5845,8 +5995,8 @@ static bool TryInjectBesideControlCenterButton(wux::FrameworkElement const& root
 
     if (auto parentPanel = parentElement.try_as<wuc::Panel>()) {
         RemoveInjectedControls(parentPanel);
-        g_trayPanel = parentPanel;
-        g_trayControlCenterButton = controlCenterButton;
+        g_currentTaskbar->g_trayPanel = parentPanel;
+        g_currentTaskbar->g_trayControlCenterButton = controlCenterButton;
         CaptureTrayButtonMetricsFromPanel(parentPanel, controlCenterButton);
         AttachTaskbarSizeRefreshHandlers(parentElement, controlCenterButton);
         HideOriginalGroupedButton(controlCenterButton);
@@ -5946,12 +6096,12 @@ static bool ApplyXamlButtons() {
         return false;
     }
 
-    HWND taskbarWnd = g_taskbarWnd ? g_taskbarWnd : FindCurrentProcessTaskbarWnd();
+    HWND taskbarWnd = g_currentTaskbar->g_taskbarWnd ? g_currentTaskbar->g_taskbarWnd : FindCurrentProcessTaskbarWnd();
     if (!taskbarWnd) {
         Wh_Log(L"ApplyXamlButtons: taskbar window not found.");
         return false;
     }
-    g_taskbarWnd = taskbarWnd;
+    g_currentTaskbar->g_taskbarWnd = taskbarWnd;
     Wh_Log(L"ApplyXamlButtons: taskbar window=%p", taskbarWnd);
 
     auto xamlRoot = GetTaskbarXamlRoot(taskbarWnd);
@@ -5973,8 +6123,8 @@ static bool ApplyXamlButtons() {
     auto trayGrid = trayFrame.try_as<wuc::Grid>();
     if (!trayGrid) {
         Wh_Log(L"ApplyXamlButtons: SystemTrayFrameGrid not found.");
-        if (!g_dumpedTree) {
-            g_dumpedTree = true;
+        if (!g_currentTaskbar->g_dumpedTree) {
+            g_currentTaskbar->g_dumpedTree = true;
             Wh_Log(L"ApplyXamlButtons: dumping XAML tree because "
                    L"SystemTrayFrameGrid was not found.");
             DumpXamlTree(root, 0, 7);
@@ -5998,8 +6148,8 @@ static bool ApplyXamlButtons() {
     }
 
     CaptureTrayButtonMetricsFromPanel(trayGrid, controlCenterButton);
-    g_trayPanel = trayGrid;
-    g_trayControlCenterButton = controlCenterButton;
+    g_currentTaskbar->g_trayPanel = trayGrid;
+    g_currentTaskbar->g_trayControlCenterButton = controlCenterButton;
     AttachTaskbarSizeRefreshHandlers(trayGrid, controlCenterButton);
     HideOriginalGroupedButton(controlCenterButton);
 
@@ -6037,79 +6187,81 @@ static void ApplyXamlButtonsWithRetry() {
     }
 
     if (ApplyXamlButtons()) {
-        g_retryCount = 0;
-        if (g_retryTimer) {
-            g_retryTimer.Stop();
-            g_retryTimer = nullptr;
+        g_currentTaskbar->g_retryCount = 0;
+        if (g_currentTaskbar->g_retryTimer) {
+            g_currentTaskbar->g_retryTimer.Stop();
+            g_currentTaskbar->g_retryTimer = nullptr;
         }
         return;
     }
 
-    if (++g_retryCount > 50) {
+    if (++g_currentTaskbar->g_retryCount > 50) {
         Wh_Log(L"ApplyXamlButtonsWithRetry: giving up after %d attempts.",
-               g_retryCount);
-        if (g_retryTimer) {
-            g_retryTimer.Stop();
-            g_retryTimer = nullptr;
+               g_currentTaskbar->g_retryCount);
+        if (g_currentTaskbar->g_retryTimer) {
+            g_currentTaskbar->g_retryTimer.Stop();
+            g_currentTaskbar->g_retryTimer = nullptr;
         }
         return;
     }
 
-    if (!g_retryTimer) {
-        g_retryTimer = wux::DispatcherTimer();
-        g_retryTimer.Interval(std::chrono::milliseconds(100));
-        g_retryTimer.Tick([](wf::IInspectable const&,
+    if (!g_currentTaskbar->g_retryTimer) {
+        g_currentTaskbar->g_retryTimer = wux::DispatcherTimer();
+        g_currentTaskbar->g_retryTimer.Interval(std::chrono::milliseconds(100));
+        g_currentTaskbar->g_retryTimer.Tick([taskbarState = CaptureTaskbarState()](wf::IInspectable const&,
                              wf::IInspectable const&) {
+        if (!taskbarState || !taskbarState->active) return;
+        TaskbarScope taskbarScope(taskbarState.get());
             ApplyXamlButtonsWithRetry();
         });
-        g_retryTimer.Start();
+        g_currentTaskbar->g_retryTimer.Start();
         Wh_Log(L"ApplyXamlButtonsWithRetry: retry timer started.");
     }
 }
 
 static void RemoveXamlButtons() {
-    for (auto& query : g_btQueries) {
+    for (auto& query : g_currentTaskbar->g_btQueries) {
         if (query) {
             try { query.Cancel(); } catch (...) {}
             query = nullptr;
         }
     }
-    g_btConnectedNames.clear();
-    g_btConnectedCount = 0;
-    g_btQueryTick = 0;
+    g_currentTaskbar->g_btConnectedNames.clear();
+    g_currentTaskbar->g_btConnectedCount = 0;
+    g_currentTaskbar->g_btQueryTick = 0;
     try {
         HideFixedTrayTooltip();
-        g_fixedTrayTooltipPopup = nullptr;
-        g_fixedTrayTooltipBorder = nullptr;
-        g_fixedTrayTooltipText = nullptr;
-        if (g_updateTimer) {
-            g_updateTimer.Stop();
-            g_updateTimer = nullptr;
+        g_currentTaskbar->g_fixedTrayTooltipPopup = nullptr;
+        g_currentTaskbar->g_fixedTrayTooltipBorder = nullptr;
+        g_currentTaskbar->g_fixedTrayTooltipText = nullptr;
+        if (g_currentTaskbar->g_updateTimer) {
+            g_currentTaskbar->g_updateTimer.Stop();
+            g_currentTaskbar->g_updateTimer = nullptr;
         }
-        if (g_retryTimer) {
-            g_retryTimer.Stop();
-            g_retryTimer = nullptr;
+        if (g_currentTaskbar->g_retryTimer) {
+            g_currentTaskbar->g_retryTimer.Stop();
+            g_currentTaskbar->g_retryTimer = nullptr;
         }
-        if (g_metricRefreshTimer) {
-            g_metricRefreshTimer.Stop();
-            g_metricRefreshTimer = nullptr;
+        if (g_currentTaskbar->g_metricRefreshTimer) {
+            g_currentTaskbar->g_metricRefreshTimer.Stop();
+            g_currentTaskbar->g_metricRefreshTimer = nullptr;
         }
-        g_retryCount = 0;
-        g_metricRefreshPending = false;
-        g_metricRefreshSettlePasses = 0;
-        if (g_sizeRefreshTrayElement) {
-            g_sizeRefreshTrayElement.SizeChanged(g_sizeRefreshTrayToken);
-            g_sizeRefreshTrayElement = nullptr;
-            g_sizeRefreshTrayToken = {};
+        g_currentTaskbar->g_retryCount = 0;
+        g_currentTaskbar->g_metricRefreshPending = false;
+        g_currentTaskbar->g_metricRefreshSettlePasses = 0;
+        if (g_currentTaskbar->g_sizeRefreshTrayElement) {
+            g_currentTaskbar->g_sizeRefreshTrayElement.SizeChanged(g_currentTaskbar->g_sizeRefreshTrayToken);
+            g_currentTaskbar->g_sizeRefreshTrayElement = nullptr;
+            g_currentTaskbar->g_sizeRefreshTrayToken = {};
         }
-        if (g_sizeRefreshControlCenterButton) {
-            g_sizeRefreshControlCenterButton.SizeChanged(
-                g_sizeRefreshControlCenterToken);
-            g_sizeRefreshControlCenterButton = nullptr;
-            g_sizeRefreshControlCenterToken = {};
+        if (g_currentTaskbar->g_sizeRefreshControlCenterButton) {
+            g_currentTaskbar->g_sizeRefreshControlCenterButton.SizeChanged(
+                g_currentTaskbar->g_sizeRefreshControlCenterToken);
+            g_currentTaskbar->g_sizeRefreshControlCenterButton = nullptr;
+            g_currentTaskbar->g_sizeRefreshControlCenterToken = {};
         }
 
-        HWND taskbarWnd = g_taskbarWnd ? g_taskbarWnd : FindCurrentProcessTaskbarWnd();
+        HWND taskbarWnd = g_currentTaskbar->g_taskbarWnd ? g_currentTaskbar->g_taskbarWnd : FindCurrentProcessTaskbarWnd();
         auto xamlRoot = taskbarWnd ? GetTaskbarXamlRoot(taskbarWnd) : nullptr;
         auto root = xamlRoot ? xamlRoot.Content().try_as<wux::FrameworkElement>()
                              : nullptr;
@@ -6129,13 +6281,13 @@ static void RemoveXamlButtons() {
         }
 
         RestoreOriginalGroupedButton();
-        g_bluetoothButton = nullptr;
-        g_networkButton = nullptr;
-        g_soundButton = nullptr;
-        g_bluetoothIcon = {};
-        g_networkIcon = {};
-        g_soundIcon = {};
-        g_originalGroupedButton = nullptr;
+        g_currentTaskbar->g_bluetoothButton = nullptr;
+        g_currentTaskbar->g_networkButton = nullptr;
+        g_currentTaskbar->g_soundButton = nullptr;
+        g_currentTaskbar->g_bluetoothIcon = {};
+        g_currentTaskbar->g_networkIcon = {};
+        g_currentTaskbar->g_soundIcon = {};
+        g_currentTaskbar->g_originalGroupedButton = nullptr;
     } catch (...) {
         Wh_Log(L"RemoveXamlButtons error: 0x%08X", winrt::to_hresult());
     }
@@ -6144,17 +6296,62 @@ static void RemoveXamlButtons() {
 using RunFromWindowThreadProc_t = void(WINAPI*)(PVOID);
 static UINT g_runFromWindowThreadRegisteredMsg = 0;
 
-static void WINAPI ApplyXamlButtonsProc(PVOID) {
-    ApplyXamlButtonsWithRetry();
+static std::shared_ptr<TaskbarState> GetTaskbarState(HWND hwnd, bool create) {
+    std::lock_guard<std::mutex> lock(g_taskbarsMutex);
+    auto it = g_taskbars.find(hwnd);
+    if (it != g_taskbars.end()) return it->second;
+    if (!create) return nullptr;
+    auto state = std::make_shared<TaskbarState>();
+    state->g_taskbarWnd = hwnd;
+    g_taskbars.emplace(hwnd, state);
+    return state;
 }
 
-static void WINAPI RemoveXamlButtonsProc(PVOID) {
+static void ReleaseTaskbarState(HWND hwnd) {
+    auto state = GetTaskbarState(hwnd, false);
+    if (!state) return;
+    TaskbarScope scope(state.get());
+    state->active = false;
     RemoveXamlButtons();
+    try {
+        if (state->g_activeTrayContextFlyout) state->g_activeTrayContextFlyout.Hide();
+    } catch (...) {
+        // The popup root may already be gone during taskbar destruction.
+    }
+    // Release every XAML reference on the owning thread, including styles.
+    *state = TaskbarState{};
+    state->active = false;
+    std::lock_guard<std::mutex> lock(g_taskbarsMutex);
+    g_taskbars.erase(hwnd);
 }
 
-static void WINAPI ReapplyXamlButtonsProc(PVOID) {
-    RemoveXamlButtons();
-    ApplyXamlButtonsWithRetry();
+static LRESULT CALLBACK TaskbarLifetimeProc(HWND hwnd, UINT msg, WPARAM wp,
+                                           LPARAM lp, UINT_PTR id, DWORD_PTR) {
+    if (msg == WM_NCDESTROY) {
+        ReleaseTaskbarState(hwnd);
+        RemoveWindowSubclass(hwnd, TaskbarLifetimeProc, id);
+    }
+    return DefSubclassProc(hwnd, msg, wp, lp);
+}
+
+static void WINAPI ApplyXamlButtonsProc(PVOID param) {
+    if (g_unloading) return;
+    HWND hwnd = static_cast<HWND>(param);
+    auto state = GetTaskbarState(hwnd, true);
+    TaskbarScope scope(state.get());
+    if (!SetWindowSubclass(hwnd, TaskbarLifetimeProc, 1, 0)) return;
+    if (!state->g_trayPanel) ApplyXamlButtonsWithRetry();
+}
+
+static void WINAPI RemoveXamlButtonsProc(PVOID param) {
+    HWND hwnd = static_cast<HWND>(param);
+    ReleaseTaskbarState(hwnd);
+    RemoveWindowSubclass(hwnd, TaskbarLifetimeProc, 1);
+}
+
+static void WINAPI ReapplyXamlButtonsProc(PVOID param) {
+    RemoveXamlButtonsProc(param);
+    ApplyXamlButtonsProc(param);
 }
 
 static LRESULT CALLBACK RunFromWindowThreadHookProc(int code,
@@ -6219,19 +6416,36 @@ static bool RunFromWindowThread(HWND hwnd,
     return true;
 }
 
-static void ApplyFromTaskbarThread() {
-    g_taskbarWnd = FindCurrentProcessTaskbarWnd();
-    if (!g_taskbarWnd) {
-        Wh_Log(L"ApplyFromTaskbarThread: Shell_TrayWnd not found.");
-        return;
-    }
+static void ForEachTaskbar(RunFromWindowThreadProc_t proc) {
+    std::vector<HWND> windows;
+    EnumWindows([](HWND hwnd, LPARAM param) -> BOOL {
+        DWORD pid = 0;
+        GetWindowThreadProcessId(hwnd, &pid);
+        wchar_t name[64]{};
+        GetClassNameW(hwnd, name, ARRAYSIZE(name));
+        if (pid == GetCurrentProcessId() &&
+            (!_wcsicmp(name, L"Shell_TrayWnd") || !_wcsicmp(name, L"Shell_SecondaryTrayWnd")))
+            reinterpret_cast<std::vector<HWND>*>(param)->push_back(hwnd);
+        return TRUE;
+    }, reinterpret_cast<LPARAM>(&windows));
+    for (HWND hwnd : windows) RunFromWindowThread(hwnd, proc, hwnd);
+}
 
-    RunFromWindowThread(g_taskbarWnd, ApplyXamlButtonsProc, nullptr);
+static void ApplyFromTaskbarThread() {
+    ForEachTaskbar(ApplyXamlButtonsProc);
 }
 
 static void WINAPI TrayUI_StartTaskbar_Hook(void* self) {
     TrayUI_StartTaskbar_Original(self);
     ApplyFromTaskbarThread();
+}
+
+static void WINAPI SecondaryInitHook(void* self, void* model) {
+    g_secondaryInit(self, model);
+    if (!g_unloading && g_secondaryWindow) {
+        if (HWND hwnd = g_secondaryWindow(self))
+            RunFromWindowThread(hwnd, ApplyXamlButtonsProc, hwnd);
+    }
 }
 
 static bool HookTaskbarDllSymbols() {
@@ -6243,6 +6457,16 @@ static bool HookTaskbarDllSymbols() {
     }
 
     WindhawkUtils::SYMBOL_HOOK taskbarHooks[] = {
+        {{LR"(const CSecondaryTaskBand::`vftable'{for `ITaskListWndSite'})"},
+         &CSecondaryTaskBand_ITaskListWndSite_vftable, nullptr, true},
+        {{LR"(public: virtual class std::shared_ptr<class TaskbarHost> __cdecl CSecondaryTaskBand::GetTaskbarHost(void)const )"},
+         &CSecondaryTaskBand_GetTaskbarHost_Original, nullptr, true},
+        {{LR"(public: virtual struct HWND__ * __cdecl CSecondaryTray::GetTrayWindow(void))",
+          LR"(public: struct HWND__ * __cdecl CSecondaryTray::GetTrayWindow(void)const )"},
+         &g_secondaryWindow, nullptr, true},
+        {{LR"(public: virtual void __cdecl CSecondaryTray::InitModelAndHost(struct winrt::WindowsUdk::UI::Shell::TaskbarModel))",
+          LR"(public: void __cdecl CSecondaryTray::InitModelAndHost(class std::shared_ptr<class TaskbarModel>))"},
+         &g_secondaryInit, SecondaryInitHook, true},
         {{LR"(const CTaskBand::`vftable'{for `ITaskListWndSite'})"},
          &CTaskBand_ITaskListWndSite_vftable},
         {{LR"(public: virtual class std::shared_ptr<class TaskbarHost> __cdecl CTaskBand::GetTaskbarHost(void)const )"},
@@ -6283,16 +6507,10 @@ void Wh_ModAfterInit() {
 
 void Wh_ModSettingsChanged() {
     LoadSettings();
-    g_taskbarWnd = FindCurrentProcessTaskbarWnd();
-    if (g_taskbarWnd) {
-        RunFromWindowThread(g_taskbarWnd, ReapplyXamlButtonsProc, nullptr);
-    }
+    ForEachTaskbar(ReapplyXamlButtonsProc);
 }
 
 void Wh_ModUninit() {
     g_unloading = true;
-    g_taskbarWnd = FindCurrentProcessTaskbarWnd();
-    if (g_taskbarWnd) {
-        RunFromWindowThread(g_taskbarWnd, RemoveXamlButtonsProc, nullptr);
-    }
+    ForEachTaskbar(RemoveXamlButtonsProc);
 }
