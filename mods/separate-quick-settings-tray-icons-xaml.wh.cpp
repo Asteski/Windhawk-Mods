@@ -23,11 +23,11 @@ That means icons are drawn as XAML text/vector glyphs instead of rasterized HICO
 
 Buttons:
 
-- Bluetooth -> `ms-controlcenter:bluetooth`
-- Network -> `ms-availablenetworks:`
+- Bluetooth -> Bluetooth flyout
+- Network -> Network flyout
 - Sound -> Control Center, sound output picker or volume mixer
-- Control Center -> `ms-controlcenter:`
-- Battery -> Control Center, or a custom action
+- Control Center -> Control Center or a custom action
+- Battery -> Control Center or a custom action
 
 Use **Toggle buttons visibility** to choose which buttons appear. Drag items in
 **Button order** to arrange all five buttons, including Battery. The battery
