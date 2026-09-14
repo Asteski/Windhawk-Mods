@@ -966,7 +966,10 @@ static void OpenNetwork() {
 }
 
 static void OpenSoundOutput() {
-    LaunchUri(L"ms-actioncenter:controlcenter/volume");
+    // Ctrl+Win+V is Windows' native sound-output picker command. Unlike the
+    // ms-actioncenter URI it toggles the picker consistently on repeat.
+    if (!SendShortcut(MOD_CONTROL | MOD_WIN, 'V'))
+        Wh_Log(L"Failed to invoke the native sound output picker shortcut.");
 }
 
 static std::wstring UriEncode(std::wstring const& text) {
@@ -5267,7 +5270,7 @@ static std::vector<ButtonKind> GetVisibleButtonOrder() {
 }
 
 static bool SoundUsesQuickSettings() {
-    return _wcsicmp(g_settings.soundClickAction.c_str(), L"sndvol") != 0;
+    return _wcsicmp(g_settings.soundClickAction.c_str(), L"quick_settings") == 0;
 }
 
 static std::atomic<HWND> g_openedTrayFlyout[5]{};
@@ -5293,9 +5296,13 @@ static bool IsShellHostedWindow(HWND hwnd) {
 
 static bool IsRecordedTrayFlyout(HWND hwnd) {
     wchar_t className[128]{};
-    return IsShellHostedWindow(hwnd) &&
-           GetClassNameW(hwnd, className, ARRAYSIZE(className)) &&
-           _wcsicmp(className, L"Windows.UI.Core.CoreWindow") == 0;
+    if (!IsShellHostedWindow(hwnd) ||
+        !GetClassNameW(hwnd, className, ARRAYSIZE(className))) return false;
+    // A flyout can have different shell window classes between builds, but it
+    // is never the taskbar or desktop itself.
+    return _wcsicmp(className, L"Shell_TrayWnd") != 0 &&
+           _wcsicmp(className, L"Progman") != 0 &&
+           _wcsicmp(className, L"WorkerW") != 0;
 }
 
 static bool DismissForegroundShellFlyout() {
@@ -5313,9 +5320,10 @@ static void CaptureOpenedTrayFlyoutAsync(ButtonKind kind) {
     g_openedTrayFlyout[index] = nullptr;
     HANDLE thread = StartOwnedWorker([kind, index] {
         // The URI action creates the flyout asynchronously. Record only the
-        // foreground ShellHost CoreWindow created by this click; never scan
-        // arbitrary windows later when toggling it closed.
-        for (int i = 0; i < 8 && !g_unloading; ++i) {
+        // foreground shell window created by this click; never scan arbitrary
+        // windows later when toggling it closed. Some builds create the sound
+        // output picker noticeably later than Control Center.
+        for (int i = 0; i < 40 && !g_unloading; ++i) {
             Sleep(25);
             HWND hwnd = GetForegroundWindow();
             if (IsRecordedTrayFlyout(hwnd)) {
