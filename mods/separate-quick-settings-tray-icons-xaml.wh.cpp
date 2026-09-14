@@ -966,8 +966,7 @@ static void OpenNetwork() {
 }
 
 static void OpenSoundOutput() {
-    // Ctrl+Win+V is Windows' native sound-output picker command. Unlike the
-    // ms-actioncenter URI it toggles the picker consistently on repeat.
+    // Ctrl+Win+V is Windows' native sound-output picker command.
     if (!SendShortcut(MOD_CONTROL | MOD_WIN, 'V'))
         Wh_Log(L"Failed to invoke the native sound output picker shortcut.");
 }
@@ -5270,7 +5269,11 @@ static std::vector<ButtonKind> GetVisibleButtonOrder() {
 }
 
 static bool SoundUsesQuickSettings() {
-    return _wcsicmp(g_settings.soundClickAction.c_str(), L"quick_settings") == 0;
+    // The native output picker needs the same tracked close path as Quick
+    // Settings. Ctrl+Win+V itself only opens the picker on recent Windows
+    // builds; it doesn't reliably toggle it closed on a second invocation.
+    return _wcsicmp(g_settings.soundClickAction.c_str(), L"quick_settings") == 0 ||
+           _wcsicmp(g_settings.soundClickAction.c_str(), L"sound_output") == 0;
 }
 
 static std::atomic<HWND> g_openedTrayFlyout[5]{};
