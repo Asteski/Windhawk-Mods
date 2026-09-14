@@ -2,12 +2,12 @@
 // @id              separate-system-tray-icons
 // @name            Separate System Tray Icons
 // @description     Replaces the grouped Windows 11 system tray button with separate sound, Bluetooth, network, Control Center, and battery buttons.
-// @version         0.6.0
+// @version         1.0.0
 // @author          Asteski
 // @github          https://www.github.com/Asteski
 // @include         explorer.exe
 // @architecture    x86-64
-// @compilerOptions -lshell32 -lole32 -loleaut32 -lruntimeobject -luuid -liphlpapi -lwlanapi -lbthprops
+// @compilerOptions -DWIN32_LEAN_AND_MEAN -lshell32 -lole32 -loleaut32 -lruntimeobject -luuid -liphlpapi -lwlanapi -lbthprops
 // ==/WindhawkMod==
 
 // ==WindhawkModReadme==
@@ -33,42 +33,25 @@ Use **Toggle buttons visibility** to choose which buttons appear. Drag items in
 **Button order** to arrange all five buttons, including Battery. The battery
 button appears only when Windows reports a battery.
 
-Sound supports:
+Sound supports mouse-wheel volume adjustment (unmuting first) and middle-click
+muting. **Volume scroll step** selects Windows' default step or 2, 5, or 10
+percentage points per wheel notch.
 
-- Mouse wheel: unmute first, then volume up/down
-- **Volume scroll step**: use the Windows default or change volume by 2, 5, or 10 percentage points per wheel notch.
-- Middle click: mute toggle
+Partial movements from smooth-scrolling mice accumulate into full wheel notches;
+horizontal scrolling does not change volume. Reach the buttons through Windows'
+taskbar keyboard navigation, then use Enter or Space to activate, or Shift+F10
+or the Menu key to open a context menu. Buttons expose their current tooltip
+information as accessible names and use system keyboard-focus visuals.
 
 Sound can show currently playing media in its tooltip and use an output-device
 glyph. Muted audio uses the standard mute glyph. Bluetooth can show connected
-devices in its tooltip and change appearance when switched off. Network can
+devices and their battery percentages (when reported by Windows) in its tooltip
+and change appearance when switched off. Network can
 show Wi-Fi signal strength and open a custom URL for **Perform speed test**.
-
-## Battery
-
-Battery is an independent button with its own highlight, tooltip, and WinUI
-context menu. Its percentage display follows the Windows setting, including
-changes made outside the mod, and its width adjusts when the percentage is
-shown or hidden. Button and highlight height follow taskbar size changes.
-
-Right-click Battery for:
-
-- **Power mode**: choose the mode for the current plugged-in or on-battery state.
-- **Enable/Disable Energy saver**: toggle Windows' **Always use energy saver** setting.
-- **Battery percentage**: toggle percentage display; a checkmark shows when it is enabled.
-- **Power and sleep settings**: open the corresponding Windows Settings page.
-
-Energy saver uses an amber charge-level fill (#EAA300). Charging retains its
-charging indicator and green fill, even when energy saver is enabled.
-
-In the **Battery** settings, **Use small battery icon** switches between small
-and default glyph sizes without changing percentage text size. **Battery click
-action** can open Control Center or run a custom action. Control Center also
-has its own glyph and default/custom action settings.
 
 ## Action formats
 
-Select **Custom** for **Control Center action** or **Battery click action**, then
+Select **Custom action** for **Control Center action** or **Battery click action**, then
 enter an action in that group's **Custom action** field.
 
 | Prefix | Example | Description |
@@ -86,6 +69,11 @@ Supported modifiers: `Ctrl`, `Alt`, `Shift`, `Win`.
 Examples: `key:Ctrl+Alt+D`, `hotkey:Win+R`, `key:0x7B` (F12 by VK code).
 
 ## Taskbar Styler targets
+
+Status changes use Windows notifications where available, with a five-second
+fallback refresh. Layout checks and the Wi-Fi connecting animation remain faster.
+This version currently manages the primary taskbar; separate-monitor taskbars
+are not supported by the current implementation.
 
 The injected buttons normally use `SystemTray.OmniButton`. If a fallback is
 needed, the mod logs the actual control class; the button names stay the same.
@@ -157,9 +145,11 @@ menu presenter receives its name after creation.
       $name: Sound glyph follows output device
       $description: "When enabled, the sound icon uses an output-device glyph for headphones, speakers, display audio, etc. Muted/unavailable audio still uses the normal mute glyph."
   $name: Sound
+  $description: Scroll to change volume and unmute. Middle-click to toggle mute. Choose the click action and volume step below.
 - bluetooth:
     - showConnectedDevicesInTooltip: true
       $name: Show connected devices in tooltip
+      $description: Includes each device's battery percentage when Windows provides it.
     - changeGlyphWhenDisabled: true
       $name: Show unavailable Bluetooth indicator
       $description: Change the Bluetooth icon appearance while Bluetooth is off.
@@ -178,10 +168,10 @@ menu presenter receives its name after creation.
       $name: Control Center action
       $options:
       - default: Open Control Center
-      - custom: Custom
+      - custom: Custom action
     - controlCenterAction: "ms-controlcenter:"
       $name: Custom action
-      $description: "Used for Custom mode. Supports file paths, ~ folders, cmd:, shell:, key:, hotkey:, web:, and ms-settings: actions."
+      $description: "Used when Custom action is selected. Supports file paths, ~ folders, cmd:, shell:, key:, hotkey:, web:, and ms-settings: actions."
   $name: Control Center
 - battery:
     - smallGlyph: false
@@ -191,10 +181,10 @@ menu presenter receives its name after creation.
       $name: Battery click action
       $options:
       - default: Open Control Center
-      - custom: Custom
+      - custom: Custom action
     - customAction: "ms-controlcenter:"
       $name: Custom action
-      $description: "Used for Custom mode. Supports file paths, ~ folders, cmd:, shell:, key:, hotkey:, web:, and ms-settings: actions."
+      $description: "Used when Custom action is selected. Supports file paths, ~ folders, cmd:, shell:, key:, hotkey:, web:, and ms-settings: actions."
   $name: Battery
 - visibility:
     - showSoundButton: true
@@ -220,7 +210,16 @@ menu presenter receives its name after creation.
 */
 // ==/WindhawkModSettings==
 
+// WIN32_LEAN_AND_MEAN must be a compiler option: Windhawk preincludes windows.h.
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <objbase.h>
+#include <mmsystem.h>
 #include <windhawk_utils.h>
+#include <memory>
+#include <functional>
+#include <cstdarg>
+#include <winrt/Windows.System.h>
 
 #include <windows.h>
 #include <inspectable.h>
@@ -235,6 +234,8 @@ menu presenter receives its name after creation.
 #include <iprtrmib.h>
 #include <wlanapi.h>
 #include <bluetoothapis.h>
+#include <dbt.h>
+#include <netioapi.h>
 
 #include <algorithm>
 #include <atomic>
@@ -335,6 +336,15 @@ struct SoundState {
 };
 
 static void UpdateDynamicXamlIcons();
+static void RequestTrayRefresh(bool radiosChanged = false);
+static void EnsureTrayRefreshWindow();
+static void DestroyTrayRefreshWindow();
+static void StartStatusEvents(HWND hwnd);
+static void StopStatusEvents();
+static void RestoreGridTrayMutation();
+static void InvalidateEnergySaverRead();
+static winrt::hstring GetNetworkGlyph(NetworkState const& state);
+static NetworkState g_displayNetworkState;
 
 using CTaskBand_GetTaskbarHost_t = void*(WINAPI*)(void*, void*);
 using TaskbarHost_FrameHeight_t = int(WINAPI*)(void*);
@@ -343,11 +353,11 @@ using TrayUI_StartTaskbar_t = void(WINAPI*)(void*);
 
 static Settings g_settings;
 static HWND g_taskbarWnd = nullptr;
-static wux::FrameworkElement g_bluetoothButton{nullptr};
-static wux::FrameworkElement g_networkButton{nullptr};
-static wux::FrameworkElement g_soundButton{nullptr};
-static wux::FrameworkElement g_batteryButton{nullptr};
-static wux::FrameworkElement g_compactGroupedButton{nullptr};
+[[clang::no_destroy]] static wux::FrameworkElement g_bluetoothButton{nullptr};
+[[clang::no_destroy]] static wux::FrameworkElement g_networkButton{nullptr};
+[[clang::no_destroy]] static wux::FrameworkElement g_soundButton{nullptr};
+[[clang::no_destroy]] static wux::FrameworkElement g_batteryButton{nullptr};
+[[clang::no_destroy]] static wux::FrameworkElement g_compactGroupedButton{nullptr};
 struct IconLayers {
     wuc::Grid host{nullptr};
     wuc::FontIcon underlay{nullptr};
@@ -355,23 +365,15 @@ struct IconLayers {
     wuc::FontIcon overlay{nullptr};
 };
 
-static IconLayers g_bluetoothIcon;
-static IconLayers g_networkIcon;
-static IconLayers g_soundIcon;
-static IconLayers g_compactGroupedIcon;
-static IconLayers g_batteryIcon;
-static wuc::TextBlock g_batteryPercentageText{nullptr};
+[[clang::no_destroy]] static IconLayers g_bluetoothIcon;
+[[clang::no_destroy]] static IconLayers g_networkIcon;
+[[clang::no_destroy]] static IconLayers g_soundIcon;
+[[clang::no_destroy]] static IconLayers g_compactGroupedIcon;
+[[clang::no_destroy]] static IconLayers g_batteryIcon;
+[[clang::no_destroy]] static wuc::TextBlock g_batteryPercentageText{nullptr};
 static std::atomic<int> g_batteryPercentageEnabled{-1};
 static std::wstring g_batteryTooltipCache;
 
-struct NativeMirrorSource {
-    wuc::FontIcon icon{nullptr};
-    wuc::TextBlock textBlock{nullptr};
-    std::wstring tooltip;
-    std::wstring name;
-    std::wstring automationName;
-    std::wstring path;
-};
 
 struct MediaTooltipInfo {
     bool hasMedia = false;
@@ -381,28 +383,23 @@ struct MediaTooltipInfo {
     std::wstring artist;
 };
 
-static NativeMirrorSource g_nativeNetworkSource;
-static NativeMirrorSource g_nativeSoundSource;
-static bool g_nativeMirrorSourcesResolved = false;
-static int g_nativeMirrorDiagnosticCount = 0;
-static ULONGLONG g_nextNativeMirrorRetryTick = 0;
 static std::wstring g_bluetoothTooltipCache;
 static std::wstring g_networkTooltipCache;
 static std::wstring g_soundTooltipCache;
 // The taskbar host ignores the placement properties of ToolTipService for
 // injected controls and falls back to mouse-relative placement. Keep one
 // XAML Popup for our three controls instead, positioned from the taskbar edge.
-static wucp::Popup g_fixedTrayTooltipPopup{nullptr};
-static wuc::Border g_fixedTrayTooltipBorder{nullptr};
-static wuc::TextBlock g_fixedTrayTooltipText{nullptr};
-static wux::FrameworkElement g_fixedTrayTooltipTarget{nullptr};
+[[clang::no_destroy]] static wucp::Popup g_fixedTrayTooltipPopup{nullptr};
+[[clang::no_destroy]] static wuc::Border g_fixedTrayTooltipBorder{nullptr};
+[[clang::no_destroy]] static wuc::TextBlock g_fixedTrayTooltipText{nullptr};
+[[clang::no_destroy]] static wux::FrameworkElement g_fixedTrayTooltipTarget{nullptr};
 static bool g_fixedTrayTooltipOpened = false;
-static wuc::MenuFlyout g_activeTrayContextFlyout{nullptr};
-static wuc::Panel g_trayPanel{nullptr};
-static wux::FrameworkElement g_trayControlCenterButton{nullptr};
-static wux::FrameworkElement g_originalGroupedButton{nullptr};
-static wux::Style g_nativeGroupedButtonStyle{nullptr};
-static wux::Style g_nativeNotifyIconStyle{nullptr};
+[[clang::no_destroy]] static wuc::MenuFlyout g_activeTrayContextFlyout{nullptr};
+[[clang::no_destroy]] static wuc::Panel g_trayPanel{nullptr};
+[[clang::no_destroy]] static wux::FrameworkElement g_trayControlCenterButton{nullptr};
+[[clang::no_destroy]] static wux::FrameworkElement g_originalGroupedButton{nullptr};
+[[clang::no_destroy]] static wux::Style g_nativeGroupedButtonStyle{nullptr};
+[[clang::no_destroy]] static wux::Style g_nativeNotifyIconStyle{nullptr};
 static wux::Visibility g_originalGroupedVisibility = wux::Visibility::Visible;
 static double g_originalGroupedWidth = NAN;
 static double g_originalGroupedMinWidth = 0;
@@ -412,11 +409,68 @@ static double g_originalGroupedMaxWidth = INFINITY;
 static double g_trayButtonWidth = 28;
 static double g_trayButtonHeight = 32;
 static int g_notifyMetricDiagnosticCount = 0;
-static wux::DispatcherTimer g_updateTimer{nullptr};
-static wux::DispatcherTimer g_retryTimer{nullptr};
-static wux::DispatcherTimer g_metricRefreshTimer{nullptr};
+[[clang::no_destroy]] static wux::DispatcherTimer g_updateTimer{nullptr};
+[[clang::no_destroy]] static wux::DispatcherTimer g_retryTimer{nullptr};
+[[clang::no_destroy]] static wux::DispatcherTimer g_metricRefreshTimer{nullptr};
 static int g_retryCount = 0;
-static bool g_unloading = false;
+static std::atomic<bool> g_unloading{false};
+static void WorkerLog(PCWSTR format, ...) {
+    wchar_t text[2048]{};
+    va_list args;
+    va_start(args, format);
+    _vsnwprintf_s(text, ARRAYSIZE(text), _TRUNCATE, format, args);
+    va_end(args);
+    OutputDebugStringW(text);
+}
+
+static SRWLOCK g_workerThreadsLock = SRWLOCK_INIT;
+static std::vector<HANDLE> g_workerThreads;
+
+static HANDLE StartOwnedWorker(std::function<void()> task) {
+    struct Work { std::function<void()> task; };
+    AcquireSRWLockShared(&g_workerThreadsLock);
+    if (g_unloading) { ReleaseSRWLockShared(&g_workerThreadsLock); return nullptr; }
+    auto work = new (std::nothrow) Work{std::move(task)};
+    if (!work) { ReleaseSRWLockShared(&g_workerThreadsLock); return nullptr; }
+    HANDLE thread = CreateThread(nullptr, 0, [](void* parameter) -> DWORD {
+        auto work = static_cast<Work*>(parameter);
+        try { work->task(); } catch (...) {}
+        delete work;
+        return 0;
+    }, work, 0, nullptr);
+    if (thread) {
+        HANDLE tracked = nullptr;
+        if (!DuplicateHandle(GetCurrentProcess(), thread, GetCurrentProcess(),
+            &tracked, 0, FALSE, DUPLICATE_SAME_ACCESS)) {
+            CloseHandle(thread);
+            thread = nullptr;
+        } else {
+            g_workerThreads.push_back(tracked);
+        }
+    } else delete work;
+    ReleaseSRWLockShared(&g_workerThreadsLock);
+    return thread;
+}
+
+static void WaitForOwnedWorkers() {
+    std::vector<HANDLE> workers;
+    AcquireSRWLockExclusive(&g_workerThreadsLock);
+    workers = std::move(g_workerThreads);
+    g_workerThreads.clear();
+    ReleaseSRWLockExclusive(&g_workerThreadsLock);
+    for (auto thread : workers) {
+        WaitForSingleObject(thread, INFINITE);
+        CloseHandle(thread);
+    }
+}
+
+static std::vector<std::function<void()>> g_uiEventRevokers;
+static std::vector<std::function<void()>> g_timerEventRevokers;
+static void RevokeEvents(std::vector<std::function<void()>>& revokers) {
+    auto saved = std::move(revokers);
+    revokers.clear();
+    for (auto& revoke : saved) { try { revoke(); } catch (...) {} }
+}
 static bool g_dumpedTree = false;
 static int g_wifiConnectingFrame = 0;
 static SRWLOCK g_mediaTooltipLock = SRWLOCK_INIT;
@@ -425,8 +479,8 @@ static std::atomic<ULONGLONG> g_lastMediaTooltipQueryTick{0};
 static std::atomic<bool> g_mediaTooltipQueryInProgress{false};
 static bool g_metricRefreshPending = false;
 static int g_metricRefreshSettlePasses = 0;
-static wux::FrameworkElement g_sizeRefreshTrayElement{nullptr};
-static wux::FrameworkElement g_sizeRefreshControlCenterButton{nullptr};
+[[clang::no_destroy]] static wux::FrameworkElement g_sizeRefreshTrayElement{nullptr};
+[[clang::no_destroy]] static wux::FrameworkElement g_sizeRefreshControlCenterButton{nullptr};
 static winrt::event_token g_sizeRefreshTrayToken{};
 static winrt::event_token g_sizeRefreshControlCenterToken{};
 
@@ -538,9 +592,20 @@ static wuxm::Brush MakeIconBrush() {
 }
 
 static wuxm::Brush MakeUnderlayBrush() {
+    // Share the native foreground without changing its opacity: the glyph
+    // applies the native 20% underlay opacity independently.
+    if (auto native = g_originalGroupedButton.try_as<wuc::Control>()) {
+        if (auto brush = native.Foreground()) return brush;
+    }
+    try {
+        auto control = wuxmk::XamlReader::Load(
+            LR"(<ContentControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>)")
+            .as<wuc::ContentControl>();
+        if (auto brush = control.Foreground()) return brush;
+    } catch (...) {}
     wu::Color color{};
-    color.A = 255;
-    const BYTE channel = IsSystemLightTheme() ? 0xC4 : 0x49;
+    color.A = IsSystemLightTheme() ? 0xE4 : 0xFF;
+    const BYTE channel = IsSystemLightTheme() ? 0x00 : 0xFF;
     color.R = channel;
     color.G = channel;
     color.B = channel;
@@ -833,12 +898,12 @@ static DWORD WINAPI ExecuteActionThreadProc(void* param) {
         UINT modifiers = 0;
         UINT vk = 0;
         if (!TryParseShortcut(shortcut, &modifiers, &vk)) {
-            Wh_Log(L"Invalid replacement button shortcut action: %s",
+            WorkerLog(L"Invalid replacement button shortcut action: %s",
                    shortcut.c_str());
             return 0;
         }
         if (!SendShortcut(modifiers, vk)) {
-            Wh_Log(L"Failed to send replacement button shortcut: %s",
+            WorkerLog(L"Failed to send replacement button shortcut: %s",
                    shortcut.c_str());
         }
         return 0;
@@ -858,7 +923,7 @@ static DWORD WINAPI ExecuteActionThreadProc(void* param) {
                           SW_SHOWNORMAL);
             return 0;
         }
-        Wh_Log(L"Replacement button ~search target not found: %s",
+        WorkerLog(L"Replacement button ~search target not found: %s",
                target.c_str());
         return 0;
     }
@@ -880,8 +945,7 @@ static void ExecuteAction(std::wstring const& action) {
     }
 
     HANDLE thread =
-        CreateThread(nullptr, 0, ExecuteActionThreadProc, heapAction, 0,
-                     nullptr);
+        StartOwnedWorker([heapAction] { ExecuteActionThreadProc(heapAction); });
     if (thread) {
         CloseHandle(thread);
     } else {
@@ -1010,15 +1074,21 @@ static bool IsAirplaneModeLikelyEnabled() {
     }
 }
 
+struct RadioChangeWork {
+    bool enabled;
+};
+
 static DWORD WINAPI SetAirplaneModeLikelyEnabledThreadProc(void* param) {
-    const bool enabled = param && *static_cast<bool*>(param);
-    delete static_cast<bool*>(param);
+    const auto work = *static_cast<RadioChangeWork*>(param);
+    delete static_cast<RadioChangeWork*>(param);
+    const bool enabled = work.enabled;
+    bool coInitialized = false;
 
     try {
         HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-        const bool coInitialized = SUCCEEDED(hr);
+        coInitialized = SUCCEEDED(hr);
         if (hr == RPC_E_CHANGED_MODE) hr = S_OK;
-        if (FAILED(hr)) return 0;
+        if (FAILED(hr)) winrt::throw_hresult(hr);
 
         auto access = wdr::Radio::RequestAccessAsync().get();
         if (access == wdr::RadioAccessStatus::Allowed) {
@@ -1035,22 +1105,20 @@ static DWORD WINAPI SetAirplaneModeLikelyEnabledThreadProc(void* param) {
             }
         }
 
-        if (coInitialized) CoUninitialize();
     } catch (...) {
-        Wh_Log(L"Airplane mode toggle failed: 0x%08X", winrt::to_hresult());
+        // A worker may finish after Windhawk has begun unloading the mod.
     }
-
-    UpdateDynamicXamlIcons();
+    if (coInitialized) CoUninitialize();
+    RequestTrayRefresh(true);
     return 0;
 }
 
 static void SetAirplaneModeLikelyEnabled(bool enabled) {
-    auto* value = new (std::nothrow) bool(enabled);
-    if (!value) return;
-
-    HANDLE thread = CreateThread(nullptr, 0,
-                                 SetAirplaneModeLikelyEnabledThreadProc,
-                                 value, 0, nullptr);
+    if (g_unloading) return;
+    auto* value = new (std::nothrow) RadioChangeWork{enabled};
+    HANDLE thread = value ? StartOwnedWorker([value] {
+        SetAirplaneModeLikelyEnabledThreadProc(value);
+    }) : nullptr;
     if (thread) {
         CloseHandle(thread);
     } else {
@@ -1109,7 +1177,7 @@ static void PositionWindowNearTaskbar(HWND hwnd, PCWSTR label) {
 
     HWND taskbar = FindWindowW(L"Shell_TrayWnd", nullptr);
     if (!taskbar) {
-        Wh_Log(L"%s placement: Shell_TrayWnd not found.", label);
+        WorkerLog(L"%s placement: Shell_TrayWnd not found.", label);
         return;
     }
 
@@ -1117,7 +1185,7 @@ static void PositionWindowNearTaskbar(HWND hwnd, PCWSTR label) {
     RECT mixerRect{};
     if (!GetWindowRect(taskbar, &taskbarRect) ||
         !GetWindowRect(hwnd, &mixerRect)) {
-        Wh_Log(L"%s placement: failed to read window rectangles.", label);
+        WorkerLog(L"%s placement: failed to read window rectangles.", label);
         return;
     }
 
@@ -1125,7 +1193,7 @@ static void PositionWindowNearTaskbar(HWND hwnd, PCWSTR label) {
     MONITORINFO monitorInfo{};
     monitorInfo.cbSize = sizeof(monitorInfo);
     if (!GetMonitorInfoW(monitor, &monitorInfo)) {
-        Wh_Log(L"sndvol placement: GetMonitorInfoW failed.");
+        WorkerLog(L"sndvol placement: GetMonitorInfoW failed.");
         return;
     }
 
@@ -1190,7 +1258,7 @@ static void PositionWindowNearTaskbar(HWND hwnd, PCWSTR label) {
 
     SetWindowPos(hwnd, HWND_TOP, x, y, 0, 0,
                  SWP_NOSIZE | SWP_NOACTIVATE | SWP_ASYNCWINDOWPOS);
-    Wh_Log(L"%s placement: moved hwnd=%p to %d,%d near taskbar rect=%ld,%ld,%ld,%ld monitor=%ldx%ld.",
+    WorkerLog(L"%s placement: moved hwnd=%p to %d,%d near taskbar rect=%ld,%ld,%ld,%ld monitor=%ldx%ld.",
            label, hwnd, x, y, taskbarRect.left, taskbarRect.top,
            taskbarRect.right, taskbarRect.bottom, monitorWidth, monitorHeight);
 }
@@ -1223,7 +1291,7 @@ static DWORD WINAPI PositionWindowNearTaskbarThreadProc(void* param) {
     if (hwnd) {
         PositionWindowNearTaskbar(hwnd, label);
     } else {
-        Wh_Log(L"%s placement: no visible top-level window found for pid=%lu.",
+        WorkerLog(L"%s placement: no visible top-level window found for pid=%lu.",
                label, pid);
     }
 
@@ -1248,10 +1316,7 @@ static void OpenVolumeMixer() {
     if (sei.hProcess) {
         auto* request = new (std::nothrow) PositionNearTaskbarRequest{
             sei.hProcess, L"sndvol"};
-        HANDLE thread = request ? CreateThread(
-                                     nullptr, 0,
-                                     PositionWindowNearTaskbarThreadProc,
-                                     request, 0, nullptr)
+        HANDLE thread = request ? StartOwnedWorker([request] { PositionWindowNearTaskbarThreadProc(request); })
                                 : nullptr;
         if (thread) {
             CloseHandle(thread);
@@ -1282,10 +1347,7 @@ static void OpenControlPanelWindow(PCWSTR parameters, PCWSTR label) {
     if (sei.hProcess) {
         auto* request = new (std::nothrow) PositionNearTaskbarRequest{
             sei.hProcess, label};
-        HANDLE thread = request ? CreateThread(
-                                     nullptr, 0,
-                                     PositionWindowNearTaskbarThreadProc,
-                                     request, 0, nullptr)
+        HANDLE thread = request ? StartOwnedWorker([request] { PositionWindowNearTaskbarThreadProc(request); })
                                 : nullptr;
         if (thread) {
             CloseHandle(thread);
@@ -1509,7 +1571,9 @@ static SoundState GetSoundState() {
     return state;
 }
 
-static void StepDefaultEndpointVolume(bool up) {
+static void StepDefaultEndpointVolume(int steps) {
+    if (!steps) return;
+    const bool up = steps > 0;
     IAudioEndpointVolume* volume = nullptr;
     bool coInitialized = false;
     if (!GetDefaultEndpointVolume(&volume, &coInitialized)) {
@@ -1527,12 +1591,13 @@ static void StepDefaultEndpointVolume(bool up) {
         float current = 0;
         if (g_settings.volumeWheelStep > 0 &&
             SUCCEEDED(volume->GetMasterVolumeLevelScalar(&current))) {
-            const float step = g_settings.volumeWheelStep / 100.0f;
-            const float target = (std::clamp)(current + (up ? step : -step), 0.0f, 1.0f);
+            const float step = g_settings.volumeWheelStep * steps / 100.0f;
+            const float target = (std::clamp)(current + step, 0.0f, 1.0f);
             hr = volume->SetMasterVolumeLevelScalar(target, nullptr);
         } else {
-            hr = up ? volume->VolumeStepUp(nullptr)
-                    : volume->VolumeStepDown(nullptr);
+            for (int remaining = std::abs(steps); remaining && SUCCEEDED(hr); --remaining)
+                hr = up ? volume->VolumeStepUp(nullptr)
+                        : volume->VolumeStepDown(nullptr);
         }
     }
     Wh_Log(L"Sound wheel: VolumeStep%s returned 0x%08X", up ? L"Up" : L"Down",
@@ -1755,7 +1820,7 @@ static void SetDefaultAudioOutput(std::wstring const& id) {
     Wh_Log(L"Set default audio output final [%s]: 0x%08X", id.c_str(),
            finalHr);
     if (coInitialized) CoUninitialize();
-    UpdateDynamicXamlIcons();
+    RequestTrayRefresh();
 }
 
 static bool ContainsAsciiInsensitive(char const* text,
@@ -2398,436 +2463,6 @@ static bool IsInjectedElement(wux::FrameworkElement const& element) {
     return wcsncmp(name, L"SeparateQuickSettingsXaml", 25) == 0;
 }
 
-static std::wstring InspectableToText(wf::IInspectable const& value) {
-    if (!value) {
-        return {};
-    }
-
-    try {
-        auto text = winrt::unbox_value<winrt::hstring>(value);
-        return text.c_str();
-    } catch (...) {
-    }
-
-    try {
-        if (auto tooltip = value.try_as<wuc::ToolTip>()) {
-            return InspectableToText(tooltip.Content());
-        }
-    } catch (...) {
-    }
-
-    try {
-        if (auto element = value.try_as<wux::FrameworkElement>()) {
-            auto name = element.Name();
-            if (!name.empty()) {
-                return name.c_str();
-            }
-        }
-    } catch (...) {
-    }
-
-    return {};
-}
-
-static std::wstring GetElementToolTipText(wux::FrameworkElement const& element) {
-    if (!element) {
-        return {};
-    }
-
-    try {
-        return InspectableToText(wuc::ToolTipService::GetToolTip(element));
-    } catch (...) {
-        return {};
-    }
-}
-
-static std::wstring GetAutomationName(wux::FrameworkElement const& element) {
-    if (!element) {
-        return {};
-    }
-
-    try {
-        return wuxa::AutomationProperties::GetName(element).c_str();
-    } catch (...) {
-        return {};
-    }
-}
-
-static bool GlyphEquals(winrt::hstring const& glyph, wchar_t codepoint) {
-    return glyph.size() == 1 && glyph[0] == codepoint;
-}
-
-static bool IsKnownNetworkGlyph(winrt::hstring const& glyph) {
-    static const wchar_t glyphs[] = {
-        L'\xE701', L'\xE872', L'\xE873', L'\xE874', L'\xE839',
-        L'\xF384', L'\xE871', L'\xEAA5', L'\xEAA8',
-    };
-
-    for (wchar_t candidate : glyphs) {
-        if (GlyphEquals(glyph, candidate)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-static bool IsKnownSoundGlyph(winrt::hstring const& glyph) {
-    static const wchar_t glyphs[] = {
-        L'\xE74F', L'\xE992', L'\xE993', L'\xE994', L'\xE767', L'\xEBC5',
-    };
-
-    for (wchar_t candidate : glyphs) {
-        if (GlyphEquals(glyph, candidate)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-static winrt::hstring GetNativeSourceGlyph(NativeMirrorSource const& source) {
-    if (source.icon) {
-        return source.icon.Glyph();
-    }
-    if (source.textBlock) {
-        return source.textBlock.Text();
-    }
-    return L"";
-}
-
-static std::wstring GlyphToHex(winrt::hstring const& glyph) {
-    if (glyph.empty()) {
-        return L"";
-    }
-
-    wchar_t buffer[16]{};
-    swprintf_s(buffer, L"%04X", static_cast<unsigned>(glyph[0]));
-    return buffer;
-}
-
-struct NativeGlyphCandidate {
-    wuc::FontIcon icon{nullptr};
-    wuc::TextBlock textBlock{nullptr};
-    std::wstring glyphHex;
-    std::wstring sourceType;
-    std::wstring tooltip;
-    std::wstring name;
-    std::wstring automationName;
-    std::wstring path;
-    int networkScore = 0;
-    int soundScore = 0;
-};
-
-static wux::DependencyObject NativeCandidateObject(
-    NativeGlyphCandidate const& candidate) {
-    if (candidate.icon) {
-        return candidate.icon.try_as<wux::DependencyObject>();
-    }
-    if (candidate.textBlock) {
-        return candidate.textBlock.try_as<wux::DependencyObject>();
-    }
-    return nullptr;
-}
-
-static std::wstring BuildNativeCandidatePath(wux::DependencyObject const& start) {
-    std::vector<std::wstring> parts;
-    auto current = start;
-
-    while (current) {
-        if (auto element = current.try_as<wux::FrameworkElement>()) {
-            std::wstring part = winrt::get_class_name(element).c_str();
-            auto name = element.Name();
-            if (!name.empty()) {
-                part += L"#";
-                part += name.c_str();
-            }
-            parts.push_back(part);
-
-            if (element == g_trayControlCenterButton) {
-                break;
-            }
-        }
-
-        current = wuxm::VisualTreeHelper::GetParent(current);
-    }
-
-    std::wstring path;
-    for (size_t i = parts.size(); i > 0; --i) {
-        if (!path.empty()) {
-            path += L" > ";
-        }
-        path += parts[i - 1];
-    }
-    return path;
-}
-
-static NativeGlyphCandidate InspectNativeGlyphCandidate(
-    wuc::FontIcon const& icon) {
-    NativeGlyphCandidate candidate;
-    candidate.icon = icon;
-    candidate.glyphHex = GlyphToHex(icon.Glyph());
-    candidate.sourceType = L"FontIcon";
-    candidate.path = BuildNativeCandidatePath(icon);
-
-    auto current = icon.try_as<wux::DependencyObject>();
-    auto glyph = icon.Glyph();
-    if (IsKnownNetworkGlyph(glyph)) {
-        candidate.networkScore += 35;
-    }
-    if (IsKnownSoundGlyph(glyph)) {
-        candidate.soundScore += 35;
-    }
-    if (glyph.size() != 1) {
-        candidate.networkScore -= 10;
-        candidate.soundScore -= 10;
-    }
-    
-    while (current) {
-        if (auto element = current.try_as<wux::FrameworkElement>()) {
-            if (IsInjectedElement(element)) {
-                candidate.networkScore = -1000;
-                candidate.soundScore = -1000;
-                return candidate;
-            }
-
-            auto name = element.Name();
-            if (candidate.name.empty() && !name.empty()) {
-                candidate.name = name.c_str();
-            }
-            if (candidate.automationName.empty()) {
-                candidate.automationName = GetAutomationName(element);
-            }
-            if (candidate.tooltip.empty()) {
-                candidate.tooltip = GetElementToolTipText(element);
-            }
-
-            if (element == g_trayControlCenterButton) {
-                break;
-            }
-        }
-
-        current = wuxm::VisualTreeHelper::GetParent(current);
-    }
-
-    std::wstring haystack = ToLower(candidate.tooltip + L" " +
-                                   candidate.name + L" " +
-                                   candidate.automationName + L" " +
-                                   candidate.path + L" " +
-                                   candidate.glyphHex);
-
-    if (haystack.find(L"network") != std::wstring::npos ||
-        haystack.find(L"wi-fi") != std::wstring::npos ||
-        haystack.find(L"wifi") != std::wstring::npos ||
-        haystack.find(L"internet") != std::wstring::npos ||
-        haystack.find(L"ethernet") != std::wstring::npos ||
-        haystack.find(L"airplane") != std::wstring::npos) {
-        candidate.networkScore += 100;
-    }
-
-    if (haystack.find(L"volume") != std::wstring::npos ||
-        haystack.find(L"sound") != std::wstring::npos ||
-        haystack.find(L"audio") != std::wstring::npos ||
-        haystack.find(L"speaker") != std::wstring::npos) {
-        candidate.soundScore += 100;
-    }
-
-    return candidate;
-}
-
-static NativeGlyphCandidate InspectNativeTextBlockCandidate(
-    wuc::TextBlock const& textBlock) {
-    NativeGlyphCandidate candidate;
-    candidate.textBlock = textBlock;
-    candidate.glyphHex = GlyphToHex(textBlock.Text());
-    candidate.sourceType = L"TextBlock";
-    candidate.path = BuildNativeCandidatePath(textBlock);
-
-    auto current = textBlock.try_as<wux::DependencyObject>();
-    auto glyph = textBlock.Text();
-    if (IsKnownNetworkGlyph(glyph)) {
-        candidate.networkScore += 45;
-    }
-    if (IsKnownSoundGlyph(glyph)) {
-        candidate.soundScore += 45;
-    }
-    if (glyph.size() != 1) {
-        candidate.networkScore -= 25;
-        candidate.soundScore -= 25;
-    }
-
-    while (current) {
-        if (auto element = current.try_as<wux::FrameworkElement>()) {
-            if (IsInjectedElement(element)) {
-                candidate.networkScore = -1000;
-                candidate.soundScore = -1000;
-                return candidate;
-            }
-
-            auto name = element.Name();
-            if (candidate.name.empty() && !name.empty()) {
-                candidate.name = name.c_str();
-            }
-            if (candidate.automationName.empty()) {
-                candidate.automationName = GetAutomationName(element);
-            }
-            if (candidate.tooltip.empty()) {
-                candidate.tooltip = GetElementToolTipText(element);
-            }
-
-            if (element == g_trayControlCenterButton) {
-                break;
-            }
-        }
-
-        current = wuxm::VisualTreeHelper::GetParent(current);
-    }
-
-    std::wstring haystack = ToLower(candidate.tooltip + L" " +
-                                   candidate.name + L" " +
-                                   candidate.automationName + L" " +
-                                   candidate.path + L" " +
-                                   candidate.glyphHex);
-
-    if (haystack.find(L"network") != std::wstring::npos ||
-        haystack.find(L"wi-fi") != std::wstring::npos ||
-        haystack.find(L"wifi") != std::wstring::npos ||
-        haystack.find(L"internet") != std::wstring::npos ||
-        haystack.find(L"ethernet") != std::wstring::npos ||
-        haystack.find(L"airplane") != std::wstring::npos) {
-        candidate.networkScore += 100;
-    }
-    if (haystack.find(L"volume") != std::wstring::npos ||
-        haystack.find(L"sound") != std::wstring::npos ||
-        haystack.find(L"audio") != std::wstring::npos ||
-        haystack.find(L"speaker") != std::wstring::npos) {
-        candidate.soundScore += 100;
-    }
-
-    return candidate;
-}
-
-static void ResolveNativeMirrorSources() {
-    g_nativeMirrorSourcesResolved = true;
-    g_nativeNetworkSource = {};
-    g_nativeSoundSource = {};
-
-    if (!g_trayControlCenterButton) {
-        return;
-    }
-
-    std::vector<NativeGlyphCandidate> candidates;
-    std::vector<wux::DependencyObject> stack;
-    stack.push_back(g_trayControlCenterButton);
-
-    while (!stack.empty()) {
-        auto current = stack.back();
-        stack.pop_back();
-
-        if (auto element = current.try_as<wux::FrameworkElement>()) {
-            if (IsInjectedElement(element)) {
-                continue;
-            }
-        }
-
-        if (auto icon = current.try_as<wuc::FontIcon>()) {
-            auto glyph = icon.Glyph();
-            if (!glyph.empty()) {
-                auto candidate = InspectNativeGlyphCandidate(icon);
-                if (candidate.networkScore > -1000) {
-                    candidates.push_back(candidate);
-                }
-            }
-        }
-
-        if (auto textBlock = current.try_as<wuc::TextBlock>()) {
-            auto glyph = textBlock.Text();
-            if (!glyph.empty() && glyph.size() <= 2) {
-                auto candidate = InspectNativeTextBlockCandidate(textBlock);
-                if (candidate.networkScore > -1000) {
-                    candidates.push_back(candidate);
-                }
-            }
-        }
-
-        int childCount = 0;
-        try {
-            childCount = wuxm::VisualTreeHelper::GetChildrenCount(current);
-        } catch (...) {
-            childCount = 0;
-        }
-
-        for (int i = childCount - 1; i >= 0; --i) {
-            auto child = wuxm::VisualTreeHelper::GetChild(current, i);
-            if (child) {
-                stack.push_back(child);
-            }
-        }
-    }
-
-    NativeGlyphCandidate* bestNetwork = nullptr;
-    NativeGlyphCandidate* bestSound = nullptr;
-    for (auto& candidate : candidates) {
-        if (!bestNetwork || candidate.networkScore > bestNetwork->networkScore) {
-            bestNetwork = &candidate;
-        }
-        if (!bestSound || candidate.soundScore > bestSound->soundScore) {
-            bestSound = &candidate;
-        }
-    }
-
-    const bool logDiagnostics = g_nativeMirrorDiagnosticCount < 8;
-    if (logDiagnostics) {
-        ++g_nativeMirrorDiagnosticCount;
-        Wh_Log(L"Native mirror scan found %u glyph candidate(s) under ControlCenterButton.",
-               static_cast<unsigned>(candidates.size()));
-        for (size_t i = 0; i < candidates.size() && i < 32; ++i) {
-            auto const& c = candidates[i];
-            Wh_Log(L"Native mirror candidate[%u]: type=%s glyph=%s networkScore=%d soundScore=%d name=[%s] automation=[%s] tooltip=[%s] path=[%s]",
-                   static_cast<unsigned>(i), c.sourceType.c_str(),
-                   c.glyphHex.c_str(), c.networkScore, c.soundScore,
-                   c.name.c_str(),
-                   c.automationName.c_str(), c.tooltip.c_str(),
-                   c.path.c_str());
-        }
-    }
-
-    if (bestNetwork && bestNetwork->networkScore >= 35) {
-        g_nativeNetworkSource.icon = bestNetwork->icon;
-        g_nativeNetworkSource.textBlock = bestNetwork->textBlock;
-        g_nativeNetworkSource.tooltip = bestNetwork->tooltip;
-        g_nativeNetworkSource.name = bestNetwork->name;
-        g_nativeNetworkSource.automationName = bestNetwork->automationName;
-        g_nativeNetworkSource.path = bestNetwork->path;
-        if (logDiagnostics) {
-            Wh_Log(L"Native mirror selected network source: type=%s glyph=%s score=%d tooltip=[%s] path=[%s]",
-                   bestNetwork->sourceType.c_str(), bestNetwork->glyphHex.c_str(),
-                   bestNetwork->networkScore,
-                   bestNetwork->tooltip.c_str(), bestNetwork->path.c_str());
-        }
-    }
-
-    if (bestSound && bestSound->soundScore >= 35 &&
-        (!bestNetwork || NativeCandidateObject(*bestSound) !=
-                             NativeCandidateObject(*bestNetwork) ||
-         bestSound->soundScore > bestNetwork->networkScore)) {
-        g_nativeSoundSource.icon = bestSound->icon;
-        g_nativeSoundSource.textBlock = bestSound->textBlock;
-        g_nativeSoundSource.tooltip = bestSound->tooltip;
-        g_nativeSoundSource.name = bestSound->name;
-        g_nativeSoundSource.automationName = bestSound->automationName;
-        g_nativeSoundSource.path = bestSound->path;
-        if (logDiagnostics) {
-            Wh_Log(L"Native mirror selected sound source: type=%s glyph=%s score=%d tooltip=[%s] path=[%s]",
-                   bestSound->sourceType.c_str(), bestSound->glyphHex.c_str(),
-                   bestSound->soundScore,
-                   bestSound->tooltip.c_str(), bestSound->path.c_str());
-        }
-    }
-}
-
-// The taskbar's ToolTipService ignores placement settings for injected
-// controls on this build and always chooses a mouse-relative anchor. A popup
-// is the only XAML surface whose offsets the host respects. It is still drawn
-// in-process with XAML and is deliberately non-interactive.
 static void HideFixedTrayTooltip() {
     try {
         if (g_fixedTrayTooltipPopup) {
@@ -2904,8 +2539,11 @@ static void EnsureFixedTrayTooltip() {
     g_fixedTrayTooltipPopup = wucp::Popup();
     g_fixedTrayTooltipPopup.Child(g_fixedTrayTooltipBorder);
     g_fixedTrayTooltipPopup.IsLightDismissEnabled(false);
-    g_fixedTrayTooltipPopup.Opened([](wf::IInspectable const&,
+    {
+        auto eventSource = g_fixedTrayTooltipPopup;
+        auto eventToken = eventSource.Opened([](wf::IInspectable const&,
                                       wf::IInspectable const&) {
+        if (g_unloading) return;
         g_fixedTrayTooltipOpened = true;
         Wh_Log(L"Fixed tray tooltip popup opened for %s#%s.",
                g_fixedTrayTooltipTarget
@@ -2920,6 +2558,10 @@ static void EnsureFixedTrayTooltip() {
             wuc::ToolTipService::SetToolTip(g_fixedTrayTooltipTarget, nullptr);
         }
     });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Opened(eventToken);
+        });
+    }
     if (auto popup3 = g_fixedTrayTooltipPopup.try_as<wucp::IPopup3>()) {
         popup3.ShouldConstrainToRootBounds(false);
     }
@@ -3042,12 +2684,19 @@ static void SetTrayToolTip(wux::FrameworkElement const& targetButton,
         wuc::ToolTip tip;
         tip.Content(winrt::box_value(tooltip));
         ApplyNativeTrayToolTipPlacement(tip, targetButton);
-        tip.Opened([targetButton](wf::IInspectable const& sender,
+        {
+        auto eventSource = tip;
+        auto eventToken = eventSource.Opened([weakTarget = winrt::make_weak(targetButton)](wf::IInspectable const& sender,
                                  wux::RoutedEventArgs const&) {
+        if (g_unloading) return;
             if (auto openedTip = sender.try_as<wuc::ToolTip>()) {
-                ApplyNativeTrayToolTipPlacement(openedTip, targetButton);
+                if (auto target = weakTarget.get()) ApplyNativeTrayToolTipPlacement(openedTip, target);
             }
         });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Opened(eventToken);
+        });
+    }
         wuc::ToolTipService::SetToolTip(targetButton, tip);
         wuxa::AutomationProperties::SetName(targetButton, tooltip);
     } catch (...) {
@@ -3094,62 +2743,14 @@ static void SetCachedTrayToolTip(wux::FrameworkElement const& targetButton,
     }
 }
 
-static bool ApplyNativeMirrorSource(NativeMirrorSource& source,
-                                    IconLayers const& targetIcon,
-                                    wux::FrameworkElement const& targetButton,
-                                    std::wstring& tooltipCache,
-                                    wuxm::Brush const& primaryBrush) {
-    if (!source.icon && !source.textBlock && g_nativeMirrorSourcesResolved) {
-        ULONGLONG now = GetTickCount64();
-        if (now < g_nextNativeMirrorRetryTick) {
-            return false;
-        }
-
-        g_nextNativeMirrorRetryTick = now + 5000;
-        g_nativeMirrorSourcesResolved = false;
-    }
-
-    if (!g_nativeMirrorSourcesResolved) {
-        ResolveNativeMirrorSources();
-    }
-
-    if ((!source.icon && !source.textBlock) || !targetIcon.primary) {
-        return false;
-    }
-
-    try {
-        auto glyph = GetNativeSourceGlyph(source);
-        if (glyph.empty()) {
-            return false;
-        }
-
-        targetIcon.primary.Glyph(glyph);
-        targetIcon.primary.Foreground(primaryBrush);
-
-        auto sourceElement =
-            source.icon ? source.icon.try_as<wux::FrameworkElement>()
-                        : source.textBlock.try_as<wux::FrameworkElement>();
-        std::wstring tooltip = GetElementToolTipText(sourceElement);
-        if (tooltip.empty()) {
-            tooltip = source.tooltip;
-        }
-        SetCachedTrayToolTip(targetButton, tooltipCache, tooltip);
-
-        return true;
-    } catch (...) {
-        Wh_Log(L"Native mirror source became unavailable; falling back: 0x%08X",
-               winrt::to_hresult());
-        source = {};
-        g_nativeMirrorSourcesResolved = false;
-        return false;
-    }
-}
-
 static void RemoveInjectedControls(wuc::Panel const& parent) {
     if (!parent) {
         return;
     }
 
+    RevokeEvents(g_uiEventRevokers);
+    try { if (g_activeTrayContextFlyout) g_activeTrayContextFlyout.Hide(); } catch (...) {}
+    g_activeTrayContextFlyout = nullptr;
     HideFixedTrayTooltip();
 
     auto children = parent.Children();
@@ -3160,6 +2761,7 @@ static void RemoveInjectedControls(wuc::Panel const& parent) {
             children.RemoveAt(index);
         }
     }
+    RestoreGridTrayMutation();
 
     g_bluetoothButton = nullptr;
     g_networkButton = nullptr;
@@ -3173,10 +2775,6 @@ static void RemoveInjectedControls(wuc::Panel const& parent) {
     g_networkIcon = {};
     g_soundIcon = {};
     g_compactGroupedIcon = {};
-    g_nativeMirrorSourcesResolved = false;
-    g_nextNativeMirrorRetryTick = 0;
-    g_nativeNetworkSource = {};
-    g_nativeSoundSource = {};
     g_bluetoothTooltipCache.clear();
     g_networkTooltipCache.clear();
     g_soundTooltipCache.clear();
@@ -3187,7 +2785,31 @@ struct NativeTrayPropertyOverride {
     wux::DependencyProperty property;
     wf::IInspectable originalValue;
 };
-static std::vector<NativeTrayPropertyOverride> g_nativeTrayPropertyOverrides;
+[[clang::no_destroy]] static std::vector<NativeTrayPropertyOverride> g_nativeTrayPropertyOverrides;
+
+struct GridTrayMutation {
+    winrt::weak_ref<wuc::Grid> grid;
+    std::vector<wuc::ColumnDefinition> columns;
+    std::vector<std::pair<winrt::weak_ref<wux::FrameworkElement>, int>> shiftedChildren;
+};
+[[clang::no_destroy]] static GridTrayMutation g_gridTrayMutation;
+
+static void RestoreGridTrayMutation() {
+    auto grid = g_gridTrayMutation.grid.get();
+    if (!grid) { g_gridTrayMutation = {}; return; }
+    try {
+        for (auto const& [childRef, column] : g_gridTrayMutation.shiftedChildren) {
+            if (auto child = childRef.get()) wuc::Grid::SetColumn(child, column);
+        }
+        auto columns = grid.ColumnDefinitions();
+        for (auto const& inserted : g_gridTrayMutation.columns) {
+            for (uint32_t i = 0; i < columns.Size(); ++i) {
+                if (columns.GetAt(i) == inserted) { columns.RemoveAt(i); break; }
+            }
+        }
+    } catch (...) {}
+    g_gridTrayMutation = {};
+}
 
 
 
@@ -3251,10 +2873,10 @@ static void RestoreOriginalGroupedButton() {
     }
     g_nativeTrayPropertyOverrides.clear();
     if (g_originalGroupedButton) {
-        g_originalGroupedButton.Visibility(g_originalGroupedVisibility);
-        g_originalGroupedButton.Width(g_originalGroupedWidth);
-        g_originalGroupedButton.MinWidth(g_originalGroupedMinWidth);
-        g_originalGroupedButton.MaxWidth(g_originalGroupedMaxWidth);
+        try { g_originalGroupedButton.Visibility(g_originalGroupedVisibility); } catch (...) {}
+        try { g_originalGroupedButton.Width(g_originalGroupedWidth); } catch (...) {}
+        try { g_originalGroupedButton.MinWidth(g_originalGroupedMinWidth); } catch (...) {}
+        try { g_originalGroupedButton.MaxWidth(g_originalGroupedMaxWidth); } catch (...) {}
     }
 }
 
@@ -3286,10 +2908,10 @@ static void CaptureOriginalGroupedButton(wux::FrameworkElement const& button) {
 static void HideOriginalGroupedButton(wux::FrameworkElement const& button) {
     if (!button) return;
     CaptureOriginalGroupedButton(button);
-    button.Visibility(wux::Visibility::Collapsed);
-    button.Width(0);
-    button.MinWidth(0);
-    button.MaxWidth(0);
+    if (button.Visibility() != wux::Visibility::Collapsed) button.Visibility(wux::Visibility::Collapsed);
+    if (button.Width() != 0) button.Width(0);
+    if (button.MinWidth() != 0) button.MinWidth(0);
+    if (button.MaxWidth() != 0) button.MaxWidth(0);
 }
 
 static bool IsUsableTrayButtonDimension(double value) {
@@ -3518,8 +3140,11 @@ static void ScheduleMetricRefresh() {
     if (!g_metricRefreshTimer) {
         g_metricRefreshTimer = wux::DispatcherTimer();
         g_metricRefreshTimer.Interval(std::chrono::milliseconds(250));
-        g_metricRefreshTimer.Tick([](wf::IInspectable const&,
+        {
+        auto eventSource = g_metricRefreshTimer;
+        auto eventToken = eventSource.Tick([](wf::IInspectable const&,
                                      wf::IInspectable const&) {
+        if (g_unloading) return;
             if (g_metricRefreshTimer) {
                 g_metricRefreshTimer.Stop();
             }
@@ -3542,6 +3167,10 @@ static void ScheduleMetricRefresh() {
                 g_metricRefreshTimer.Start();
             }
         });
+        g_timerEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Tick(eventToken);
+        });
+    }
     }
     g_metricRefreshTimer.Start();
 }
@@ -3667,20 +3296,36 @@ static bool RefreshTaskbarLayoutIfRebuilt() {
 }
 
 static void EnsureUpdateTimer() {
+    EnsureTrayRefreshWindow();
     if (g_updateTimer) {
         return;
     }
 
     g_updateTimer = wux::DispatcherTimer();
     g_updateTimer.Interval(std::chrono::milliseconds(500));
-    g_updateTimer.Tick([](wf::IInspectable const&, wf::IInspectable const&) {
-        UpdateDynamicXamlIcons();
+    {
+        auto eventSource = g_updateTimer;
+        auto eventToken = eventSource.Tick([lastFallback = ULONGLONG{0}](wf::IInspectable const&,
+                          wf::IInspectable const&) mutable {
+        if (g_unloading) return;
+        const auto now = GetTickCount64();
+        if (!lastFallback || now - lastFallback >= 5000) {
+            lastFallback = now;
+            UpdateDynamicXamlIcons();
+        } else if (g_networkIcon.primary &&
+                   g_displayNetworkState.kind == NetworkKind::WifiConnecting) {
+            g_networkIcon.primary.Glyph(GetNetworkGlyph(g_displayNetworkState));
+        }
         if (!RefreshTaskbarLayoutIfRebuilt()) {
             RefreshInjectedButtonMetrics();
         }
         if (g_originalGroupedButton)
             HideOriginalGroupedButton(g_originalGroupedButton);
     });
+        g_timerEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Tick(eventToken);
+        });
+    }
     g_updateTimer.Start();
 }
 
@@ -3800,10 +3445,31 @@ static std::wstring GetNetworkTooltip(NetworkState const& state) {
 
 namespace bt = winrt::Windows::Devices::Bluetooth;
 namespace de = winrt::Windows::Devices::Enumeration;
-static wf::IAsyncOperation<de::DeviceInformationCollection> g_btQueries[2]{nullptr, nullptr};
+[[clang::no_destroy]] static wf::IAsyncOperation<de::DeviceInformationCollection> g_btQueries[3]{nullptr, nullptr, nullptr};
 static std::wstring g_btConnectedNames;
 static size_t g_btConnectedCount = 0;
 static ULONGLONG g_btQueryTick = 0;
+
+// Windows' peripheral battery property, also exposed on headset audio devnodes.
+static constexpr auto kBluetoothBatteryProperty = L"{104EA319-6EE2-4701-BD47-8DDBF425BBE5} 2";
+
+static int GetBluetoothBatteryLevel(wf::IInspectable const& value) {
+    auto property = value.try_as<wf::IPropertyValue>();
+    if (!property) return -1;
+    uint32_t level;
+    switch (property.Type()) {
+        case wf::PropertyType::UInt8: level = property.GetUInt8(); break;
+        case wf::PropertyType::UInt16: level = property.GetUInt16(); break;
+        case wf::PropertyType::UInt32: level = property.GetUInt32(); break;
+        default: return -1;
+    }
+    return level <= 100 ? static_cast<int>(level) : -1;
+}
+
+static std::wstring GetBluetoothContainerKey(wf::IInspectable const& value) {
+    auto id = winrt::unbox_value_or<winrt::guid>(value, winrt::guid{});
+    return id == winrt::guid{} ? L"" : std::wstring(winrt::to_hstring(id));
+}
 
 static std::wstring GetBluetoothTooltip(bool available) {
     if (!available || !g_settings.showConnectedDevicesInTooltip) {
@@ -3817,11 +3483,34 @@ static std::wstring GetBluetoothTooltip(bool available) {
         return available ? L"Bluetooth" : L"Bluetooth is off";
     }
     try {
-        if (g_btQueries[0] && g_btQueries[1] &&
+        if (g_btQueries[0] && g_btQueries[1] && g_btQueries[2] &&
             g_btQueries[0].Status() != wf::AsyncStatus::Started &&
-            g_btQueries[1].Status() != wf::AsyncStatus::Started) {
-            std::unordered_map<std::wstring, std::wstring> devices;
-            for (auto& query : g_btQueries) {
+            g_btQueries[1].Status() != wf::AsyncStatus::Started &&
+            g_btQueries[2].Status() != wf::AsyncStatus::Started) {
+            // A failed enumeration is not evidence that devices disconnected.
+            for (size_t index = 0; index < 2; ++index) {
+                if (g_btQueries[index].Status() != wf::AsyncStatus::Completed) {
+                    winrt::throw_hresult(g_btQueries[index].ErrorCode());
+                }
+            }
+            std::unordered_map<std::wstring, int> batteries;
+            if (g_btQueries[2].Status() == wf::AsyncStatus::Completed) {
+                for (auto const& device : g_btQueries[2].GetResults()) {
+                    auto props = device.Properties();
+                    auto key = GetBluetoothContainerKey(props.TryLookup(L"System.Devices.ContainerId"));
+                    int level = GetBluetoothBatteryLevel(props.TryLookup(kBluetoothBatteryProperty));
+                    if (!key.empty() && level >= 0) {
+                        auto [entry, inserted] = batteries.emplace(key, level);
+                        // Multiple reporting components: show the lowest reported charge.
+                        if (!inserted) entry->second = (std::min)(entry->second, level);
+                    }
+                }
+            }
+            g_btQueries[2] = nullptr;
+            struct ConnectedDevice { std::wstring name; int battery = -1; };
+            std::unordered_map<std::wstring, ConnectedDevice> devices;
+            for (size_t index = 0; index < 2; ++index) {
+                auto& query = g_btQueries[index];
                 if (query.Status() == wf::AsyncStatus::Completed) {
                     for (auto const& device : query.GetResults()) {
                         auto props = device.Properties();
@@ -3830,17 +3519,22 @@ static std::wstring GetBluetoothTooltip(bool available) {
                         auto address = props.TryLookup(L"System.Devices.Aep.DeviceAddress");
                         std::wstring key = address ? winrt::unbox_value_or<winrt::hstring>(address, L"").c_str() : L"";
                         if (key.empty()) key = device.Id().c_str();
-                        devices[ToLower(key)] = device.Name().c_str();
+                        auto& entry = devices[ToLower(key)];
+                        entry.name = device.Name().c_str();
+                        int level = GetBluetoothBatteryLevel(props.TryLookup(kBluetoothBatteryProperty));
+                        auto container = GetBluetoothContainerKey(props.TryLookup(L"System.Devices.Aep.ContainerId"));
+                        auto battery = batteries.find(container);
+                        if (level < 0 && battery != batteries.end()) level = battery->second;
+                        if (level >= 0) entry.battery = level;
                     }
                 } else {
                     Wh_Log(L"Bluetooth connected-endpoint query failed: 0x%08X", query.ErrorCode().value);
                 }
                 query = nullptr;
             }
-            g_btConnectedNames.clear();
-            g_btConnectedCount = devices.size();
+            std::wstring connectedNames;
             for (auto const& entry : devices) {
-                std::wstring name = entry.second;
+                std::wstring name = entry.second.name;
                 for (auto& character : name) {
                     if (character == L'\r' || character == L'\n' ||
                         character == L'\u2028' || character == L'\u2029') {
@@ -3848,25 +3542,35 @@ static std::wstring GetBluetoothTooltip(bool available) {
                     }
                 }
                 name = Trim(name);
-                g_btConnectedNames += L"\n- " +
+                connectedNames += L"\n- " +
                     (name.empty() ? std::wstring(L"Bluetooth device") : name);
+                if (entry.second.battery >= 0) {
+                    connectedNames += L" (" + std::to_wstring(entry.second.battery) + L"%)";
+                }
             }
+            // Publish only a complete snapshot, including a genuinely empty one.
+            g_btConnectedNames = std::move(connectedNames);
+            g_btConnectedCount = devices.size();
         }
         if (!g_btQueries[0] && GetTickCount64() - g_btQueryTick >= 1000) {
             auto properties = winrt::single_threaded_vector<winrt::hstring>({
-                L"System.Devices.Aep.IsConnected", L"System.Devices.Aep.DeviceAddress"});
+                L"System.Devices.Aep.IsConnected", L"System.Devices.Aep.DeviceAddress",
+                L"System.Devices.Aep.ContainerId", kBluetoothBatteryProperty});
             g_btQueries[0] = de::DeviceInformation::FindAllAsync(
                 bt::BluetoothDevice::GetDeviceSelectorFromConnectionStatus(bt::BluetoothConnectionStatus::Connected),
                 properties, de::DeviceInformationKind::AssociationEndpoint);
             g_btQueries[1] = de::DeviceInformation::FindAllAsync(
                 bt::BluetoothLEDevice::GetDeviceSelectorFromConnectionStatus(bt::BluetoothConnectionStatus::Connected),
                 properties, de::DeviceInformationKind::AssociationEndpoint);
+            g_btQueries[2] = de::DeviceInformation::FindAllAsync(
+                L"System.Devices.Present:=System.StructuredQueryType.Boolean#True",
+                winrt::single_threaded_vector<winrt::hstring>({
+                    L"System.Devices.ContainerId", kBluetoothBatteryProperty}),
+                de::DeviceInformationKind::Device);
             g_btQueryTick = GetTickCount64();
         }
     } catch (...) {
         for (auto& query : g_btQueries) query = nullptr;
-        g_btConnectedNames.clear();
-        g_btConnectedCount = 0;
         g_btQueryTick = GetTickCount64();
         Wh_Log(L"Bluetooth tooltip query failed: 0x%08X", winrt::to_hresult());
     }
@@ -3954,10 +3658,12 @@ static MediaTooltipInfo GetCurrentlyPlayingMediaInfo() {
     if ((!previous || now - previous >= 1000) &&
         !g_mediaTooltipQueryInProgress.exchange(true)) {
         g_lastMediaTooltipQueryTick.store(now);
-        std::thread([]() {
+        HANDLE thread = StartOwnedWorker([]() {
             MediaTooltipInfo info{};
+            bool initialized = false;
             try {
                 winrt::init_apartment(winrt::apartment_type::multi_threaded);
+                initialized = true;
                 auto manager =
                     wmc::GlobalSystemMediaTransportControlsSessionManager::
                         RequestAsync()
@@ -3995,12 +3701,15 @@ static MediaTooltipInfo GetCurrentlyPlayingMediaInfo() {
                     }
                 }
             } catch (...) {
-                Wh_Log(L"Currently playing tooltip query failed: 0x%08X",
+                WorkerLog(L"Currently playing tooltip query failed: 0x%08X",
                        winrt::to_hresult());
             }
+            if (initialized) winrt::uninit_apartment();
             StoreMediaTooltipInfo(info);
             g_mediaTooltipQueryInProgress.store(false);
-        }).detach();
+        });
+        if (thread) CloseHandle(thread);
+        else g_mediaTooltipQueryInProgress.store(false);
     }
 
     return LoadMediaTooltipInfo();
@@ -4060,6 +3769,25 @@ static std::wstring GetSoundTooltip(SoundState const& state) {
 }
 
 static void RefreshEnergySaverStateAsync();
+template<typename T, typename G> static void SetTrayGlyph(T const& icon, G const& value) {
+    const winrt::hstring glyph{value};
+    if (icon && icon.Glyph() != glyph) icon.Glyph(glyph);
+}
+template<typename T> static void SetTrayVisibility(T const& element, wux::Visibility value) {
+    if (element && element.Visibility() != value) element.Visibility(value);
+}
+template<typename T> static void SetTrayOpacity(T const& element, double value) {
+    if (element && element.Opacity() != value) element.Opacity(value);
+}
+template<typename T> static void SetTrayForeground(T const& element, wuxm::Brush const& brush) {
+    if (!element) return;
+    auto current = element.Foreground();
+    if (current == brush) return;
+    auto a = current.template try_as<wuxm::SolidColorBrush>();
+    auto b = brush.try_as<wuxm::SolidColorBrush>();
+    if (a && b && a.Color() == b.Color() && a.Opacity() == b.Opacity()) return;
+    element.Foreground(brush);
+}
 static std::atomic<int> g_energySaverState{-1};
 
 static wuxm::Brush BatteryStatusBrush(PCWSTR resource, wu::Color fallback) {
@@ -4085,7 +3813,7 @@ static void UpdateSeparateBatteryButton() {
     SYSTEM_POWER_STATUS status{};
     const bool known = GetSystemPowerStatus(&status) != FALSE;
     const bool present = known && status.BatteryFlag != 255 && !(status.BatteryFlag & 128);
-    g_batteryButton.Visibility(present && g_settings.showBatteryButton
+    SetTrayVisibility(g_batteryButton, present && g_settings.showBatteryButton
         ? wux::Visibility::Visible : wux::Visibility::Collapsed);
     if (!present) return;
     const bool percentKnown = status.BatteryLifePercent <= 100;
@@ -4114,13 +3842,13 @@ static void UpdateSeparateBatteryButton() {
     } else if (percent <= 20) {
         fill = BatteryStatusBrush(L"SystemFillColorCautionBrush", {255, 157, 93, 0});
     }
-    g_batteryIcon.primary.Glyph(std::wstring(1, base));
-    g_batteryIcon.primary.Foreground(foreground);
-    g_batteryIcon.overlay.Glyph(std::wstring(1, overlay));
-    g_batteryIcon.overlay.Foreground(fill);
-    g_batteryIcon.overlay.Visibility(percentKnown && percent > 0
+    SetTrayGlyph(g_batteryIcon.primary, std::wstring(1, base));
+    SetTrayForeground(g_batteryIcon.primary, foreground);
+    SetTrayGlyph(g_batteryIcon.overlay, std::wstring(1, overlay));
+    SetTrayForeground(g_batteryIcon.overlay, fill);
+    SetTrayVisibility(g_batteryIcon.overlay, percentKnown && percent > 0
         ? wux::Visibility::Visible : wux::Visibility::Collapsed);
-    g_batteryIcon.underlay.Visibility(wux::Visibility::Collapsed);
+    SetTrayVisibility(g_batteryIcon.underlay, wux::Visibility::Collapsed);
     const bool showPercent = percentKnown && g_batteryPercentageEnabled.load() == 1;
     if (auto content = wuxm::VisualTreeHelper::GetParent(g_batteryPercentageText)
             .try_as<wuc::StackPanel>()) {
@@ -4144,16 +3872,22 @@ static void UpdateSeparateBatteryButton() {
     }
     const std::wstring label = percentKnown ? std::to_wstring(percent) + L"%" : L"";
     if (g_batteryPercentageText.Text() != label) g_batteryPercentageText.Text(label);
-    g_batteryPercentageText.Foreground(foreground);
-    g_batteryPercentageText.Visibility(showPercent ? wux::Visibility::Visible : wux::Visibility::Collapsed);
+    SetTrayForeground(g_batteryPercentageText, foreground);
+    SetTrayVisibility(g_batteryPercentageText, showPercent ? wux::Visibility::Visible : wux::Visibility::Collapsed);
     std::wstring tooltip = percentKnown ? L"Battery: " + label : L"Battery";
-    tooltip += charging ? L" (Charging)" : saver ? L" (Energy saver)" :
-        status.ACLineStatus == 1 ? L" (Plugged in)" : L" (On battery)";
+    tooltip += charging ? L" (Charging)" :
+        status.ACLineStatus == 1 ? (percentKnown && percent == 100
+            ? L" (Fully charged, plugged in)" : L" (Plugged in, not charging)")
+        : L" (On battery)";
     if (status.ACLineStatus == 0 && status.BatteryLifeTime != DWORD(-1)) {
         const auto minutes = status.BatteryLifeTime / 60;
-        tooltip += L"\n" + std::to_wstring(minutes / 60) + L" hr " +
-                   std::to_wstring(minutes % 60) + L" min remaining";
+        tooltip += L"\n" + std::to_wstring(minutes / 60) + L" h " +
+                   std::to_wstring(minutes % 60) + L" m remaining";
     }
+    // Match the menu's AlwaysOn toggle. The legacy power-status flag can remain
+    // on (for example, automatic low-battery saving) after that toggle is off.
+    if (g_energySaverState.load() == 1 && !charging)
+        tooltip += L"\n\nEnergy saver is enabled";
     SetCachedTrayToolTip(g_batteryButton, g_batteryTooltipCache, tooltip);
 }
 
@@ -4168,31 +3902,32 @@ static void UpdateDynamicXamlIcons() {
         if (g_bluetoothIcon.primary) {
             const bool bluetoothAvailable = IsBluetoothAvailable();
             if (g_bluetoothButton) {
-                g_bluetoothButton.Visibility(wux::Visibility::Visible);
-                g_bluetoothButton.Opacity(1.0);
+                SetTrayVisibility(g_bluetoothButton, wux::Visibility::Visible);
+                SetTrayOpacity(g_bluetoothButton, 1.0);
             }
-            g_bluetoothIcon.primary.Visibility(wux::Visibility::Visible);
-            g_bluetoothIcon.primary.Opacity(1.0);
+            SetTrayVisibility(g_bluetoothIcon.primary, wux::Visibility::Visible);
+            SetTrayOpacity(g_bluetoothIcon.primary,
+                (bluetoothAvailable || !g_settings.changeBluetoothGlyphWhenDisabled) ? 1.0 : 0.2);
             // Keep the Bluetooth glyph visible when disabled; the overlay is
             // responsible for marking the unavailable state.
-            g_bluetoothIcon.primary.Glyph(L"\xE702");
-            g_bluetoothIcon.primary.Foreground((bluetoothAvailable || !g_settings.changeBluetoothGlyphWhenDisabled)
+            SetTrayGlyph(g_bluetoothIcon.primary, L"\xE702");
+            SetTrayForeground(g_bluetoothIcon.primary, (bluetoothAvailable || !g_settings.changeBluetoothGlyphWhenDisabled)
                                                    ? primaryBrush
                                                    : underlayBrush);
             SetCachedTrayToolTip(
                 g_bluetoothButton, g_bluetoothTooltipCache,
                 GetBluetoothTooltip(bluetoothAvailable));
             if (g_bluetoothIcon.underlay) {
-                g_bluetoothIcon.underlay.Visibility(wux::Visibility::Collapsed);
+                SetTrayVisibility(g_bluetoothIcon.underlay, wux::Visibility::Collapsed);
             }
             if (g_bluetoothIcon.overlay) {
-                g_bluetoothIcon.overlay.Glyph(L"\xE871");
+                SetTrayGlyph(g_bluetoothIcon.overlay, L"\xE871");
                 g_bluetoothIcon.overlay.FontFamily(
                     wuxm::FontFamily(L"Segoe Fluent Icons"));
                 g_bluetoothIcon.overlay.FontSize(16);
                 g_bluetoothIcon.overlay.FontWeight({400});
-                g_bluetoothIcon.overlay.Foreground(primaryBrush);
-                g_bluetoothIcon.overlay.Visibility(
+                SetTrayForeground(g_bluetoothIcon.overlay, primaryBrush);
+                SetTrayVisibility(g_bluetoothIcon.overlay,
                     (bluetoothAvailable || !g_settings.changeBluetoothGlyphWhenDisabled) ? wux::Visibility::Collapsed
                                        : wux::Visibility::Visible);
             }
@@ -4200,21 +3935,22 @@ static void UpdateDynamicXamlIcons() {
 
         if (g_networkIcon.primary) {
             NetworkState state = GetNetworkState();
-            g_networkIcon.primary.Glyph(GetNetworkGlyph(state));
-            g_networkIcon.primary.Foreground(primaryBrush);
+            g_displayNetworkState = state;
+            SetTrayGlyph(g_networkIcon.primary, GetNetworkGlyph(state));
+            SetTrayForeground(g_networkIcon.primary, primaryBrush);
             SetCachedTrayToolTip(g_networkButton, g_networkTooltipCache,
                                  GetNetworkTooltip(state));
             if (g_networkIcon.underlay) {
-                g_networkIcon.underlay.Glyph(L"\xE701");
-                g_networkIcon.underlay.Foreground(underlayBrush);
-                g_networkIcon.underlay.Visibility(
+                SetTrayGlyph(g_networkIcon.underlay, L"\xE701");
+                SetTrayForeground(g_networkIcon.underlay, underlayBrush);
+                SetTrayVisibility(g_networkIcon.underlay,
                     state.kind == NetworkKind::Wifi ||
                             state.kind == NetworkKind::WifiConnecting
                         ? wux::Visibility::Visible
                         : wux::Visibility::Collapsed);
             }
             if (g_networkIcon.overlay) {
-                g_networkIcon.overlay.Visibility(wux::Visibility::Collapsed);
+                SetTrayVisibility(g_networkIcon.overlay, wux::Visibility::Collapsed);
             }
         }
 
@@ -4222,29 +3958,312 @@ static void UpdateDynamicXamlIcons() {
             SoundState state = GetSoundState();
             const bool useOutputDeviceGlyph =
                 g_settings.soundIconFollowsOutputDevice && state.available && !state.muted;
-            g_soundIcon.primary.Glyph(useOutputDeviceGlyph
+            SetTrayGlyph(g_soundIcon.primary, useOutputDeviceGlyph
                                           ? GetSoundOutputDeviceGlyph(state)
                                           : GetSoundGlyph(state));
-            g_soundIcon.primary.Foreground(primaryBrush);
+            SetTrayForeground(g_soundIcon.primary, primaryBrush);
             SetCachedTrayToolTip(g_soundButton, g_soundTooltipCache,
                                  GetSoundTooltip(state));
             if (g_soundIcon.underlay) {
-                g_soundIcon.underlay.Glyph(L"\xEBC5");
-                g_soundIcon.underlay.Foreground(underlayBrush);
-                g_soundIcon.underlay.Visibility(
+                SetTrayGlyph(g_soundIcon.underlay, L"\xEBC5");
+                SetTrayForeground(g_soundIcon.underlay, underlayBrush);
+                SetTrayVisibility(g_soundIcon.underlay,
                     state.available && !state.muted && !useOutputDeviceGlyph
                         ? wux::Visibility::Visible
                         : wux::Visibility::Collapsed);
             }
             if (g_soundIcon.overlay) {
-                g_soundIcon.overlay.Glyph(L"\xE74F");
-                g_soundIcon.overlay.Foreground(primaryBrush);
-                g_soundIcon.overlay.Visibility(wux::Visibility::Collapsed);
+                SetTrayGlyph(g_soundIcon.overlay, L"\xE74F");
+                SetTrayForeground(g_soundIcon.overlay, primaryBrush);
+                SetTrayVisibility(g_soundIcon.overlay, wux::Visibility::Collapsed);
             }
         }
     } catch (...) {
         Wh_Log(L"UpdateDynamicXamlIcons error: 0x%08X", winrt::to_hresult());
     }
+}
+
+// Workers post native messages only; all XAML work stays on the owning thread.
+static SRWLOCK g_refreshLock = SRWLOCK_INIT;
+static HWND g_refreshWindow = nullptr;
+static unsigned g_refreshPending = 0;
+static constexpr UINT kRefreshMessage = WM_APP + 164;
+static constexpr UINT kDestroyRefreshWindowMessage = kRefreshMessage + 2;
+static constexpr PCWSTR kRefreshWindowClass = L"SeparateSystemTrayIcons.Refresh";
+
+static void RequestTrayRefresh(bool radiosChanged) {
+    AcquireSRWLockExclusive(&g_refreshLock);
+    if (!g_unloading && g_refreshWindow) {
+        const bool alreadyQueued = g_refreshPending != 0;
+        g_refreshPending |= radiosChanged ? 3u : 1u;
+        if (!alreadyQueued && !PostMessageW(g_refreshWindow, kRefreshMessage, 0, 0))
+            g_refreshPending = 0;
+    }
+    ReleaseSRWLockExclusive(&g_refreshLock);
+}
+
+static LRESULT CALLBACK TrayRefreshWindowProc(HWND hwnd, UINT message,
+                                             WPARAM wp, LPARAM lp) {
+    if (message == kRefreshMessage + 1) {
+        SetPropW(hwnd, L"StatusEventSources", reinterpret_cast<HANDLE>(wp));
+        Wh_Log(L"Status event subscriptions ready: 0x%X", static_cast<unsigned>(wp));
+        return 0;
+    }
+    if (message == kDestroyRefreshWindowMessage) {
+        DestroyTrayRefreshWindow();
+        return 0;
+    }
+    if (message == WM_POWERBROADCAST) {
+        InvalidateEnergySaverRead();
+        RequestTrayRefresh();
+        return TRUE;
+    }
+    if (message == WM_DEVICECHANGE) {
+        RequestTrayRefresh(true);
+        return TRUE;
+    }
+    if (message == kRefreshMessage || (message == WM_TIMER && wp == 1)) {
+        KillTimer(hwnd, 1);
+        AcquireSRWLockExclusive(&g_refreshLock);
+        const unsigned pending = g_refreshPending;
+        g_refreshPending = 0;
+        ReleaseSRWLockExclusive(&g_refreshLock);
+        if (g_unloading) return 0;
+        if (pending & 2) {
+            for (auto& query : g_btQueries) {
+                if (query) { try { query.Cancel(); } catch (...) {} }
+                query = nullptr;
+            }
+            // Keep the last snapshot visible until the replacement query completes.
+            g_btQueryTick = 0;
+        }
+        UpdateDynamicXamlIcons();
+        // One follow-up allows Windows' asynchronous state propagation to settle.
+        if (message == kRefreshMessage) SetTimer(hwnd, 1, 150, nullptr);
+        return 0;
+    }
+    return DefWindowProcW(hwnd, message, wp, lp);
+}
+
+static void EnsureTrayRefreshWindow() {
+    if (g_unloading || g_refreshWindow) return;
+    HMODULE owner = nullptr;
+    GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+        GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+        reinterpret_cast<PCWSTR>(&TrayRefreshWindowProc), &owner);
+    WNDCLASSW cls{};
+    cls.lpfnWndProc = TrayRefreshWindowProc;
+    cls.hInstance = owner;
+    cls.lpszClassName = kRefreshWindowClass;
+    if (!RegisterClassW(&cls)) return;
+    HWND hwnd = CreateWindowExW(0, kRefreshWindowClass, L"", 0, 0, 0, 0, 0,
+                                HWND_MESSAGE, nullptr, owner, nullptr);
+    if (!hwnd) {
+        UnregisterClassW(kRefreshWindowClass, owner);
+        return;
+    }
+    AcquireSRWLockExclusive(&g_refreshLock);
+    g_refreshWindow = hwnd;
+    ReleaseSRWLockExclusive(&g_refreshLock);
+    if (hwnd) StartStatusEvents(hwnd);
+}
+
+static void DestroyTrayRefreshWindow() {
+    AcquireSRWLockExclusive(&g_refreshLock);
+    HWND hwnd = g_refreshWindow;
+    g_refreshWindow = nullptr;
+    g_refreshPending = 0;
+    ReleaseSRWLockExclusive(&g_refreshLock);
+    StopStatusEvents();
+    if (hwnd) {
+        auto owner = reinterpret_cast<HINSTANCE>(GetWindowLongPtrW(hwnd, GWLP_HINSTANCE));
+        KillTimer(hwnd, 1);
+        DestroyWindow(hwnd);
+        UnregisterClassW(kRefreshWindowClass, owner);
+    }
+}
+
+struct AudioStatusObserver : winrt::implements<AudioStatusObserver,
+        IMMNotificationClient, IAudioEndpointVolumeCallback> {
+    HANDLE changed = CreateEventW(nullptr, FALSE, FALSE, nullptr);
+    ~AudioStatusObserver() { if (changed) CloseHandle(changed); }
+    HRESULT STDMETHODCALLTYPE OnNotify(PAUDIO_VOLUME_NOTIFICATION_DATA) override {
+        RequestTrayRefresh(); return S_OK;
+    }
+    HRESULT STDMETHODCALLTYPE OnDefaultDeviceChanged(EDataFlow flow, ERole, LPCWSTR) override {
+        if (flow == eRender) SetEvent(changed);
+        RequestTrayRefresh(); return S_OK;
+    }
+    HRESULT STDMETHODCALLTYPE OnDeviceAdded(LPCWSTR) override { SetEvent(changed); return S_OK; }
+    HRESULT STDMETHODCALLTYPE OnDeviceRemoved(LPCWSTR) override { SetEvent(changed); return S_OK; }
+    HRESULT STDMETHODCALLTYPE OnDeviceStateChanged(LPCWSTR, DWORD) override { SetEvent(changed); return S_OK; }
+    HRESULT STDMETHODCALLTYPE OnPropertyValueChanged(LPCWSTR, const PROPERTYKEY) override {
+        RequestTrayRefresh(); return S_OK;
+    }
+};
+
+static void WINAPI NetworkInterfaceChanged(void*, PMIB_IPINTERFACE_ROW, MIB_NOTIFICATION_TYPE) {
+    RequestTrayRefresh();
+}
+static void WINAPI WirelessStatusChanged(PWLAN_NOTIFICATION_DATA, void*) {
+    RequestTrayRefresh();
+}
+
+struct StatusEventWork {
+    HWND window;
+    HANDLE stop;
+};
+static HANDLE g_statusEventStop = nullptr;
+static HANDLE g_statusEventThread = nullptr;
+
+static DWORD WINAPI StatusEventThread(void* parameter) {
+    const auto work = *static_cast<StatusEventWork*>(parameter);
+    delete static_cast<StatusEventWork*>(parameter);
+    {
+    const HRESULT initialized = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    HANDLE ipNotification = nullptr, wlan = nullptr;
+    HKEY keys[2]{};
+    HANDLE keyEvents[2]{CreateEventW(nullptr, FALSE, FALSE, nullptr),
+                        CreateEventW(nullptr, FALSE, FALSE, nullptr)};
+    HPOWERNOTIFY power[2]{};
+    std::vector<std::pair<HANDLE, HDEVNOTIFY>> radios;
+    HDEVNOTIFY devices = nullptr;
+    winrt::com_ptr<IMMDeviceEnumerator> enumerator;
+    winrt::com_ptr<IAudioEndpointVolume> volume;
+    auto observer = winrt::make_self<AudioStatusObserver>();
+    bool audioRegistered = false;
+    unsigned sources = 0;
+    auto bindVolume = [&] {
+        if (volume) {
+            volume->UnregisterControlChangeNotify(observer.get());
+            volume = nullptr;
+        }
+        if (enumerator) {
+            winrt::com_ptr<IMMDevice> endpoint;
+            if (SUCCEEDED(enumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, endpoint.put())) &&
+                SUCCEEDED(endpoint->Activate(__uuidof(IAudioEndpointVolume), CLSCTX_ALL,
+                    nullptr, volume.put_void()))) {
+                if (FAILED(volume->RegisterControlChangeNotify(observer.get()))) volume = nullptr;
+            }
+        }
+    };
+    auto bindRadios = [&] {
+        for (auto [handle, notification] : radios) {
+            if (notification) UnregisterDeviceNotification(notification);
+            CloseHandle(handle);
+        }
+        radios.clear();
+        BLUETOOTH_FIND_RADIO_PARAMS params{sizeof(params)};
+        HANDLE radio = nullptr;
+        if (auto find = BluetoothFindFirstRadio(&params, &radio)) {
+            do {
+                DEV_BROADCAST_HANDLE filter{};
+                filter.dbch_size = sizeof(filter);
+                filter.dbch_devicetype = DBT_DEVTYP_HANDLE;
+                filter.dbch_handle = radio;
+                radios.emplace_back(radio, RegisterDeviceNotificationW(work.window,
+                    &filter, DEVICE_NOTIFY_WINDOW_HANDLE));
+            } while (BluetoothFindNextRadio(find, &radio));
+            BluetoothFindRadioClose(find);
+        }
+    };
+    if (SUCCEEDED(initialized)) {
+        if (SUCCEEDED(CoCreateInstance(__uuidof(MMDeviceEnumerator), nullptr, CLSCTX_ALL,
+            __uuidof(IMMDeviceEnumerator), enumerator.put_void()))) {
+            audioRegistered = SUCCEEDED(enumerator->RegisterEndpointNotificationCallback(observer.get()));
+            bindVolume();
+        }
+    }
+    if (audioRegistered) sources |= 1;
+    if (volume) sources |= 2;
+    if (NotifyIpInterfaceChange(AF_UNSPEC, NetworkInterfaceChanged, nullptr, FALSE, &ipNotification) == NO_ERROR)
+        sources |= 4;
+    DWORD version = 0;
+    if (WlanOpenHandle(2, nullptr, &version, &wlan) == ERROR_SUCCESS &&
+        WlanRegisterNotification(wlan, WLAN_NOTIFICATION_SOURCE_ACM | WLAN_NOTIFICATION_SOURCE_MSM,
+            TRUE, WirelessStatusChanged, nullptr, nullptr, nullptr) == ERROR_SUCCESS) sources |= 8;
+    power[0] = RegisterPowerSettingNotification(work.window, &GUID_ACDC_POWER_SOURCE, DEVICE_NOTIFY_WINDOW_HANDLE);
+    power[1] = RegisterPowerSettingNotification(work.window, &GUID_BATTERY_PERCENTAGE_REMAINING, DEVICE_NOTIFY_WINDOW_HANDLE);
+    if (power[0] && power[1]) sources |= 16;
+    DEV_BROADCAST_DEVICEINTERFACE_W interfaceFilter{};
+    interfaceFilter.dbcc_size = sizeof(interfaceFilter);
+    interfaceFilter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
+    devices = RegisterDeviceNotificationW(work.window, &interfaceFilter,
+        DEVICE_NOTIFY_WINDOW_HANDLE | DEVICE_NOTIFY_ALL_INTERFACE_CLASSES);
+    bindRadios();
+    for (auto [handle, notification] : radios) if (notification) sources |= 32;
+    RegOpenKeyExW(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
+        0, KEY_NOTIFY, &keys[0]);
+    RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Control\\Power",
+        0, KEY_NOTIFY, &keys[1]);
+    auto armKey = [&](int i) {
+        if (keys[i] && keyEvents[i])
+            RegNotifyChangeKeyValue(keys[i], TRUE, REG_NOTIFY_CHANGE_LAST_SET, keyEvents[i], TRUE);
+    };
+    armKey(0); armKey(1);
+    if (keys[0] && keys[1]) sources |= 64;
+    PostMessageW(work.window, kRefreshMessage + 1, sources, 0);
+    if (observer->changed && keyEvents[0] && keyEvents[1]) {
+        HANDLE waits[]{work.stop, observer->changed, keyEvents[0], keyEvents[1]};
+        while (true) {
+            const DWORD result = WaitForMultipleObjects(4, waits, FALSE, 30000);
+            if (result == WAIT_OBJECT_0 || result == WAIT_FAILED) break;
+            if (result == WAIT_OBJECT_0 + 1) bindVolume();
+            if (result == WAIT_OBJECT_0 + 2 || result == WAIT_OBJECT_0 + 3) {
+                armKey(static_cast<int>(result - WAIT_OBJECT_0 - 2));
+                InvalidateEnergySaverRead();
+            }
+            // Recover radio handles after adapters are unplugged/reconnected.
+            if (result == WAIT_TIMEOUT) bindRadios();
+            RequestTrayRefresh();
+        }
+    }
+    // Never hold g_refreshLock while unregistering: APIs may wait for callbacks.
+    if (ipNotification) CancelMibChangeNotify2(ipNotification);
+    if (wlan) {
+        WlanRegisterNotification(wlan, WLAN_NOTIFICATION_SOURCE_NONE, TRUE,
+            nullptr, nullptr, nullptr, nullptr);
+        WlanCloseHandle(wlan, nullptr);
+    }
+    if (volume) volume->UnregisterControlChangeNotify(observer.get());
+    if (audioRegistered) enumerator->UnregisterEndpointNotificationCallback(observer.get());
+    volume = nullptr; enumerator = nullptr; observer = nullptr;
+    for (auto [handle, notification] : radios) {
+        if (notification) UnregisterDeviceNotification(notification);
+        CloseHandle(handle);
+    }
+    if (devices) UnregisterDeviceNotification(devices);
+    for (auto notification : power) if (notification) UnregisterPowerSettingNotification(notification);
+    for (auto key : keys) if (key) RegCloseKey(key);
+    for (auto event : keyEvents) if (event) CloseHandle(event);
+    if (SUCCEEDED(initialized)) CoUninitialize();
+    }
+    return 0;
+}
+
+static void StartStatusEvents(HWND hwnd) {
+    if (g_statusEventStop || g_unloading) return;
+    HANDLE stop = CreateEventW(nullptr, TRUE, FALSE, nullptr);
+    if (!stop) return;
+    auto work = new (std::nothrow) StatusEventWork{hwnd, stop};
+    HANDLE thread = work ? CreateThread(nullptr, 0, StatusEventThread, work, 0, nullptr) : nullptr;
+    if (thread) {
+        g_statusEventStop = stop;
+        g_statusEventThread = thread;
+    }
+    else {
+        delete work; CloseHandle(stop);
+    }
+}
+
+static void StopStatusEvents() {
+    if (g_statusEventStop) SetEvent(g_statusEventStop);
+    if (g_statusEventThread) {
+        WaitForSingleObject(g_statusEventThread, INFINITE);
+        CloseHandle(g_statusEventThread);
+        g_statusEventThread = nullptr;
+    }
+    if (g_statusEventStop) { CloseHandle(g_statusEventStop); g_statusEventStop = nullptr; }
 }
 
 enum class ButtonKind {
@@ -4560,10 +4579,17 @@ static void AppendWinUiContextItem(
         icon.FontSize(16);
         item.Icon(icon);
     }
-    item.Click([command](wf::IInspectable const&,
+    {
+        auto eventSource = item;
+        auto eventToken = eventSource.Click([command](wf::IInspectable const&,
                          wux::RoutedEventArgs const&) {
+        if (g_unloading) return;
         ExecuteTrayContextCommand(command);
     });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Click(eventToken);
+        });
+    }
     items.Append(item);
 }
 
@@ -4622,10 +4648,17 @@ static void AppendWinUiSoundContextMenu(wuc::MenuFlyout const& flyout) {
             wuc::ToggleMenuFlyoutItem outputItem;
             outputItem.Text(output.name);
             outputItem.IsChecked(output.isDefault);
-            outputItem.Click([id = output.id](wf::IInspectable const&,
+            {
+        auto eventSource = outputItem;
+        auto eventToken = eventSource.Click([id = output.id](wf::IInspectable const&,
                                               wux::RoutedEventArgs const&) {
+        if (g_unloading) return;
                 SetDefaultAudioOutput(id);
             });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Click(eventToken);
+        });
+    }
             outputSubmenu.Items().Append(outputItem);
         }
     }
@@ -4663,10 +4696,17 @@ static void AppendWinUiNetworkContextMenu(wuc::MenuFlyout const& flyout) {
         icon.FontSize(16);
         airplaneItem.Icon(icon);
     }
-    airplaneItem.Click([](wf::IInspectable const&,
+    {
+        auto eventSource = airplaneItem;
+        auto eventToken = eventSource.Click([](wf::IInspectable const&,
                           wux::RoutedEventArgs const&) {
+        if (g_unloading) return;
         ExecuteTrayContextCommand(TrayContextCommand::NetworkToggleAirplaneMode);
     });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Click(eventToken);
+        });
+    }
     items.Append(airplaneItem);
 }
 
@@ -4726,12 +4766,13 @@ static bool ReadBatteryBooleanSetting(
 }
 
 static std::atomic<bool> g_energySaverBusy{false};
-static std::atomic<ULONGLONG> g_energySaverQueryTick{0};
+static void InvalidateEnergySaverRead() {
+    g_energySaverState.store(-1);
+}
 static SRWLOCK g_energySaverQueueLock = SRWLOCK_INIT;
 static unsigned g_batteryOperationsQueued = 0;
 
 struct EnergySaverWork {
-    HMODULE owner;
     int operation;  // 0: refresh, 1: energy saver toggle, 2: percentage toggle.
 };
 
@@ -4739,6 +4780,7 @@ static DWORD WINAPI EnergySaverWorker(void* parameter) {
     auto work = *static_cast<EnergySaverWork*>(parameter);
     delete static_cast<EnergySaverWork*>(parameter);
 nextOperation:
+    bool stateChanged = false;
     HRESULT error = S_OK;
     bool initialized = false;
     try {
@@ -4759,15 +4801,15 @@ nextOperation:
                     reinterpret_cast<::IInspectable*>(winrt::get_abi(value))));
                 enabled = ReadBatteryBooleanSetting(setting);
             }
-            if (percentageOperation) g_batteryPercentageEnabled.store(enabled ? 1 : 0);
-            else g_energySaverState.store(enabled ? 1 : 0);
+            if (percentageOperation)
+                stateChanged = g_batteryPercentageEnabled.exchange(enabled ? 1 : 0) != (enabled ? 1 : 0);
+            else stateChanged = g_energySaverState.exchange(enabled ? 1 : 0) != (enabled ? 1 : 0);
         }
     } catch (...) {
         error = winrt::to_hresult();
         if (work.operation != 2) g_energySaverState.store(-1);
     }
     if (initialized) winrt::uninit_apartment();
-    g_energySaverQueryTick.store(GetTickCount64());
     if (FAILED(error) && work.operation) {
         MessageBoxW(nullptr, L"Windows could not change the battery setting. Check Power and sleep settings.",
                     L"Battery settings", MB_OK | MB_ICONWARNING);
@@ -4781,9 +4823,8 @@ nextOperation:
     }
     g_energySaverBusy.store(false);
     ReleaseSRWLockExclusive(&g_energySaverQueueLock);
-    // Do not call Windhawk or XAML from this worker. A slow Settings operation
-    // must not hold up taskbar teardown or execute code from an unloaded DLL.
-    FreeLibraryAndExitThread(work.owner, 0);
+    if (work.operation || stateChanged) RequestTrayRefresh();
+    return 0;
 }
 
 static void QueueEnergySaverWork(int operation) {
@@ -4796,25 +4837,21 @@ static void QueueEnergySaverWork(int operation) {
         return;
     }
     ReleaseSRWLockExclusive(&g_energySaverQueueLock);
-    HMODULE owner = nullptr;
-    if (!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
-            reinterpret_cast<PCWSTR>(&EnergySaverWorker), &owner)) {
-        g_energySaverBusy.store(false);
-        return;
-    }
-    auto work = new (std::nothrow) EnergySaverWork{owner, operation};
-    HANDLE thread = work ? CreateThread(nullptr, 0, EnergySaverWorker, work, 0, nullptr) : nullptr;
+    auto work = new (std::nothrow) EnergySaverWork{operation};
+    HANDLE thread = work ? StartOwnedWorker([work] { EnergySaverWorker(work); }) : nullptr;
     if (thread) {
         CloseHandle(thread);
     } else {
         delete work;
-        FreeLibrary(owner);
         g_energySaverBusy.store(false);
     }
 }
 
 static void RefreshEnergySaverStateAsync() {
-    if (GetTickCount64() - g_energySaverQueryTick.load() >= 2000)
+    // Registry/power notifications invalidate the cache. Do not continuously
+    // create a Settings apartment merely to poll an unchanged preference.
+    if (g_batteryButton && g_energySaverState.load() < 0 &&
+        !g_energySaverBusy.load())
         QueueEnergySaverWork(false);
 }
 
@@ -4831,9 +4868,16 @@ static void AppendWinUiEnergySaverItem(wuc::MenuFlyout const& flyout) {
     const int state = g_energySaverState.load();
     item.Text(state == 1 ? L"Disable Energy saver" : L"Enable Energy saver");
     item.IsEnabled(state >= 0 && !g_energySaverBusy.load());
-    item.Click([](auto const&, auto const&) {
+    {
+        auto eventSource = item;
+        auto eventToken = eventSource.Click([](auto const&, auto const&) {
+        if (g_unloading) return;
         QueueEnergySaverWork(true);
     });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Click(eventToken);
+        });
+    }
     flyout.Items().Append(item);
 }
 
@@ -4855,9 +4899,16 @@ static void AppendWinUiBatteryPercentageItem(wuc::MenuFlyout const& flyout) {
     const int state = g_batteryPercentageEnabled.load();
     SetBatteryPercentageCheck(item, state == 1);
     item.IsEnabled(state >= 0 && !g_energySaverBusy.load());
-    item.Click([](auto const&, auto const&) {
+    {
+        auto eventSource = item;
+        auto eventToken = eventSource.Click([](auto const&, auto const&) {
+        if (g_unloading) return;
         QueueEnergySaverWork(2);
     });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Click(eventToken);
+        });
+    }
     flyout.Items().Append(item);
 }
 static void AppendWinUiBatteryContextMenu(wuc::MenuFlyout const& flyout) {
@@ -4899,7 +4950,10 @@ static void AppendWinUiBatteryContextMenu(wuc::MenuFlyout const& flyout) {
             item.Text(labels[i]);
             item.IsChecked(readable && IsEqualGUID(current, modes[i]));
             const GUID mode = modes[i];
-            item.Click([setMode, mode](auto const&, auto const&) {
+            {
+        auto eventSource = item;
+        auto eventToken = eventSource.Click([setMode, mode](auto const&, auto const&) {
+        if (g_unloading) return;
                 const DWORD error = setMode ? setMode(&mode) : ERROR_NOT_SUPPORTED;
                 if (error != ERROR_SUCCESS) {
                     Wh_Log(L"Changing power mode failed: %lu", error);
@@ -4907,6 +4961,10 @@ static void AppendWinUiBatteryContextMenu(wuc::MenuFlyout const& flyout) {
                                 L"Power mode", MB_OK | MB_ICONWARNING);
                 }
             });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Click(eventToken);
+        });
+    }
             powerMode.Items().Append(item);
         }
 
@@ -5006,7 +5064,10 @@ static void ShowWinUiFlyoutNearTaskbar(wuc::MenuFlyout const& flyout,
     // anchor, whose final placement includes framework offsets and clamping.
     auto weakRoot = winrt::make_weak(target.XamlRoot());
     auto weakTarget = winrt::make_weak(target);
-    flyout.Opened([weakRoot, weakTarget](auto const& sender, auto const&) {
+    {
+        auto eventSource = flyout;
+        auto eventToken = eventSource.Opened([weakRoot, weakTarget](auto const& sender, auto const&) {
+        if (g_unloading) return;
         try {
             auto root = weakRoot.get();
             auto target = weakTarget.get();
@@ -5016,6 +5077,10 @@ static void ShowWinUiFlyoutNearTaskbar(wuc::MenuFlyout const& flyout,
             Wh_Log(L"Menu placement failed: 0x%08X", winrt::to_hresult());
         }
     });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Opened(eventToken);
+        });
+    }
     flyout.ShowAt(target, options);
 }
 
@@ -5243,20 +5308,10 @@ static HWND FindVisibleShellFlyoutWindow() {
     return search.hwnd;
 }
 
-static void SendEscapeToDismissFlyout(HWND flyoutWindow) {
-    // Escape is how the native system flyouts dismiss themselves.  Only send
-    // it after confirming that the matching shell flyout is visibly open.
-    if (flyoutWindow) {
-        SetForegroundWindow(flyoutWindow);
-    }
-
-    INPUT inputs[2]{};
-    inputs[0].type = INPUT_KEYBOARD;
-    inputs[0].ki.wVk = VK_ESCAPE;
-    inputs[1].type = INPUT_KEYBOARD;
-    inputs[1].ki.wVk = VK_ESCAPE;
-    inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
-    SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
+static void DismissFlyout(HWND flyoutWindow) {
+    // Do not inject Escape system-wide: foreground activation can fail and
+    // deliver it to an unrelated app. Ask the selected shell flyout to close.
+    if (flyoutWindow) PostMessageW(flyoutWindow, WM_CLOSE, 0, 0);
 }
 
 static bool SoundUsesQuickSettings() {
@@ -5277,7 +5332,7 @@ static bool HandleTrayButtonClick(ButtonKind kind) {
         if (HWND flyout = FindVisibleShellFlyoutWindow()) {
             Wh_Log(L"Repeated %d tray click: dismissing visible shell flyout %p.",
                    buttonIndex, flyout);
-            SendEscapeToDismissFlyout(flyout);
+            DismissFlyout(flyout);
             g_lastOpenedFlyoutButton = -1;
             g_lastOpenedFlyoutTick = 0;
             return true;
@@ -5314,7 +5369,7 @@ static bool HandleTrayButtonClick(ButtonKind kind) {
 // PointerPressed is handled for a middle click, but the private tray control
 // can still raise Tapped afterwards. Keep a short per-button suppression
 // window so middle-click never falls through to the normal click action.
-static ULONGLONG g_suppressTapUntil[4]{};
+static ULONGLONG g_suppressTapUntil[5]{};
 
 static size_t ButtonKindIndex(ButtonKind kind) {
     return static_cast<size_t>(kind);
@@ -5356,6 +5411,7 @@ static IconLayers CreateTrayIconLayers(PCWSTR primaryGlyph) {
 
     layers.host = host;
     layers.underlay = CreateTrayFontIcon(L"", MakeUnderlayBrush());
+    layers.underlay.Opacity(0.2);
     layers.primary = CreateTrayFontIcon(primaryGlyph, MakeIconBrush());
     layers.overlay = CreateTrayFontIcon(L"", MakeIconBrush());
     layers.underlay.Name(L"SeparateTrayIconUnderlay");
@@ -5556,22 +5612,111 @@ static void CenterNativeOmniButtonItemHost(wux::FrameworkElement const& button) 
     }
 }
 
+struct TrayButtonInputState {
+    int wheelRemainder = 0;
+    ULONGLONG lastWheelTick = 0;
+    bool enterDown = false;
+    bool spaceDown = false;
+
+    int ConsumeWheelDelta(int delta, ULONGLONG now) {
+        if (now - lastWheelTick > 1500) wheelRemainder = 0;
+        lastWheelTick = now;
+        const long long total = static_cast<long long>(wheelRemainder) + delta;
+        wheelRemainder = static_cast<int>(total % WHEEL_DELTA);
+        return static_cast<int>(total / WHEEL_DELTA);
+    }
+};
+
 static void AttachTrayButtonHandlers(wux::FrameworkElement const& element,
                                      ButtonKind kind) {
     auto uiElement = element.as<wux::UIElement>();
+    auto input = std::make_shared<TrayButtonInputState>();
+    if (auto control = element.try_as<wuc::Control>()) {
+        control.IsTabStop(true);
+        control.UseSystemFocusVisuals(true);
+    }
+    wuxa::AutomationProperties::SetHelpText(element,
+        L"Press Enter or Space to activate. Press Shift+F10 or the Menu key for options.");
 
-    uiElement.RightTapped(
+    {
+        auto eventSource = uiElement;
+        auto eventToken = eventSource.KeyDown([kind, input](wf::IInspectable const& sender,
+                                    wuxi::KeyRoutedEventArgs const& args) {
+        if (g_unloading) return;
+        using Key = winrt::Windows::System::VirtualKey;
+        const auto key = args.Key();
+        if (key == Key::Enter) {
+            args.Handled(true);
+            if (!input->enterDown) {
+                input->enterDown = true;
+                HandleTrayButtonClick(kind);
+            }
+        } else if (key == Key::Space) {
+            input->spaceDown = true;
+            args.Handled(true);
+        } else if (key == Key::Application ||
+                   (key == Key::F10 && (GetKeyState(VK_SHIFT) & 0x8000))) {
+            args.Handled(true);
+            ShowTrayContextMenu(sender.as<wux::FrameworkElement>(), kind);
+        }
+    });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.KeyDown(eventToken);
+        });
+    }
+    {
+        auto eventSource = uiElement;
+        auto eventToken = eventSource.KeyUp([kind, input](wf::IInspectable const&,
+                                  wuxi::KeyRoutedEventArgs const& args) {
+        if (g_unloading) return;
+        using Key = winrt::Windows::System::VirtualKey;
+        if (args.Key() == Key::Enter) {
+            input->enterDown = false;
+            args.Handled(true);
+        } else if (args.Key() == Key::Space) {
+            const bool activate = input->spaceDown;
+            input->spaceDown = false;
+            args.Handled(true);
+            if (activate) HandleTrayButtonClick(kind);
+        }
+    });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.KeyUp(eventToken);
+        });
+    }
+    {
+        auto eventSource = uiElement;
+        auto eventToken = eventSource.LostFocus([input](wf::IInspectable const&, wux::RoutedEventArgs const&) {
+        if (g_unloading) return;
+        input->enterDown = input->spaceDown = false;
+    });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.LostFocus(eventToken);
+        });
+    }
+
+    {
+        auto eventSource = uiElement;
+        auto eventToken = eventSource.RightTapped(
         [kind](wf::IInspectable const& sender,
                wuxi::RightTappedRoutedEventArgs const& args) {
+        if (g_unloading) return;
             auto element = sender.try_as<wux::FrameworkElement>();
             if (element) {
                 ShowTrayContextMenu(element, kind);
             }
             args.Handled(true);
         });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.RightTapped(eventToken);
+        });
+    }
 
-    uiElement.Tapped([kind](wf::IInspectable const&,
+    {
+        auto eventSource = uiElement;
+        auto eventToken = eventSource.Tapped([kind](wf::IInspectable const&,
                             wuxi::TappedRoutedEventArgs const& args) {
+        if (g_unloading) return;
         if (ConsumeSuppressedTap(kind)) {
             args.Handled(true);
             return;
@@ -5580,10 +5725,17 @@ static void AttachTrayButtonHandlers(wux::FrameworkElement const& element,
         HandleTrayButtonClick(kind);
         args.Handled(true);
     });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Tapped(eventToken);
+        });
+    }
 
-    uiElement.PointerPressed(
+    {
+        auto eventSource = uiElement;
+        auto eventToken = eventSource.PointerPressed(
         [kind](wf::IInspectable const& sender,
                wuxi::PointerRoutedEventArgs const& args) {
+        if (g_unloading) return;
             auto element = sender.try_as<wux::UIElement>();
             auto point = args.GetCurrentPoint(element);
             if (!point.Properties().IsMiddleButtonPressed()) {
@@ -5593,24 +5745,39 @@ static void AttachTrayButtonHandlers(wux::FrameworkElement const& element,
             SuppressMiddleClickTap(kind);
             if (kind == ButtonKind::Sound) {
                 ToggleDefaultEndpointMute();
-                UpdateDynamicXamlIcons();
+                RequestTrayRefresh();
             }
             args.Handled(true);
         });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.PointerPressed(eventToken);
+        });
+    }
 
     if (kind == ButtonKind::Sound) {
-        uiElement.PointerWheelChanged(
-            [](wf::IInspectable const& sender,
+        {
+        auto eventSource = uiElement;
+        auto eventToken = eventSource.PointerWheelChanged(
+            [input](wf::IInspectable const& sender,
                wuxi::PointerRoutedEventArgs const& args) {
+        if (g_unloading) return;
                 auto element = sender.try_as<wux::UIElement>();
                 auto point = args.GetCurrentPoint(element);
+                if (point.Properties().IsHorizontalMouseWheel()) return;
                 int delta = point.Properties().MouseWheelDelta();
                 if (delta != 0) {
-                    StepDefaultEndpointVolume(delta > 0);
-                    UpdateDynamicXamlIcons();
+                    const int steps = input->ConsumeWheelDelta(delta, GetTickCount64());
+                    if (steps) {
+                        StepDefaultEndpointVolume(steps);
+                        RequestTrayRefresh();
+                    }
                     args.Handled(true);
                 }
             });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.PointerWheelChanged(eventToken);
+        });
+    }
     }
 }
 
@@ -5660,8 +5827,11 @@ static wux::FrameworkElement CreateTrayButton(ButtonKind kind,
                  L"SystemTray.OmniButton") == 0) {
         // The private control's visual tree exists only once it is in the live
         // taskbar. Do this on Loaded rather than offsetting the FontIcon itself.
-        element.Loaded([](wf::IInspectable const& sender,
+        {
+        auto eventSource = element;
+        auto eventToken = eventSource.Loaded([](wf::IInspectable const& sender,
                           wux::RoutedEventArgs const&) {
+        if (g_unloading) return;
             if (auto button = sender.try_as<wux::FrameworkElement>()) {
                 ApplyTrayButtonMetrics(button);
                 CenterNativeOmniButtonItemHost(button);
@@ -5670,6 +5840,10 @@ static wux::FrameworkElement CreateTrayButton(ButtonKind kind,
                 LogVisualStateGroups(button);
             }
         });
+        g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Loaded(eventToken);
+        });
+    }
     }
 
     return element;
@@ -5908,6 +6082,8 @@ static void InsertGridTrayButtons(wuc::Grid const& trayGrid,
         return;
     }
 
+    RestoreGridTrayMutation();
+    g_gridTrayMutation.grid = winrt::make_weak(trayGrid);
     for (int i = 0; i < buttonCount; ++i) {
         wuc::ColumnDefinition column;
         column.Width({1.0, wux::GridUnitType::Auto});
@@ -5917,6 +6093,7 @@ static void InsertGridTrayButtons(wuc::Grid const& trayGrid,
         } else {
             trayGrid.ColumnDefinitions().InsertAt(insertCol + i, column);
         }
+        g_gridTrayMutation.columns.push_back(column);
     }
 
     for (uint32_t i = 0; i < trayGrid.Children().Size(); ++i) {
@@ -5928,6 +6105,8 @@ static void InsertGridTrayButtons(wuc::Grid const& trayGrid,
 
         int childCol = wuc::Grid::GetColumn(child);
         if (childCol >= insertCol) {
+            g_gridTrayMutation.shiftedChildren.emplace_back(
+                winrt::make_weak(child), childCol);
             wuc::Grid::SetColumn(child, childCol + buttonCount);
         }
     }
@@ -6058,16 +6237,28 @@ static void ApplyXamlButtonsWithRetry() {
     if (!g_retryTimer) {
         g_retryTimer = wux::DispatcherTimer();
         g_retryTimer.Interval(std::chrono::milliseconds(100));
-        g_retryTimer.Tick([](wf::IInspectable const&,
+        {
+        auto eventSource = g_retryTimer;
+        auto eventToken = eventSource.Tick([](wf::IInspectable const&,
                              wf::IInspectable const&) {
+        if (g_unloading) return;
             ApplyXamlButtonsWithRetry();
         });
+        g_timerEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
+            if (auto source = weakSource.get()) source.Tick(eventToken);
+        });
+    }
         g_retryTimer.Start();
         Wh_Log(L"ApplyXamlButtonsWithRetry: retry timer started.");
     }
 }
 
 static void RemoveXamlButtons() {
+    DestroyTrayRefreshWindow();
+    RevokeEvents(g_timerEventRevokers);
+    RevokeEvents(g_uiEventRevokers);
+    try { if (g_activeTrayContextFlyout) g_activeTrayContextFlyout.Hide(); } catch (...) {}
+    g_activeTrayContextFlyout = nullptr;
     for (auto& query : g_btQueries) {
         if (query) {
             try { query.Cancel(); } catch (...) {}
@@ -6139,6 +6330,16 @@ static void RemoveXamlButtons() {
     } catch (...) {
         Wh_Log(L"RemoveXamlButtons error: 0x%08X", winrt::to_hresult());
     }
+    // Release cached XAML references on this UI thread, not at DLL destruction.
+    g_bluetoothButton = g_networkButton = g_soundButton = g_batteryButton = nullptr;
+    g_compactGroupedButton = g_trayControlCenterButton = g_originalGroupedButton = nullptr;
+    g_bluetoothIcon = {}; g_networkIcon = {}; g_soundIcon = {};
+    g_batteryIcon = {}; g_compactGroupedIcon = {};
+    g_batteryPercentageText = nullptr;
+    g_trayPanel = nullptr;
+    g_nativeGroupedButtonStyle = g_nativeNotifyIconStyle = nullptr;
+    g_fixedTrayTooltipTarget = nullptr;
+    g_sizeRefreshTrayElement = g_sizeRefreshControlCenterButton = nullptr;
 }
 
 using RunFromWindowThreadProc_t = void(WINAPI*)(PVOID);
@@ -6186,7 +6387,7 @@ static bool RunFromWindowThread(HWND hwnd,
     if (!g_runFromWindowThreadRegisteredMsg) {
         g_runFromWindowThreadRegisteredMsg =
             RegisterWindowMessageW(L"Windhawk_RunFromWindowThread_"
-                                   L"separate-quick-settings-tray-icons-xaml");
+                                   WH_MOD_ID);
     }
 
     DWORD threadId = GetWindowThreadProcessId(hwnd, nullptr);
@@ -6242,7 +6443,7 @@ static bool HookTaskbarDllSymbols() {
         return false;
     }
 
-    WindhawkUtils::SYMBOL_HOOK taskbarHooks[] = {
+    WindhawkUtils::SYMBOL_HOOK taskbarDllHooks[] = {
         {{LR"(const CTaskBand::`vftable'{for `ITaskListWndSite'})"},
          &CTaskBand_ITaskListWndSite_vftable},
         {{LR"(public: virtual class std::shared_ptr<class TaskbarHost> __cdecl CTaskBand::GetTaskbarHost(void)const )"},
@@ -6256,8 +6457,8 @@ static bool HookTaskbarDllSymbols() {
          TrayUI_StartTaskbar_Hook},
     };
 
-    if (!WindhawkUtils::HookSymbols(taskbarModule, taskbarHooks,
-                                    ARRAYSIZE(taskbarHooks))) {
+    if (!WindhawkUtils::HookSymbols(taskbarModule, taskbarDllHooks,
+                                    ARRAYSIZE(taskbarDllHooks))) {
         Wh_Log(L"HookTaskbarDllSymbols: failed to resolve taskbar symbols.");
         return false;
     }
@@ -6292,7 +6493,19 @@ void Wh_ModSettingsChanged() {
 void Wh_ModUninit() {
     g_unloading = true;
     g_taskbarWnd = FindCurrentProcessTaskbarWnd();
+    bool removed = false;
     if (g_taskbarWnd) {
-        RunFromWindowThread(g_taskbarWnd, RemoveXamlButtonsProc, nullptr);
+        removed = RunFromWindowThread(g_taskbarWnd, RemoveXamlButtonsProc, nullptr);
     }
+    if (!removed) {
+        // XAML must remain on its owner thread, but native resources cannot
+        // survive merely because Shell_TrayWnd is temporarily unavailable.
+        HWND refresh = nullptr;
+        AcquireSRWLockShared(&g_refreshLock);
+        refresh = g_refreshWindow;
+        ReleaseSRWLockShared(&g_refreshLock);
+        if (refresh) SendMessageW(refresh, kDestroyRefreshWindowMessage, 0, 0);
+        else StopStatusEvents();
+    }
+    WaitForOwnedWorkers();
 }

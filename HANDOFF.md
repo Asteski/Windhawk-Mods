@@ -1,5 +1,65 @@
 # Separate System Tray Icons — Handoff
 
+## Current state — 2026-09-13
+
+This section overrides the historical notes below.
+
+2026-09-14 Windhawk automated-review remediation: replaced self-pinning worker
+threads with tracked joinable workers, and the status-event worker is joined
+before unload completes. Teardown now stops native resources even when the
+taskbar-thread dispatch fails; the refresh window receives an owner-thread
+destroy message. XAML/WinRT global references that are explicitly cleared on
+the taskbar thread use clang::no_destroy to prevent Explorer process-shutdown
+destructors from releasing them off-thread. Refresh-window class registration
+now rejects stale classes and unregisters on failed window creation. Grid
+column insertions and shifted native columns are recorded and restored.
+Repeated clicks close the selected flyout with WM_CLOSE rather than sending a
+global Escape. Energy-saver preference reads are event-invalidated, removing
+the periodic Settings-worker creation. x64/ARM64 -Werror builds and helper
+tests passed; disable/enable retained both Explorer PIDs.
+
+Underlay fix implemented after the native inspection: MakeUnderlayBrush reads
+the original grouped button's foreground, with TextFillColorPrimaryBrush fallback.
+Underlay FontIcons use Opacity=0.2 without mutating the shared native brush.
+Disabled Bluetooth's base glyph applies the same opacity while its overlay stays
+fully opaque. Opaque grey underlay colors were removed. Main glyphs are unchanged.
+
+2026-09-14 native underlay investigation: temporary diagnostic build traversed
+the original ControlCenterButton XAML tree on Explorer's UI thread. Native
+SystemTray.TextIconContent > Grid#ContainerGrid >
+SystemTray.AdaptiveTextBlock#Underlay has Opacity=0.2; its InnerTextBlock has
+Opacity=1 and SolidColorBrush ARGB #E4000000, brush opacity 1 in current light
+theme. Base uses the same brush at element opacity 1. Thus native underlays
+are translucent, not solid grey. Trashpanda similarly creates underlays with
+TextFillColorPrimaryBrush and Opacity=0.20. Our MakeUnderlayBrush still uses
+opaque #C4C4C4/#494949; no production behavior change was made during this
+investigation. Raw dump: .codex-build/tray-test/native-brushes.txt. Restore source
+snapshot: .codex-build/tray-test/before-brush-probe.wh.cpp.
+
+Energy saver tooltip text follows the context menu's AlwaysOn preference only,
+not the OR-combined glyph state. Windows' SystemStatusFlag was observed as 1
+after the user disabled the setting; it no longer overrides the tooltip's off
+state. Unknown preference reads hide the text. Battery glyph behavior unchanged.
+
+Battery tooltip formatting: remaining time uses `h` / `m`; active energy saver text is appended after a blank line as `Energy saver is enabled`, instead of on the battery status line. Existing charging suppression is preserved.
+
+Bluetooth tooltip refresh fix: installed/enabled 1.0.0_363578. Device-change invalidation now preserves the previous completed snapshot during asynchronous enumeration; failed endpoint queries also preserve it, and completed results publish atomically (including real empty lists). Live test sent two device-change messages to the mod's refresh window and sampled 30 times over 15 seconds: zero false empty tooltips, iPhone 48% preserved, Explorer PID 1220 unchanged. Helper tests and compilation passed; editor synced.
+
+Audit validation: build 0.6.0_697213 passed extracted-helper tests, full compilation, and four disable/enable checks plus Battery visibility reapply with Explorer PID 1220 preserved. The user subsequently reported all their manual tests looked good. Historical crash causality remains unproven.
+
+Release 1.0.0 adds Bluetooth battery percentages from Windows' peripheral battery property. Async device-node enumeration joins readings to connected classic/LE endpoints by container ID, including headset audio components. Missing or invalid readings are omitted; duplicate component readings use the lowest valid percentage. No direct GATT connection is made. Live accessible tooltip validation showed `Adams iPhone (48%)`, matching Windows' reported property. Full compile and helper tests passed, including absent/invalid/0/100 battery readings and missing container identities. Custom dropdown labels now say Custom action; Sound has a settings description and prose README controls, and the dedicated Battery README section was removed.
+
+- Active source: `mods/separate-quick-settings-tray-icons-xaml.wh.cpp`; version 1.0.0; installed id `local@separate-system-tray-icons`.
+- Primary taskbar only. The previously implemented per-taskbar refactor is absent from the current checkout; do not claim multi-monitor support.
+- Sound, Bluetooth, Network, Control Center and Battery are independent injected buttons, all orderable. Native grouped button is hidden and restored on disable. Battery follows Windows percentage settings and has its own size/action settings.
+- Event subscriptions cover audio, network, Bluetooth, power and registry settings, with a five-second state fallback. UI refreshes are queued to an owned window on the taskbar thread. Fast layout checks remain.
+- Lifetime audit: owned background-worker launcher retains the DLL; worker diagnostics avoid Windhawk calls after unload; media COM apartment is balanced. XAML UI/timer events are tracked for explicit revocation; tooltip references are weak. Cleanup closes menus and releases cached XAML/style references on the UI thread.
+- Removed 498 lines of unreachable native-glyph mirroring code after checking references. Native style capture remains. Status glyph/visibility/opacity/foreground setters now avoid unchanged assignments; native hiding also avoids repeated property writes.
+- Historical Explorer crashes during replacement have not been conclusively attributed. The audit fixes concrete lifetime hazards, but passing tests cannot prove the historical crash is eliminated.
+- Regression procedure and current validation results: [testing checklist](docs/separate-system-tray-icons-testing.md).
+
+## Historical notes (may describe reverted implementations)
+
 ## Project
 
 Windhawk mod source:
@@ -167,6 +227,12 @@ REVERTED: v0.6.0 shared-flyout battery highlight patch (DLL 0.6.0_452265) caused
 Energy saver intermittent freeze mitigation (v0.6.0): previous menu construction and Click called private Windows Settings APIs synchronously on the taskbar thread. Moved EnergySaverAlwaysOn GetSetting/GetValue/SetValue and COM object lifetime to a serialized STA worker. Menu uses atomic cached state, disabled while unknown/busy; background reads refresh at most every two seconds. A click racing a read is queued. Worker holds a module reference until FreeLibraryAndExitThread and uses no Windhawk/XAML calls, so mod teardown doesn't wait for a stuck Settings call or unload its running code. Percentage uses the existing independent path. This removes a confirmed UI-thread blocking risk; the intermittent Explorer restart's exact cause and whether this fully resolves it still need runtime confirmation.
 
 ## Experimental separate battery branch
+Event-driven stage (single-taskbar checkout): native audio endpoint/device callbacks, IP-interface/WLAN notifications, Bluetooth radio-handle notifications, AC/percentage power notifications, and registry-change waits for Explorer Advanced + Control/Power now queue UI-thread refreshes. A dedicated MTA worker owns subscription setup/cleanup and retains the DLL until it exits; stop is asynchronous to avoid blocking Explorer. Notification callbacks only queue messages; unregister operations never hold the refresh lock. Routine state fallback is 5 seconds; 500 ms layout checks and Wi-Fi connecting glyph animation remain. Registry changes invalidate the energy-saver read timestamp; changed asynchronous reads request a repaint. Worker periodically rebinds Bluetooth handles after adapter changes. Failed subscriptions leave fallback polling available.
+
+Validation: syntax/full compile passed (SDK winsock include-order warning). Build 0.6.0_204417 registered all seven groups, diagnostic StatusEventSources=127 on its message window. A Windows.UI.Xaml.dll crash occurred during replacement in prior Explorer PID 11428 at 16:44:54 on 2026-09-13; causal attribution remains unresolved. New Explorer PID 1220 survived a separate disable/enable cycle. Disable removed the message-only window, and the worker/module was released; editor synchronized. Actual device reconnects, power transitions, and external volume changes remain to be exercised; subscription success alone is not end-to-end validation. Multi-monitor support is still not present in this checkout.
+Action refresh stage: added a message-only window created on the taskbar UI thread. Volume/mute/output-device changes and completed radio/energy-saver/percentage operations post a coalesced refresh, followed by one 150 ms settle pass. Radio changes invalidate Bluetooth device queries on the UI thread. Removed the airplane-mode worker's direct XAML refresh, retained its module until worker exit, and made unloading atomic. Teardown disconnects producers before destroying the window/timer. Current checkout remains single-taskbar: this does NOT restore cross-monitor state/refresher support. Compile passed; build 0.6.0_688141 refresh window and Shell_TrayWnd both belonged to Explorer PID 11428, UI thread 7768. Disable removed the refresh window; Explorer PID remained unchanged. Actual setting changes were not made during validation.
+First-stage runtime validation: build 0.6.0_966237 compiled, enabled, and loaded; Explorer PID 20020 was unchanged through installation. UI Automation confirmed each visible injected button (Sound, Bluetooth, Network, Battery) is keyboard-focusable and exposes its dynamic name plus keyboard help. Editor synchronized. Control Center was not visible in this configuration; actual key activation, focus visuals, and Narrator output remain unverified.
+First input/accessibility stage: current workspace was back on the single-taskbar implementation when this task began; the earlier per-taskbar refactor was not restored. Added per-button input state for wheel accumulation (120 units per notch, signed remainder, discard remainder after 1.5 seconds idle, ignore horizontal wheel). Custom volume steps apply the complete notch count in one scalar update; system default repeats native steps. Added tab stops/system focus visuals, Enter activation, Space release activation, Menu/Shift+F10 context menus, and accessible keyboard help. Existing dynamic accessible names remain. Middle-click suppression array expanded to five entries. Battery tooltip now distinguishes charging, plugged-in/not-charging and fully charged/plugged-in, with energy saver separate. Extracted actual wheel accumulator into a standalone C++ test: partial deltas, positive/negative multi-notch, direction cancellation, and idle expiry passed. Live keyboard/screen-reader testing remains required.
 Added Sound > Volume scroll step, adapted from the supplied fork: system default (0), 2%, 5%, or 10% per existing wheel step. Custom values use endpoint scalar volume, clamp to 0–100%, preserve unmute-first behavior, and fall back to native stepping if reading current volume fails. Invalid setting values use system default. README updated; no live audio level changes made during validation.
 Energy saver appearance specified by user: use SysBatt F8D0 outline with regular charge-level fill F8D1-F8DA in exact #EAA300 (opaque), replacing the fork's saver-specific glyphs and theme caution brush. Charging retains priority. This resolves the previously unspecified replacement mapping.
 Energy saver priority correction: saver glyph/color now applies only when not charging; charging retains its existing green charging layers. User also reports saver glyph resembles low battery. Mapping matches the supplied fork (F849 base, F84A-F851 fills), but referenced comparison images were absent from that message; replacement mapping remains unresolved pending images.

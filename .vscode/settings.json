@@ -27,5 +27,7 @@
         "activityBar.activeBorder": "#15202b",
         "activityBarTop.activeBorder": "#15202b"
     },
-    "peacock.color": "#fe6c6a"
+    "peacock.color": "#fe6c6a",
+    "editor.overviewRulerBorder": true,
+    "window.border": "off"
 }
