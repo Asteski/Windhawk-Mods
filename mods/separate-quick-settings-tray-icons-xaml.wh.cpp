@@ -59,7 +59,7 @@ enter an action in that group's **Custom action** field.
 | `" "` | `"C:\Program Files\app.exe"` | Opens a file or folder by absolute path. |
 | `~` | `~Downloads` | Opens a folder or file by name. |
 | `cmd:` | `cmd:control` | Runs a command through `cmd.exe`. |
-| `shell:` | `shell:shutdown /r /f /t 0` | Runs through `powershell.exe`. |
+| `ps:` / `powershell:` | `ps:shutdown /r /f /t 0` | Runs through `powershell.exe`. |
 | `key:` / `hotkey:` | `key:Ctrl+Shift+Esc` | Simulates a keyboard shortcut with virtual key presses. |
 | `web:` | `web:https://windhawk.net/` | Opens a URL in the default browser. |
 | `ms-settings:` | `ms-settings:bluetooth` | Opens a Windows Settings page. |
@@ -171,7 +171,7 @@ menu presenter receives its name after creation.
       - custom: Custom action
     - controlCenterAction: "ms-controlcenter:"
       $name: Custom action
-      $description: "Used when Custom action is selected. Supports file paths, ~ folders, cmd:, shell:, key:, hotkey:, web:, and ms-settings: actions."
+      $description: "Used when Custom action is selected. Supports file paths, ~ folders, cmd:, ps:, powershell:, key:, hotkey:, web:, and ms-settings: actions."
   $name: Control Center
 - battery:
     - smallGlyph: false
@@ -184,7 +184,7 @@ menu presenter receives its name after creation.
       - custom: Custom action
     - customAction: "ms-controlcenter:"
       $name: Custom action
-      $description: "Used when Custom action is selected. Supports file paths, ~ folders, cmd:, shell:, key:, hotkey:, web:, and ms-settings: actions."
+      $description: "Used when Custom action is selected. Supports file paths, ~ folders, cmd:, ps:, powershell:, key:, hotkey:, web:, and ms-settings: actions."
   $name: Battery
 - visibility:
     - showSoundButton: true
@@ -245,7 +245,6 @@ menu presenter receives its name after creation.
 #include <new>
 #include <unordered_map>
 #include <string>
-#include <thread>
 #include <vector>
 
 #undef GetCurrentTime
@@ -272,7 +271,6 @@ namespace wfc = winrt::Windows::Foundation::Collections;
 namespace wmc = winrt::Windows::Media::Control;
 namespace wdr = winrt::Windows::Devices::Radios;
 namespace wu = winrt::Windows::UI;
-namespace wui = winrt::Windows::UI::Input;
 namespace wux = winrt::Windows::UI::Xaml;
 namespace wuxa = winrt::Windows::UI::Xaml::Automation;
 namespace wuc = winrt::Windows::UI::Xaml::Controls;
@@ -344,6 +342,18 @@ static void RestoreGridTrayMutation();
 static void InvalidateEnergySaverRead();
 static winrt::hstring GetNetworkGlyph(NetworkState const& state);
 static NetworkState g_displayNetworkState;
+
+// Status collection can involve RPC to the audio, WLAN and network-list
+// services. Keep that work on the status worker; the taskbar UI thread only
+// consumes this snapshot while it updates XAML.
+struct StatusSnapshot {
+    bool bluetoothAvailable = false;
+    NetworkState network;
+    SoundState sound;
+    bool ready = false;
+};
+static SRWLOCK g_statusSnapshotLock = SRWLOCK_INIT;
+static StatusSnapshot g_statusSnapshot;
 
 using CTaskBand_GetTaskbarHost_t = void*(WINAPI*)(void*, void*);
 using TaskbarHost_FrameHeight_t = int(WINAPI*)(void*);
@@ -483,7 +493,7 @@ static void* CTaskBand_ITaskListWndSite_vftable = nullptr;
 static std::wstring GetStringSettingWithDefault(PCWSTR name,
                                                 PCWSTR fallback) {
     PCWSTR value = Wh_GetStringSetting(name);
-    std::wstring result = value && *value ? value : fallback;
+    std::wstring result = *value ? value : fallback;
     Wh_FreeStringSetting(value);
     return result;
 }
@@ -494,7 +504,7 @@ static std::wstring LoadButtonOrderSetting() {
         wchar_t key[64]{};
         swprintf_s(key, L"buttonOrder[%d]", index);
         PCWSTR value = Wh_GetStringSetting(key);
-        if (!value || !*value) {
+        if (!*value) {
             Wh_FreeStringSetting(value);
             break;
         }
@@ -873,10 +883,11 @@ static DWORD WINAPI ExecuteActionThreadProc(void* param) {
                       SW_HIDE);
         return 0;
     }
-    if (StartsWithCI(action, L"shell:")) {
+    if (StartsWithCI(action, L"ps:") || StartsWithCI(action, L"powershell:")) {
+        const size_t prefixLength = StartsWithCI(action, L"ps:") ? 3 : 11;
         std::wstring args =
             L"-NoProfile -ExecutionPolicy Bypass -Command " +
-            action.substr(6);
+            action.substr(prefixLength);
         ShellExecuteW(nullptr, L"open", L"powershell.exe", args.c_str(),
                       nullptr, SW_HIDE);
         return 0;
@@ -2087,6 +2098,29 @@ static NetworkState GetNetworkState() {
     return state;
 }
 
+static void RefreshStatusSnapshot() {
+    StatusSnapshot snapshot;
+    try {
+        snapshot.bluetoothAvailable = IsBluetoothAvailable();
+        snapshot.network = GetNetworkState();
+        snapshot.sound = GetSoundState();
+        snapshot.ready = true;
+    } catch (...) {
+        Wh_Log(L"Status snapshot refresh failed: 0x%08X", winrt::to_hresult());
+    }
+
+    AcquireSRWLockExclusive(&g_statusSnapshotLock);
+    g_statusSnapshot = std::move(snapshot);
+    ReleaseSRWLockExclusive(&g_statusSnapshotLock);
+}
+
+static StatusSnapshot GetStatusSnapshot() {
+    AcquireSRWLockShared(&g_statusSnapshotLock);
+    StatusSnapshot snapshot = g_statusSnapshot;
+    ReleaseSRWLockShared(&g_statusSnapshotLock);
+    return snapshot;
+}
+
 static BOOL CALLBACK FindTaskbarWndProc(HWND hwnd, LPARAM lp) {
     DWORD pid = 0;
     GetWindowThreadProcessId(hwnd, &pid);
@@ -2260,11 +2294,15 @@ static std::wstring GetElementSelector(wux::DependencyObject const& object) {
     return selector;
 }
 
+static bool IsModLoggingEnabled() {
+    return InternalWh_IsLogEnabled(InternalWhModPtr);
+}
+
 static void DumpInjectedButtonVisualPaths(wux::DependencyObject const& root,
                                           std::wstring const& path,
                                           int depth = 0,
                                           int maxDepth = 5) {
-    if (!root || depth > maxDepth) {
+    if (!IsModLoggingEnabled() || !root || depth > maxDepth) {
         return;
     }
 
@@ -2288,7 +2326,7 @@ static void DumpInjectedButtonVisualPaths(wux::DependencyObject const& root,
 }
 
 static void DumpInjectedButtonDiagnostics(wux::FrameworkElement const& button) {
-    if (!button) {
+    if (!IsModLoggingEnabled() || !button) {
         return;
     }
 
@@ -2298,7 +2336,7 @@ static void DumpInjectedButtonDiagnostics(wux::FrameworkElement const& button) {
 }
 
 static void LogVisualStateGroups(wux::FrameworkElement const& root) {
-    if (!root) {
+    if (!IsModLoggingEnabled() || !root) {
         return;
     }
 
@@ -2891,7 +2929,10 @@ static void RestoreOriginalGroupedButton() {
             }
         } catch (...) {}
     }
-    g_nativeTrayPropertyOverrides.clear();
+    // This vector has no automatic destructor so that XAML references are
+    // never released from the CRT shutdown thread. Release both its elements
+    // and retained allocation explicitly on the taskbar UI thread instead.
+    std::vector<NativeTrayPropertyOverride>().swap(g_nativeTrayPropertyOverrides);
     if (g_originalGroupedButton) {
         try { g_originalGroupedButton.Visibility(g_originalGroupedVisibility); } catch (...) {}
         try { g_originalGroupedButton.Width(g_originalGroupedWidth); } catch (...) {}
@@ -3036,46 +3077,6 @@ static bool TryCaptureNativeNotifyIconMetrics(
 }
 
 static void ApplyTrayButtonMetrics(wux::FrameworkElement const& element);
-
-static wux::FrameworkElement TryCreateNativeNotifyIcon(PCWSTR name) {
-    try {
-        auto loaded = wuxmk::XamlReader::Load(
-            LR"(<SystemTray:NotifyIconView xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:SystemTray="using:SystemTray" HorizontalAlignment="Center" VerticalAlignment="Center"/>)");
-        auto element = loaded.try_as<wux::FrameworkElement>();
-        if (!element) {
-            Wh_Log(L"XamlReader loaded NotifyIconView, but it is not FrameworkElement: %s.",
-                   winrt::get_class_name(loaded).c_str());
-            return nullptr;
-        }
-
-        element.Name(name);
-        if (auto control = element.try_as<wuc::Control>()) {
-            if (g_nativeNotifyIconStyle) {
-                try {
-                    control.Style(g_nativeNotifyIconStyle);
-                    Wh_Log(L"Applied live NotifyIconView style to %s#%s.",
-                           winrt::get_class_name(element).c_str(), name);
-                } catch (winrt::hresult_error const& e) {
-                    Wh_Log(L"Applying NotifyIconView style failed: 0x%08X %s",
-                           e.code(), e.message().c_str());
-                }
-            }
-        }
-
-        ApplyTrayButtonMetrics(element);
-        Wh_Log(L"Created native tray element through XamlReader: %s#%s",
-               winrt::get_class_name(element).c_str(), name);
-        return element;
-    } catch (winrt::hresult_error const& e) {
-        Wh_Log(L"XamlReader SystemTray.NotifyIconView creation failed: 0x%08X %s",
-               e.code(), e.message().c_str());
-    } catch (...) {
-        Wh_Log(L"XamlReader SystemTray.NotifyIconView creation failed: 0x%08X",
-               winrt::to_hresult());
-    }
-
-    return nullptr;
-}
 
 static void CaptureTrayButtonMetricsFromPanel(
     wuc::Panel const& parentPanel,
@@ -3926,9 +3927,10 @@ static void UpdateDynamicXamlIcons() {
         UpdateSeparateBatteryButton();
         auto primaryBrush = MakeIconBrush();
         auto underlayBrush = MakeUnderlayBrush();
+        const StatusSnapshot snapshot = GetStatusSnapshot();
 
         if (g_bluetoothIcon.primary) {
-            const bool bluetoothAvailable = IsBluetoothAvailable();
+            const bool bluetoothAvailable = snapshot.bluetoothAvailable;
             if (g_bluetoothButton) {
                 SetTrayVisibility(g_bluetoothButton, wux::Visibility::Visible);
                 SetTrayOpacity(g_bluetoothButton, 1.0);
@@ -3962,7 +3964,7 @@ static void UpdateDynamicXamlIcons() {
         }
 
         if (g_networkIcon.primary) {
-            NetworkState state = GetNetworkState();
+            NetworkState const& state = snapshot.network;
             g_displayNetworkState = state;
             SetTrayGlyph(g_networkIcon.primary, GetNetworkGlyph(state));
             SetTrayForeground(g_networkIcon.primary, primaryBrush);
@@ -3983,7 +3985,7 @@ static void UpdateDynamicXamlIcons() {
         }
 
         if (g_soundIcon.primary) {
-            SoundState state = GetSoundState();
+            SoundState const& state = snapshot.sound;
             const bool useOutputDeviceGlyph =
                 g_settings.soundIconFollowsOutputDevice && state.available && !state.muted;
             SetTrayGlyph(g_soundIcon.primary, useOutputDeviceGlyph
@@ -4015,11 +4017,12 @@ static void UpdateDynamicXamlIcons() {
 static SRWLOCK g_refreshLock = SRWLOCK_INIT;
 static HWND g_refreshWindow = nullptr;
 static unsigned g_refreshPending = 0;
+static HANDLE g_statusRefreshEvent = nullptr;
 static constexpr UINT kRefreshMessage = WM_APP + 164;
 static constexpr UINT kDestroyRefreshWindowMessage = kRefreshMessage + 2;
 static constexpr PCWSTR kRefreshWindowClass = L"SeparateSystemTrayIcons.Refresh";
 
-static void RequestTrayRefresh(bool radiosChanged) {
+static void PostTrayRefresh(bool radiosChanged) {
     AcquireSRWLockExclusive(&g_refreshLock);
     if (!g_unloading && g_refreshWindow) {
         const bool alreadyQueued = g_refreshPending != 0;
@@ -4028,6 +4031,13 @@ static void RequestTrayRefresh(bool radiosChanged) {
             g_refreshPending = 0;
     }
     ReleaseSRWLockExclusive(&g_refreshLock);
+}
+
+static void RequestTrayRefresh(bool radiosChanged) {
+    // Status callbacks can run on arbitrary threads. Signal the collector and
+    // keep the current snapshot painted until the replacement is ready.
+    if (!g_unloading && g_statusRefreshEvent) SetEvent(g_statusRefreshEvent);
+    PostTrayRefresh(radiosChanged);
 }
 
 static LRESULT CALLBACK TrayRefreshWindowProc(HWND hwnd, UINT message,
@@ -4142,6 +4152,7 @@ static void WINAPI WirelessStatusChanged(PWLAN_NOTIFICATION_DATA, void*) {
 struct StatusEventWork {
     HWND window;
     HANDLE stop;
+    HANDLE refresh;
 };
 static HANDLE g_statusEventStop = nullptr;
 static HANDLE g_statusEventThread = nullptr;
@@ -4233,19 +4244,23 @@ static DWORD WINAPI StatusEventThread(void* parameter) {
     armKey(0); armKey(1);
     if (keys[0] && keys[1]) sources |= 64;
     PostMessageW(work.window, kRefreshMessage + 1, sources, 0);
+    RefreshStatusSnapshot();
+    PostTrayRefresh(false);
     if (observer->changed && keyEvents[0] && keyEvents[1]) {
-        HANDLE waits[]{work.stop, observer->changed, keyEvents[0], keyEvents[1]};
+        HANDLE waits[]{work.stop, work.refresh, observer->changed,
+                       keyEvents[0], keyEvents[1]};
         while (true) {
-            const DWORD result = WaitForMultipleObjects(4, waits, FALSE, 30000);
+            const DWORD result = WaitForMultipleObjects(5, waits, FALSE, 30000);
             if (result == WAIT_OBJECT_0 || result == WAIT_FAILED) break;
-            if (result == WAIT_OBJECT_0 + 1) bindVolume();
-            if (result == WAIT_OBJECT_0 + 2 || result == WAIT_OBJECT_0 + 3) {
-                armKey(static_cast<int>(result - WAIT_OBJECT_0 - 2));
+            if (result == WAIT_OBJECT_0 + 2) bindVolume();
+            if (result == WAIT_OBJECT_0 + 3 || result == WAIT_OBJECT_0 + 4) {
+                armKey(static_cast<int>(result - WAIT_OBJECT_0 - 3));
                 InvalidateEnergySaverRead();
             }
             // Recover radio handles after adapters are unplugged/reconnected.
             if (result == WAIT_TIMEOUT) bindRadios();
-            RequestTrayRefresh();
+            RefreshStatusSnapshot();
+            PostTrayRefresh(false);
         }
     }
     // Never hold g_refreshLock while unregistering: APIs may wait for callbacks.
@@ -4274,26 +4289,34 @@ static DWORD WINAPI StatusEventThread(void* parameter) {
 static void StartStatusEvents(HWND hwnd) {
     if (g_statusEventStop || g_unloading) return;
     HANDLE stop = CreateEventW(nullptr, TRUE, FALSE, nullptr);
-    if (!stop) return;
-    auto work = new (std::nothrow) StatusEventWork{hwnd, stop};
+    HANDLE refresh = CreateEventW(nullptr, FALSE, FALSE, nullptr);
+    if (!stop || !refresh) {
+        if (stop) CloseHandle(stop);
+        if (refresh) CloseHandle(refresh);
+        return;
+    }
+    auto work = new (std::nothrow) StatusEventWork{hwnd, stop, refresh};
     HANDLE thread = work ? CreateThread(nullptr, 0, StatusEventThread, work, 0, nullptr) : nullptr;
     if (thread) {
         g_statusEventStop = stop;
+        g_statusRefreshEvent = refresh;
         g_statusEventThread = thread;
     }
     else {
-        delete work; CloseHandle(stop);
+        delete work; CloseHandle(stop); CloseHandle(refresh);
     }
 }
 
 static void StopStatusEvents() {
     if (g_statusEventStop) SetEvent(g_statusEventStop);
+    if (g_statusRefreshEvent) SetEvent(g_statusRefreshEvent);
     if (g_statusEventThread) {
         WaitForSingleObject(g_statusEventThread, INFINITE);
         CloseHandle(g_statusEventThread);
         g_statusEventThread = nullptr;
     }
     if (g_statusEventStop) { CloseHandle(g_statusEventStop); g_statusEventStop = nullptr; }
+    if (g_statusRefreshEvent) { CloseHandle(g_statusRefreshEvent); g_statusRefreshEvent = nullptr; }
 }
 
 enum class ButtonKind {
@@ -4352,28 +4375,6 @@ enum class TrayContextCommand : UINT {
     QuickSettingsSystemSettings,
     BatteryPowerSettings,
 };
-
-struct TrayContextMenuItem {
-    PCWSTR text;
-    TrayContextCommand command;
-};
-
-static std::vector<TrayContextMenuItem> GetTrayContextMenuItems(
-    ButtonKind kind) {
-    switch (kind) {
-        case ButtonKind::Bluetooth:
-        case ButtonKind::Sound:
-            // These menus contain separators and submenus, so they are built
-            // by the framework-specific functions below.
-            return {};
-        case ButtonKind::Network:
-            // Network has separators and dynamic labels, so it is built by the
-            // framework-specific functions below.
-            return {};
-        default:
-            return {};
-    }
-}
 
 static void ExecuteTrayContextCommand(TrayContextCommand command) {
     switch (command) {
@@ -4569,10 +4570,6 @@ static void ShowWin32TrayContextMenu(ButtonKind kind) {
         AppendWin32NetworkContextMenu(menu);
     } else if (kind == ButtonKind::QuickSettings) {
         AppendWin32QuickSettingsContextMenu(menu);
-    } else {
-        for (auto const& item : GetTrayContextMenuItems(kind)) {
-            AppendWin32ContextItem(menu, item.text, item.command);
-        }
     }
 
     POINT point{};
@@ -5130,10 +5127,6 @@ static bool ShowWinUiTrayContextMenu(wux::FrameworkElement const& target,
             AppendWinUiQuickSettingsContextMenu(flyout);
         } else if (kind == ButtonKind::Battery) {
             AppendWinUiBatteryContextMenu(flyout);
-        } else {
-            for (auto const& item : GetTrayContextMenuItems(kind)) {
-                AppendWinUiContextItem(flyout.Items(), item.text, item.command);
-            }
         }
 
         g_activeTrayContextFlyout = flyout;
@@ -5149,23 +5142,6 @@ static bool ShowWinUiTrayContextMenu(wux::FrameworkElement const& target,
 static void ShowTrayContextMenu(wux::FrameworkElement const& target,
                                 ButtonKind kind) {
     ShowWinUiTrayContextMenu(target, kind);
-}
-
-static std::wstring const& TooltipCacheForButtonKind(ButtonKind kind) {
-    static const std::wstring kQuickSettingsTooltip = L"Quick Settings";
-    static const std::wstring kEmptyTooltip;
-    switch (kind) {
-        case ButtonKind::Bluetooth:
-            return g_bluetoothTooltipCache;
-        case ButtonKind::Network:
-            return g_networkTooltipCache;
-        case ButtonKind::Sound:
-            return g_soundTooltipCache;
-        case ButtonKind::QuickSettings:
-            return kQuickSettingsTooltip;
-        default:
-            return kEmptyTooltip;
-    }
 }
 
 static bool TryParseButtonKind(std::wstring const& rawToken,
@@ -5188,7 +5164,7 @@ static bool TryParseButtonKind(std::wstring const& rawToken,
         return true;
     }
     if (token == L"controlcenter" || token == L"quick_settings" || token == L"quicksettings" ||
-        token == L"control_center" || token == L"controlcenter" ||
+        token == L"control_center" ||
         token == L"grouped") {
         *kind = ButtonKind::QuickSettings;
         return true;
