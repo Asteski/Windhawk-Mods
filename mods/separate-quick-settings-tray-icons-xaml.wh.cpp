@@ -218,7 +218,6 @@ menu presenter receives its name after creation.
 #include <windhawk_utils.h>
 #include <memory>
 #include <functional>
-#include <cstdarg>
 #include <winrt/Windows.System.h>
 
 #include <windows.h>
@@ -414,24 +413,15 @@ static int g_notifyMetricDiagnosticCount = 0;
 [[clang::no_destroy]] static wux::DispatcherTimer g_metricRefreshTimer{nullptr};
 static int g_retryCount = 0;
 static std::atomic<bool> g_unloading{false};
-static void WorkerLog(PCWSTR format, ...) {
-    wchar_t text[2048]{};
-    va_list args;
-    va_start(args, format);
-    _vsnwprintf_s(text, ARRAYSIZE(text), _TRUNCATE, format, args);
-    va_end(args);
-    OutputDebugStringW(text);
-}
-
 static SRWLOCK g_workerThreadsLock = SRWLOCK_INIT;
 static std::vector<HANDLE> g_workerThreads;
 
 static HANDLE StartOwnedWorker(std::function<void()> task) {
     struct Work { std::function<void()> task; };
-    AcquireSRWLockShared(&g_workerThreadsLock);
-    if (g_unloading) { ReleaseSRWLockShared(&g_workerThreadsLock); return nullptr; }
+    AcquireSRWLockExclusive(&g_workerThreadsLock);
+    if (g_unloading) { ReleaseSRWLockExclusive(&g_workerThreadsLock); return nullptr; }
     auto work = new (std::nothrow) Work{std::move(task)};
-    if (!work) { ReleaseSRWLockShared(&g_workerThreadsLock); return nullptr; }
+    if (!work) { ReleaseSRWLockExclusive(&g_workerThreadsLock); return nullptr; }
     HANDLE thread = CreateThread(nullptr, 0, [](void* parameter) -> DWORD {
         auto work = static_cast<Work*>(parameter);
         try { work->task(); } catch (...) {}
@@ -448,7 +438,7 @@ static HANDLE StartOwnedWorker(std::function<void()> task) {
             g_workerThreads.push_back(tracked);
         }
     } else delete work;
-    ReleaseSRWLockShared(&g_workerThreadsLock);
+    ReleaseSRWLockExclusive(&g_workerThreadsLock);
     return thread;
 }
 
@@ -898,12 +888,12 @@ static DWORD WINAPI ExecuteActionThreadProc(void* param) {
         UINT modifiers = 0;
         UINT vk = 0;
         if (!TryParseShortcut(shortcut, &modifiers, &vk)) {
-            WorkerLog(L"Invalid replacement button shortcut action: %s",
+            Wh_Log(L"Invalid replacement button shortcut action: %s",
                    shortcut.c_str());
             return 0;
         }
         if (!SendShortcut(modifiers, vk)) {
-            WorkerLog(L"Failed to send replacement button shortcut: %s",
+            Wh_Log(L"Failed to send replacement button shortcut: %s",
                    shortcut.c_str());
         }
         return 0;
@@ -923,7 +913,7 @@ static DWORD WINAPI ExecuteActionThreadProc(void* param) {
                           SW_SHOWNORMAL);
             return 0;
         }
-        WorkerLog(L"Replacement button ~search target not found: %s",
+        Wh_Log(L"Replacement button ~search target not found: %s",
                target.c_str());
         return 0;
     }
@@ -1042,10 +1032,18 @@ static void OpenDefaultAudioDeviceProperties() {
                   UriEncode(id));
 }
 
-static bool IsAirplaneModeLikelyEnabled() {
+static std::atomic<int> g_airplaneModeState{-1};
+static std::atomic<bool> g_airplaneModeQueryBusy{false};
+
+static bool QueryAirplaneModeLikelyEnabled() {
+    HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    const bool coInitialized = SUCCEEDED(hr);
+    if (hr == RPC_E_CHANGED_MODE) hr = S_OK;
+    if (FAILED(hr)) return false;
     try {
         auto access = wdr::Radio::RequestAccessAsync().get();
         if (access != wdr::RadioAccessStatus::Allowed) {
+            if (coInitialized) CoUninitialize();
             return false;
         }
 
@@ -1066,12 +1064,26 @@ static bool IsAirplaneModeLikelyEnabled() {
             }
         }
 
-        return sawWirelessRadio && !sawOnWirelessRadio;
+        const bool enabled = sawWirelessRadio && !sawOnWirelessRadio;
+        if (coInitialized) CoUninitialize();
+        return enabled;
     } catch (...) {
-        Wh_Log(L"Airplane mode state query failed: 0x%08X",
-               winrt::to_hresult());
+        if (coInitialized) CoUninitialize();
+        Wh_Log(L"Airplane mode state query failed: 0x%08X", winrt::to_hresult());
         return false;
     }
+}
+
+static void RefreshAirplaneModeAsync() {
+    if (g_airplaneModeState.load() >= 0 || g_airplaneModeQueryBusy.exchange(true)) return;
+    HANDLE thread = StartOwnedWorker([] {
+        const bool enabled = QueryAirplaneModeLikelyEnabled();
+        g_airplaneModeState.store(enabled ? 1 : 0);
+        g_airplaneModeQueryBusy.store(false);
+        RequestTrayRefresh();
+    });
+    if (thread) CloseHandle(thread);
+    else g_airplaneModeQueryBusy.store(false);
 }
 
 struct RadioChangeWork {
@@ -1109,6 +1121,7 @@ static DWORD WINAPI SetAirplaneModeLikelyEnabledThreadProc(void* param) {
         // A worker may finish after Windhawk has begun unloading the mod.
     }
     if (coInitialized) CoUninitialize();
+    g_airplaneModeState.store(enabled ? 0 : 1);
     RequestTrayRefresh(true);
     return 0;
 }
@@ -1177,7 +1190,7 @@ static void PositionWindowNearTaskbar(HWND hwnd, PCWSTR label) {
 
     HWND taskbar = FindWindowW(L"Shell_TrayWnd", nullptr);
     if (!taskbar) {
-        WorkerLog(L"%s placement: Shell_TrayWnd not found.", label);
+        Wh_Log(L"%s placement: Shell_TrayWnd not found.", label);
         return;
     }
 
@@ -1185,7 +1198,7 @@ static void PositionWindowNearTaskbar(HWND hwnd, PCWSTR label) {
     RECT mixerRect{};
     if (!GetWindowRect(taskbar, &taskbarRect) ||
         !GetWindowRect(hwnd, &mixerRect)) {
-        WorkerLog(L"%s placement: failed to read window rectangles.", label);
+        Wh_Log(L"%s placement: failed to read window rectangles.", label);
         return;
     }
 
@@ -1193,7 +1206,7 @@ static void PositionWindowNearTaskbar(HWND hwnd, PCWSTR label) {
     MONITORINFO monitorInfo{};
     monitorInfo.cbSize = sizeof(monitorInfo);
     if (!GetMonitorInfoW(monitor, &monitorInfo)) {
-        WorkerLog(L"sndvol placement: GetMonitorInfoW failed.");
+        Wh_Log(L"sndvol placement: GetMonitorInfoW failed.");
         return;
     }
 
@@ -1258,7 +1271,7 @@ static void PositionWindowNearTaskbar(HWND hwnd, PCWSTR label) {
 
     SetWindowPos(hwnd, HWND_TOP, x, y, 0, 0,
                  SWP_NOSIZE | SWP_NOACTIVATE | SWP_ASYNCWINDOWPOS);
-    WorkerLog(L"%s placement: moved hwnd=%p to %d,%d near taskbar rect=%ld,%ld,%ld,%ld monitor=%ldx%ld.",
+    Wh_Log(L"%s placement: moved hwnd=%p to %d,%d near taskbar rect=%ld,%ld,%ld,%ld monitor=%ldx%ld.",
            label, hwnd, x, y, taskbarRect.left, taskbarRect.top,
            taskbarRect.right, taskbarRect.bottom, monitorWidth, monitorHeight);
 }
@@ -1278,10 +1291,15 @@ static DWORD WINAPI PositionWindowNearTaskbarThreadProc(void* param) {
     }
 
     DWORD pid = GetProcessId(process);
-    WaitForInputIdle(process, 2000);
+    // Keep teardown responsive: placement is cosmetic and must yield quickly
+    // once the mod is unloading.
+    for (int i = 0; i < 20 && !g_unloading; ++i) {
+        const DWORD idle = WaitForInputIdle(process, 100);
+        if (idle == 0 || idle == WAIT_FAILED) break;
+    }
 
     HWND hwnd = nullptr;
-    for (int i = 0; i < 40 && !hwnd; ++i) {
+    for (int i = 0; i < 40 && !hwnd && !g_unloading; ++i) {
         hwnd = FindVisibleWindowByPid(pid);
         if (!hwnd) {
             Sleep(50);
@@ -1291,7 +1309,7 @@ static DWORD WINAPI PositionWindowNearTaskbarThreadProc(void* param) {
     if (hwnd) {
         PositionWindowNearTaskbar(hwnd, label);
     } else {
-        WorkerLog(L"%s placement: no visible top-level window found for pid=%lu.",
+        Wh_Log(L"%s placement: no visible top-level window found for pid=%lu.",
                label, pid);
     }
 
@@ -3312,15 +3330,17 @@ static void EnsureUpdateTimer() {
         if (!lastFallback || now - lastFallback >= 5000) {
             lastFallback = now;
             UpdateDynamicXamlIcons();
+            // SizeChanged and StartTaskbar handle normal rebuilds. Keep this
+            // expensive tree walk as a low-frequency recovery fallback.
+            if (!RefreshTaskbarLayoutIfRebuilt()) {
+                RefreshInjectedButtonMetrics();
+            }
+            if (g_originalGroupedButton)
+                HideOriginalGroupedButton(g_originalGroupedButton);
         } else if (g_networkIcon.primary &&
                    g_displayNetworkState.kind == NetworkKind::WifiConnecting) {
             g_networkIcon.primary.Glyph(GetNetworkGlyph(g_displayNetworkState));
         }
-        if (!RefreshTaskbarLayoutIfRebuilt()) {
-            RefreshInjectedButtonMetrics();
-        }
-        if (g_originalGroupedButton)
-            HideOriginalGroupedButton(g_originalGroupedButton);
     });
         g_timerEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
             if (auto source = weakSource.get()) source.Tick(eventToken);
@@ -3701,7 +3721,7 @@ static MediaTooltipInfo GetCurrentlyPlayingMediaInfo() {
                     }
                 }
             } catch (...) {
-                WorkerLog(L"Currently playing tooltip query failed: 0x%08X",
+                Wh_Log(L"Currently playing tooltip query failed: 0x%08X",
                        winrt::to_hresult());
             }
             if (initialized) winrt::uninit_apartment();
@@ -3892,6 +3912,12 @@ static void UpdateSeparateBatteryButton() {
 }
 
 static void UpdateDynamicXamlIcons() {
+    static bool updating = false;
+    // COM calls can pump a queued refresh while the taskbar ASTA is busy.
+    // Never re-enter XAML mutation partway through an earlier update.
+    if (updating) return;
+    struct ResetUpdating { bool& value; ~ResetUpdating() { value = false; } } reset{updating};
+    updating = true;
     try {
         RefreshEnergySaverStateAsync();
         RefreshNativeTrayStyling();
@@ -4030,6 +4056,7 @@ static LRESULT CALLBACK TrayRefreshWindowProc(HWND hwnd, UINT message,
         ReleaseSRWLockExclusive(&g_refreshLock);
         if (g_unloading) return 0;
         if (pending & 2) {
+            g_airplaneModeState.store(-1);
             for (auto& query : g_btQueries) {
                 if (query) { try { query.Cancel(); } catch (...) {} }
                 query = nullptr;
@@ -4037,6 +4064,7 @@ static LRESULT CALLBACK TrayRefreshWindowProc(HWND hwnd, UINT message,
             // Keep the last snapshot visible until the replacement query completes.
             g_btQueryTick = 0;
         }
+        RefreshAirplaneModeAsync();
         UpdateDynamicXamlIcons();
         // One follow-up allows Windows' asynchronous state propagation to settle.
         if (message == kRefreshMessage) SetTimer(hwnd, 1, 150, nullptr);
@@ -4385,8 +4413,7 @@ static void ExecuteTrayContextCommand(TrayContextCommand command) {
                 g_settings.speedTestUrl.starts_with(L"http://")) {
                 ExecuteAction(L"web:" + g_settings.speedTestUrl);
             } else {
-                MessageBoxW(nullptr, L"Enter a full http:// or https:// address in the Speed test website setting.",
-                            L"Speed test website", MB_OK | MB_ICONINFORMATION);
+                Wh_Log(L"Speed test custom URL is invalid; expected http:// or https://.");
             }
             break;
         case TrayContextCommand::NetworkSettings:
@@ -4396,7 +4423,7 @@ static void ExecuteTrayContextCommand(TrayContextCommand command) {
             ExecuteAction(L"ms-settings:network-airplanemode");
             break;
         case TrayContextCommand::NetworkToggleAirplaneMode:
-            SetAirplaneModeLikelyEnabled(!IsAirplaneModeLikelyEnabled());
+            SetAirplaneModeLikelyEnabled(g_airplaneModeState.load() != 1);
             break;
         case TrayContextCommand::NetworkFirewallProtection:
             ExecuteAction(L"windowsdefender://Network/");
@@ -4496,7 +4523,8 @@ static void AppendWin32SoundContextMenu(
 }
 
 static void AppendWin32NetworkContextMenu(HMENU menu) {
-    const bool airplaneEnabled = IsAirplaneModeLikelyEnabled();
+    RefreshAirplaneModeAsync();
+    const bool airplaneEnabled = g_airplaneModeState.load() == 1;
     AppendWin32ContextItem(menu, L"Troubleshoot network problems",
                            TrayContextCommand::NetworkTroubleshoot);
     AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
@@ -4670,7 +4698,8 @@ static void AppendWinUiSoundContextMenu(wuc::MenuFlyout const& flyout) {
 
 static void AppendWinUiNetworkContextMenu(wuc::MenuFlyout const& flyout) {
     auto items = flyout.Items();
-    const bool airplaneEnabled = IsAirplaneModeLikelyEnabled();
+    RefreshAirplaneModeAsync();
+    const bool airplaneEnabled = g_airplaneModeState.load() == 1;
 
     AppendWinUiContextItem(items, L"Troubleshoot network problems",
                            TrayContextCommand::NetworkTroubleshoot, L"\xE90F");
@@ -4811,8 +4840,7 @@ nextOperation:
     }
     if (initialized) winrt::uninit_apartment();
     if (FAILED(error) && work.operation) {
-        MessageBoxW(nullptr, L"Windows could not change the battery setting. Check Power and sleep settings.",
-                    L"Battery settings", MB_OK | MB_ICONWARNING);
+        Wh_Log(L"Windows could not change the battery setting: 0x%08X", error);
     }
     AcquireSRWLockExclusive(&g_energySaverQueueLock);
     if (g_batteryOperationsQueued) {
@@ -4957,8 +4985,6 @@ static void AppendWinUiBatteryContextMenu(wuc::MenuFlyout const& flyout) {
                 const DWORD error = setMode ? setMode(&mode) : ERROR_NOT_SUPPORTED;
                 if (error != ERROR_SUCCESS) {
                     Wh_Log(L"Changing power mode failed: %lu", error);
-                    MessageBoxW(nullptr, L"Windows could not change the power mode. Check Power and sleep settings.",
-                                L"Power mode", MB_OK | MB_ICONWARNING);
                 }
             });
         g_uiEventRevokers.push_back([weakSource = winrt::make_weak(eventSource), eventToken] {
@@ -5240,108 +5266,68 @@ static std::vector<ButtonKind> GetVisibleButtonOrder() {
     return order;
 }
 
-static int g_lastOpenedFlyoutButton = -1;
-static ULONGLONG g_lastOpenedFlyoutTick = 0;
-constexpr ULONGLONG kFlyoutToggleLifetimeMs = 5 * 60 * 1000;
-
-struct ShellFlyoutSearch {
-    HWND hwnd = nullptr;
-};
-
-static bool IsShellFlyoutHostProcess(DWORD processId) {
-    HANDLE process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE,
-                                 processId);
-    if (!process) {
-        return false;
-    }
-
-    wchar_t path[MAX_PATH]{};
-    DWORD length = ARRAYSIZE(path);
-    const bool queried = QueryFullProcessImageNameW(process, 0, path, &length);
-    CloseHandle(process);
-    if (!queried) {
-        return false;
-    }
-
-    PCWSTR fileName = wcsrchr(path, L'\\');
-    fileName = fileName ? fileName + 1 : path;
-    return _wcsicmp(fileName, L"ShellHost.exe") == 0 ||
-           _wcsicmp(fileName, L"ShellExperienceHost.exe") == 0;
-}
-
-static BOOL CALLBACK FindShellFlyoutWindowProc(HWND hwnd, LPARAM lParam) {
-    auto* search = reinterpret_cast<ShellFlyoutSearch*>(lParam);
-    if (!search || !IsWindowVisible(hwnd) || IsIconic(hwnd)) {
-        return TRUE;
-    }
-
-    wchar_t className[128]{};
-    wchar_t title[256]{};
-    GetClassNameW(hwnd, className, ARRAYSIZE(className));
-    GetWindowTextW(hwnd, title, ARRAYSIZE(title));
-
-    DWORD processId = 0;
-    GetWindowThreadProcessId(hwnd, &processId);
-    if (!processId || !IsShellFlyoutHostProcess(processId)) {
-        return TRUE;
-    }
-
-    RECT rect{};
-    GetWindowRect(hwnd, &rect);
-    const int width = rect.right - rect.left;
-    const int height = rect.bottom - rect.top;
-    if (width < 100 || height < 100) {
-        return TRUE;
-    }
-
-    Wh_Log(L"Visible shell flyout candidate hwnd=%p pid=%lu class=%s title=[%s] rect=%ld,%ld %ldx%ld.",
-           hwnd, processId, className, title, rect.left, rect.top, width,
-           height);
-    search->hwnd = hwnd;
-    return FALSE;
-}
-
-static HWND FindVisibleShellFlyoutWindow() {
-    ShellFlyoutSearch search;
-    EnumWindows(FindShellFlyoutWindowProc,
-                reinterpret_cast<LPARAM>(&search));
-    return search.hwnd;
-}
-
-static void DismissFlyout(HWND flyoutWindow) {
-    // Do not inject Escape system-wide: foreground activation can fail and
-    // deliver it to an unrelated app. Ask the selected shell flyout to close.
-    if (flyoutWindow) PostMessageW(flyoutWindow, WM_CLOSE, 0, 0);
-}
-
 static bool SoundUsesQuickSettings() {
     return _wcsicmp(g_settings.soundClickAction.c_str(), L"sndvol") != 0;
 }
 
+static std::atomic<HWND> g_openedTrayFlyout[5]{};
+static std::atomic<ULONGLONG> g_openedTrayFlyoutTick[5]{};
+static constexpr ULONGLONG kFlyoutToggleLifetimeMs = 5 * 60 * 1000;
+
+static bool IsRecordedTrayFlyout(HWND hwnd) {
+    if (!hwnd || !IsWindow(hwnd)) return false;
+    wchar_t className[128]{};
+    if (!GetClassNameW(hwnd, className, ARRAYSIZE(className)) ||
+        _wcsicmp(className, L"Windows.UI.Core.CoreWindow") != 0) return false;
+    DWORD processId{};
+    GetWindowThreadProcessId(hwnd, &processId);
+    HANDLE process = processId ? OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, processId) : nullptr;
+    if (!process) return false;
+    wchar_t path[MAX_PATH]{};
+    DWORD length = ARRAYSIZE(path);
+    const bool ok = QueryFullProcessImageNameW(process, 0, path, &length);
+    CloseHandle(process);
+    PCWSTR name = ok ? wcsrchr(path, L'\\') : nullptr;
+    name = name ? name + 1 : path;
+    return ok && (_wcsicmp(name, L"ShellHost.exe") == 0 ||
+                  _wcsicmp(name, L"ShellExperienceHost.exe") == 0);
+}
+
+static void CaptureOpenedTrayFlyoutAsync(ButtonKind kind) {
+    const size_t index = static_cast<size_t>(kind);
+    g_openedTrayFlyout[index] = nullptr;
+    HANDLE thread = StartOwnedWorker([kind, index] {
+        // The URI action creates the flyout asynchronously. Record only the
+        // foreground ShellHost CoreWindow created by this click; never scan
+        // arbitrary windows later when toggling it closed.
+        for (int i = 0; i < 8 && !g_unloading; ++i) {
+            Sleep(25);
+            HWND hwnd = GetForegroundWindow();
+            if (IsRecordedTrayFlyout(hwnd)) {
+                g_openedTrayFlyout[index] = hwnd;
+                g_openedTrayFlyoutTick[index] = GetTickCount64();
+                return;
+            }
+        }
+    });
+    if (thread) CloseHandle(thread);
+}
+
 static bool HandleTrayButtonClick(ButtonKind kind) {
-    const int buttonIndex = static_cast<int>(kind);
-    const ULONGLONG now = GetTickCount64();
-    const bool canToggle = kind != ButtonKind::Sound || SoundUsesQuickSettings();
     if (kind == ButtonKind::Battery && g_settings.batteryCustomAction) {
         ExecuteAction(g_settings.batteryAction);
         return true;
     }
 
-    if (canToggle && g_lastOpenedFlyoutButton == buttonIndex &&
-        now - g_lastOpenedFlyoutTick <= kFlyoutToggleLifetimeMs) {
-        if (HWND flyout = FindVisibleShellFlyoutWindow()) {
-            Wh_Log(L"Repeated %d tray click: dismissing visible shell flyout %p.",
-                   buttonIndex, flyout);
-            DismissFlyout(flyout);
-            g_lastOpenedFlyoutButton = -1;
-            g_lastOpenedFlyoutTick = 0;
-            return true;
-        }
-
-        // The panel was dismissed independently, so this click should open it
-        // again rather than treating a stale last-click record as a toggle.
-        g_lastOpenedFlyoutButton = -1;
-        g_lastOpenedFlyoutTick = 0;
+    const size_t index = static_cast<size_t>(kind);
+    const bool canToggle = kind != ButtonKind::Sound || SoundUsesQuickSettings();
+    const HWND opened = g_openedTrayFlyout[index].load();
+    if (canToggle && GetTickCount64() - g_openedTrayFlyoutTick[index].load() <=
+            kFlyoutToggleLifetimeMs && IsRecordedTrayFlyout(opened)) {
+        PostMessageW(opened, WM_CLOSE, 0, 0);
+        g_openedTrayFlyout[index] = nullptr;
+        g_openedTrayFlyoutTick[index] = 0;
+        return true;
     }
 
     if (kind == ButtonKind::Bluetooth) {
@@ -5356,13 +5342,8 @@ static bool HandleTrayButtonClick(ButtonKind kind) {
         OpenSound();
     }
 
-    if (canToggle) {
-        g_lastOpenedFlyoutButton = buttonIndex;
-        g_lastOpenedFlyoutTick = now;
-    } else {
-        g_lastOpenedFlyoutButton = -1;
-        g_lastOpenedFlyoutTick = 0;
-    }
+    if (canToggle) CaptureOpenedTrayFlyoutAsync(kind);
+
     return true;
 }
 
@@ -6254,9 +6235,10 @@ static void ApplyXamlButtonsWithRetry() {
 }
 
 static void RemoveXamlButtons() {
-    DestroyTrayRefreshWindow();
-    RevokeEvents(g_timerEventRevokers);
-    RevokeEvents(g_uiEventRevokers);
+    try { DestroyTrayRefreshWindow(); }
+    catch (...) { Wh_Log(L"DestroyTrayRefreshWindow error: 0x%08X", winrt::to_hresult()); }
+    try { RevokeEvents(g_timerEventRevokers); RevokeEvents(g_uiEventRevokers); }
+    catch (...) { Wh_Log(L"Event revocation error: 0x%08X", winrt::to_hresult()); }
     try { if (g_activeTrayContextFlyout) g_activeTrayContextFlyout.Hide(); } catch (...) {}
     g_activeTrayContextFlyout = nullptr;
     for (auto& query : g_btQueries) {
@@ -6346,16 +6328,23 @@ using RunFromWindowThreadProc_t = void(WINAPI*)(PVOID);
 static UINT g_runFromWindowThreadRegisteredMsg = 0;
 
 static void WINAPI ApplyXamlButtonsProc(PVOID) {
-    ApplyXamlButtonsWithRetry();
+    try { ApplyXamlButtonsWithRetry(); }
+    catch (...) { Wh_Log(L"ApplyXamlButtonsProc error: 0x%08X", winrt::to_hresult()); }
 }
 
 static void WINAPI RemoveXamlButtonsProc(PVOID) {
-    RemoveXamlButtons();
+    try { RemoveXamlButtons(); }
+    catch (...) { Wh_Log(L"RemoveXamlButtonsProc error: 0x%08X", winrt::to_hresult()); }
 }
 
 static void WINAPI ReapplyXamlButtonsProc(PVOID) {
-    RemoveXamlButtons();
-    ApplyXamlButtonsWithRetry();
+    try { RemoveXamlButtons(); ApplyXamlButtonsWithRetry(); }
+    catch (...) { Wh_Log(L"ReapplyXamlButtonsProc error: 0x%08X", winrt::to_hresult()); }
+}
+
+static void WINAPI ReloadSettingsAndReapplyProc(PVOID) {
+    try { LoadSettings(); RemoveXamlButtons(); ApplyXamlButtonsWithRetry(); }
+    catch (...) { Wh_Log(L"ReloadSettingsAndReapplyProc error: 0x%08X", winrt::to_hresult()); }
 }
 
 static LRESULT CALLBACK RunFromWindowThreadHookProc(int code,
@@ -6483,16 +6472,16 @@ void Wh_ModAfterInit() {
 }
 
 void Wh_ModSettingsChanged() {
-    LoadSettings();
     g_taskbarWnd = FindCurrentProcessTaskbarWnd();
     if (g_taskbarWnd) {
-        RunFromWindowThread(g_taskbarWnd, ReapplyXamlButtonsProc, nullptr);
+        RunFromWindowThread(g_taskbarWnd, ReloadSettingsAndReapplyProc, nullptr);
     }
 }
 
 void Wh_ModUninit() {
     g_unloading = true;
-    g_taskbarWnd = FindCurrentProcessTaskbarWnd();
+    if (HWND currentTaskbar = FindCurrentProcessTaskbarWnd())
+        g_taskbarWnd = currentTaskbar;
     bool removed = false;
     if (g_taskbarWnd) {
         removed = RunFromWindowThread(g_taskbarWnd, RemoveXamlButtonsProc, nullptr);
