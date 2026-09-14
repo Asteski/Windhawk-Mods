@@ -5274,11 +5274,8 @@ static std::atomic<HWND> g_openedTrayFlyout[5]{};
 static std::atomic<ULONGLONG> g_openedTrayFlyoutTick[5]{};
 static constexpr ULONGLONG kFlyoutToggleLifetimeMs = 5 * 60 * 1000;
 
-static bool IsRecordedTrayFlyout(HWND hwnd) {
+static bool IsShellHostedWindow(HWND hwnd) {
     if (!hwnd || !IsWindow(hwnd)) return false;
-    wchar_t className[128]{};
-    if (!GetClassNameW(hwnd, className, ARRAYSIZE(className)) ||
-        _wcsicmp(className, L"Windows.UI.Core.CoreWindow") != 0) return false;
     DWORD processId{};
     GetWindowThreadProcessId(hwnd, &processId);
     HANDLE process = processId ? OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, processId) : nullptr;
@@ -5290,7 +5287,25 @@ static bool IsRecordedTrayFlyout(HWND hwnd) {
     PCWSTR name = ok ? wcsrchr(path, L'\\') : nullptr;
     name = name ? name + 1 : path;
     return ok && (_wcsicmp(name, L"ShellHost.exe") == 0 ||
-                  _wcsicmp(name, L"ShellExperienceHost.exe") == 0);
+                  _wcsicmp(name, L"ShellExperienceHost.exe") == 0 ||
+                  _wcsicmp(name, L"explorer.exe") == 0);
+}
+
+static bool IsRecordedTrayFlyout(HWND hwnd) {
+    wchar_t className[128]{};
+    return IsShellHostedWindow(hwnd) &&
+           GetClassNameW(hwnd, className, ARRAYSIZE(className)) &&
+           _wcsicmp(className, L"Windows.UI.Core.CoreWindow") == 0;
+}
+
+static bool DismissForegroundShellFlyout() {
+    HWND foreground = GetForegroundWindow();
+    if (!IsShellHostedWindow(foreground)) return false;
+    // Target Escape to the foreground shell window only. Unlike SendInput,
+    // this cannot affect the user's active application.
+    PostMessageW(foreground, WM_KEYDOWN, VK_ESCAPE, 1);
+    PostMessageW(foreground, WM_KEYUP, VK_ESCAPE, 0xC0000001);
+    return true;
 }
 
 static void CaptureOpenedTrayFlyoutAsync(ButtonKind kind) {
@@ -5323,11 +5338,17 @@ static bool HandleTrayButtonClick(ButtonKind kind) {
     const bool canToggle = kind != ButtonKind::Sound || SoundUsesQuickSettings();
     const HWND opened = g_openedTrayFlyout[index].load();
     if (canToggle && GetTickCount64() - g_openedTrayFlyoutTick[index].load() <=
-            kFlyoutToggleLifetimeMs && IsRecordedTrayFlyout(opened)) {
-        PostMessageW(opened, WM_CLOSE, 0, 0);
-        g_openedTrayFlyout[index] = nullptr;
-        g_openedTrayFlyoutTick[index] = 0;
-        return true;
+            kFlyoutToggleLifetimeMs) {
+        if (IsRecordedTrayFlyout(opened)) {
+            PostMessageW(opened, WM_CLOSE, 0, 0);
+            g_openedTrayFlyout[index] = nullptr;
+            g_openedTrayFlyoutTick[index] = 0;
+            return true;
+        }
+        if (DismissForegroundShellFlyout()) {
+            g_openedTrayFlyoutTick[index] = 0;
+            return true;
+        }
     }
 
     if (kind == ButtonKind::Bluetooth) {
@@ -5342,7 +5363,10 @@ static bool HandleTrayButtonClick(ButtonKind kind) {
         OpenSound();
     }
 
-    if (canToggle) CaptureOpenedTrayFlyoutAsync(kind);
+    if (canToggle) {
+        g_openedTrayFlyoutTick[index] = GetTickCount64();
+        CaptureOpenedTrayFlyoutAsync(kind);
+    }
 
     return true;
 }
