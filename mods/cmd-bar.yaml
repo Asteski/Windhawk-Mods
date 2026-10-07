@@ -1,0 +1,148 @@
+items:
+  - type: button
+    name: Scan Folder
+    command: wiztree64.exe
+    parameters: . /admin=1
+    iconGlyph: ED37
+    hideIcon: false
+    separatorAfter: false
+    subItems:
+      - type: ''
+        name: ''
+        command: ''
+        parameters: ''
+        iconGlyph: ''
+        hideIcon: false
+        separatorAfter: false
+        subItems:
+          - name: ''
+            command: ''
+            parameters: ''
+            iconGlyph: ''
+            hideIcon: false
+            separatorAfter: false
+  - type: button
+    name: Disk Cleanup
+    command: cleanmgr.exe
+    parameters: ''
+    iconGlyph: EA99
+    hideIcon: false
+    separatorAfter: false
+    subItems:
+      - type: ''
+        name: ''
+        command: ''
+        parameters: ''
+        iconGlyph: ''
+        hideIcon: false
+        separatorAfter: false
+        subItems:
+          - name: ''
+            command: ''
+            parameters: ''
+            iconGlyph: ''
+            hideIcon: false
+            separatorAfter: false
+  - type: button
+    name: File Locksmith
+    command: C:\Users\Adams\OneDrive\Utilities\FileLocksmith\Run-FileLocksmithUI.exe
+    parameters: .
+    iconGlyph: E72E
+    hideIcon: false
+    separatorAfter: true
+    subItems:
+      - type: ''
+        name: ''
+        command: ''
+        parameters: ''
+        iconGlyph: ''
+        hideIcon: false
+        separatorAfter: false
+        subItems:
+          - name: ''
+            command: ''
+            parameters: ''
+            iconGlyph: ''
+            hideIcon: false
+            separatorAfter: false
+  - type: button
+    name: Open in Terminal
+    command: wt.exe
+    parameters: -d .
+    iconGlyph: E756
+    hideIcon: false
+    separatorAfter: false
+    subItems:
+      - type: ''
+        name: ''
+        command: ''
+        parameters: ''
+        iconGlyph: ''
+        hideIcon: false
+        separatorAfter: false
+        subItems:
+          - name: ''
+            command: ''
+            parameters: ''
+            iconGlyph: ''
+            hideIcon: false
+            separatorAfter: false
+  - type: button
+    name: Open in VS Code
+    command: code
+    parameters: .
+    iconGlyph: F133
+    hideIcon: false
+    separatorAfter: false
+    subItems:
+      - type: ''
+        name: ''
+        command: ''
+        parameters: ''
+        iconGlyph: ''
+        hideIcon: false
+        separatorAfter: false
+        subItems:
+          - name: ''
+            command: ''
+            parameters: ''
+            iconGlyph: ''
+            hideIcon: false
+            separatorAfter: false
+hideDefaultButtons:
+  new: true
+  separatorAfterNew: true
+  cut: false
+  copy: false
+  paste: false
+  rename: false
+  share: false
+  delete: false
+  separatorAfterDelete: false
+  sort: false
+  view: false
+  separatorAfterView: false
+  moreOptions: true
+  setAsBackground: true
+  rotateLeft: true
+  rotateRight: true
+  extractAll: false
+  details: true
+newPlus:
+  enabled: false
+  showLabel: false
+  buttonLabel: New
+  buttonIcon: ''
+  templateFolder: ''
+  showIcons: false
+  showTemplatesFolderItem: false
+  keepOriginalNewButton: false
+contextMenuItem:
+  enabled: false
+  useNilesoftShell: false
+  showLabel: false
+  buttonLabel: Context menu
+  buttonIcon: E8FD
+openMenuOnHover: false
+menuHoverDelay: 400
+itemSpacing: -1
