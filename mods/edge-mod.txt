@@ -1,0 +1,94 @@
+interface:
+  font_family: Segoe UI Variable Text
+  glyphs:
+    font_family: Segoe Fluent Icons
+    folder: ''
+    new_tab: ''
+    right: U+E76C
+    left: U+E76B
+    down: U+E70D
+    up: U+E70E
+menus:
+  text:
+    font_size: 14
+    show_shortcuts: false
+  icons:
+    show_icons: true
+  items:
+    item_vertical_margin: -1
+    between_item_vertical_padding: -1
+    item_horizontal_padding: -1
+    item_horizontal_border_padding: -1
+  corners:
+    preserve_rounded_corners: true
+    corner_radius: 8
+    auxiliary_corner_radius: 8
+    item_corner_radius: 8
+    use_bubble_border: 8
+  separators:
+    separator_height: -1
+    separator_upper_height: -1
+    separator_lower_height: -1
+    separator_spacing_height: -1
+    separator_thickness: -1
+    double_separator_height: -1
+    double_separator_thickness: -1
+    separator_horizontal_border_padding: -1
+    padded_separator_start_padding: -1
+  submenus:
+    show_delay: -1
+    arrow_size: -1
+    arrow_to_edge_padding: -1
+    submenu_horizontal_overlap: -1
+    scroll_arrow_height: -1
+  shadows:
+    hide_shadows: true
+    bubble_menu_shadow_elevation: -1
+    bubble_submenu_shadow_elevation: -1
+favorites:
+  appearance:
+    show_icons: false
+    font_size: -1
+    windows_folder_icon: false
+  layout:
+    center: true
+  behavior:
+    hide_editor_on_add: true
+    edit_immediately: 1
+address_bar:
+  font_size: -1
+  appearance:
+    corner_radius: 8
+    hide_border: true
+    hide_focus_outline: true
+    border_color: e8e8e8
+    background_color: ''
+  icons:
+    size: -1
+    reduction: 6
+tabs:
+  appearance:
+    common_color: false
+    active_title_weight: semibold
+    active_title_italic: false
+    active_title_underline: false
+    font_size: 8
+    active_title_style: bold
+    match_dark_toolbar: 1
+  layout:
+    center: true
+    close_buttons: show
+    icon_title_spacing: -1
+    hide_close_buttons: 1
+content:
+  hide_border: true
+  square_corners: true
+toolbar:
+  hide_extensions: false
+  hide_profile: true
+  hide_menu: 0
+extensions:
+  button_width: -1
+auxiliary_corner_radius: 8
+corner_radius: 8
+preserve_rounded_corners: 1
