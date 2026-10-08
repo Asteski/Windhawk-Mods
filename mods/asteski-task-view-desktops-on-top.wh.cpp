@@ -2,7 +2,7 @@
 // @id              asteski-task-view-desktops-on-top
 // @name            Task View: Desktops on Top
 // @description     Move virtual desktops above the window overview in Windows 11 Task View
-// @version         0.5.8
+// @version         0.5.9
 // @author          Asteski
 // @github          https://github.com/Asteski
 // @include         explorer.exe
@@ -46,7 +46,7 @@ Disable the mod to restore the saved layout properties.
 
 ## Status
 
-Version 0.5.8 is experimental. Compilation can be checked independently of
+Version 0.5.9 is experimental. Compilation can be checked independently of
 Explorer. Live layout, animations, desktop drag and drop, mixed DPI monitors,
 and compatibility with individual Windows builds still require testing.
 If Windows changes the Task View control names or layout, the mod leaves
@@ -56,6 +56,9 @@ unrecognized controls alone. Logs identify when a Task View root is found.
 
 // ==WindhawkModSettings==
 /*
+- desktopFrameMargin: 8
+  $name: Virtual desktop list frame margin (px)
+  $description: "Space around the desktop list frame. Default: 8. Range: 0–200. The top margin also includes the existing 32 px taskbar clearance."
 - scrollAnimationSpeed: 100
   $name: Desktop scroll animation speed (%)
   $description: "100 = current Windows speed (default). 50 = half speed. 200 = double speed. Range: 10–500. Applies to horizontal scrolling that reveals a desktop tile."
@@ -90,6 +93,7 @@ std::atomic<bool> g_stopping{false};
 std::atomic<bool> g_hooksReady{false};
 std::atomic_flag g_installing = ATOMIC_FLAG_INIT;
 std::atomic<int> g_scrollSpeed{100};
+std::atomic<int> g_desktopFrameMargin{8};
 std::atomic<int> g_nativeScrollDuration{250};
 thread_local bool g_insideLayout = false;
 thread_local bool g_insideScroll = false;
@@ -402,7 +406,8 @@ struct LayoutState {
         if (!std::isnan(desktopElement.Height())) desktopElement.Height(NAN);
         if (!std::isnan(windowElement.Height())) windowElement.Height(NAN);
         xaml::Thickness zero{};
-        xaml::Thickness desktopMargin{0, 32, 0, 0};
+        double frameMargin = g_desktopFrameMargin.load();
+        xaml::Thickness desktopMargin{frameMargin, 32 + frameMargin, frameMargin, frameMargin};
         if (!SameMargin(desktopElement.Margin(), desktopMargin)) desktopElement.Margin(desktopMargin);
         if (!SameMargin(windowElement.Margin(), zero)) windowElement.Margin(zero);
         PinNewDesktopButton(desktopElement);
@@ -878,6 +883,7 @@ HWND WINAPI CreateWindowExW_Hook(DWORD exStyle, LPCWSTR className,
 }  // namespace
 
 BOOL Wh_ModInit() {
+    g_desktopFrameMargin = (std::max)(0, (std::min)(Wh_GetIntSetting(L"desktopFrameMargin"), 200));
     int speed = Wh_GetIntSetting(L"scrollAnimationSpeed");
     g_scrollSpeed = (std::max)(10, (std::min)(speed > 0 ? speed : 100, 500));
     g_nativeScrollDuration = (std::max)(40, (std::min)(Wh_GetIntValue(L"nativeScrollDurationMs", 250), 2000));
@@ -926,6 +932,7 @@ void Wh_ModAfterInit() {
 }
 
 void Wh_ModSettingsChanged() {
+    g_desktopFrameMargin = (std::max)(0, (std::min)(Wh_GetIntSetting(L"desktopFrameMargin"), 200));
     int speed = Wh_GetIntSetting(L"scrollAnimationSpeed");
     g_scrollSpeed = (std::max)(10, (std::min)(speed > 0 ? speed : 100, 500));
 }
