@@ -2,7 +2,7 @@
 // @id              asteski-task-view-desktops-on-top
 // @name            Task View: Desktops on Top
 // @description     Move virtual desktops above the window overview in Windows 11 Task View
-// @version         0.5.9
+// @version         0.7.7
 // @author          Asteski
 // @github          https://github.com/Asteski
 // @include         explorer.exe
@@ -46,7 +46,7 @@ Disable the mod to restore the saved layout properties.
 
 ## Status
 
-Version 0.5.9 is experimental. Compilation can be checked independently of
+Version 0.7.7 is experimental. Compilation can be checked independently of
 Explorer. Live layout, animations, desktop drag and drop, mixed DPI monitors,
 and compatibility with individual Windows builds still require testing.
 If Windows changes the Task View control names or layout, the mod leaves
@@ -56,6 +56,29 @@ unrecognized controls alone. Logs identify when a Task View root is found.
 
 // ==WindhawkModSettings==
 /*
+- closeOnWindowsRelease: true
+  $name: Close desktop list when Windows key is released
+  $description: "List-only modes: hold Windows while using the list, then release it to close. Does not affect Alt+Tab or full Task View."
+- disableListAnimations: false
+  $name: Disable animations in desktop-list-only modes
+- hideNewDesktop: false
+  $name: Hide New desktop button
+- desktopFrameWidth: "full"
+  $name: Desktop list background width
+  $options:
+  - full: Full available width
+  - fit: Fit desktop tiles
+  - percent: Percentage of screen
+- desktopFramePercent: 70
+  $name: Desktop list width (% of screen)
+  $description: "Used with Percentage of screen. Range: 10–100. Overflowing desktop tiles remain scrollable."
+- viewMode: "0"
+  $name: Task View mode (experimental)
+  $options:
+  - "0": Full Task View
+  - "1": Desktop list in the center
+  - "2": Desktop list at the top
+  $description: "List-only modes hide Task View's window overview and background. Reopen Task View after changing this setting."
 - desktopFrameMargin: 8
   $name: Virtual desktop list frame margin (px)
   $description: "Space around the desktop list frame. Default: 8. Range: 0–200. The top margin also includes the existing 32 px taskbar clearance."
@@ -72,9 +95,13 @@ unrecognized controls alone. Logs identify when a Task View root is found.
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.UI.Xaml.h>
 #include <winrt/Windows.UI.Xaml.Controls.h>
+#include <winrt/Windows.UI.Xaml.Controls.Primitives.h>
+#include <winrt/Windows.UI.Input.h>
 #include <winrt/Windows.UI.Xaml.Data.h>
 #include <winrt/Windows.UI.Xaml.Media.h>
 #include <winrt/Windows.UI.Xaml.Media.Animation.h>
+#include <winrt/Windows.UI.Xaml.Input.h>
+#include <winrt/Windows.System.h>
 
 #include <atomic>
 #include <cmath>
@@ -94,6 +121,22 @@ std::atomic<bool> g_hooksReady{false};
 std::atomic_flag g_installing = ATOMIC_FLAG_INIT;
 std::atomic<int> g_scrollSpeed{100};
 std::atomic<int> g_desktopFrameMargin{8};
+std::atomic<int> g_viewMode{0};
+std::atomic<bool> g_hideNewDesktop{false};
+std::atomic<int> g_frameWidthMode{0};
+std::atomic<int> g_framePercent{70};
+std::atomic<bool> g_disableListAnimations{false};
+std::atomic<bool> g_closeOnWindowsRelease{true};
+void LoadFrameSettings() {
+    g_closeOnWindowsRelease = Wh_GetIntSetting(L"closeOnWindowsRelease") != 0;
+    g_disableListAnimations = Wh_GetIntSetting(L"disableListAnimations") != 0;
+    g_hideNewDesktop = Wh_GetIntSetting(L"hideNewDesktop") != 0;
+    auto width = Wh_GetStringSetting(L"desktopFrameWidth");
+    g_frameWidthMode = width && wcscmp(width, L"fit") == 0 ? 1 :
+                       width && wcscmp(width, L"percent") == 0 ? 2 : 0;
+    Wh_FreeStringSetting(width);
+    g_framePercent = (std::max)(10, (std::min)(Wh_GetIntSetting(L"desktopFramePercent"), 100));
+}
 std::atomic<int> g_nativeScrollDuration{250};
 thread_local bool g_insideLayout = false;
 thread_local bool g_insideScroll = false;
@@ -243,6 +286,43 @@ xaml::FrameworkElement FindDesktopTile(xaml::DependencyObject const& parent, int
 }
 
 struct LayoutState {
+    bool windowsHeld = false;
+    winrt::event_token releaseToken{};
+    bool DismissList() {
+        HWND foreground = GetForegroundWindow();
+        DWORD process = 0;
+        DWORD thread = GetWindowThreadProcessId(foreground, &process);
+        if (process != GetCurrentProcessId()) return false;
+        GUITHREADINFO info{sizeof(info)};
+        HWND target = foreground;
+        if (GetGUIThreadInfo(thread, &info) && info.hwndFocus) target = info.hwndFocus;
+        PostMessageW(target, WM_KEYDOWN, VK_ESCAPE, 0x00010001);
+        PostMessageW(target, WM_KEYUP, VK_ESCAPE, 0xC0010001);
+        return true;
+    }
+    void Navigate(int direction) {
+        auto stack = desktopStack.get();
+        auto list = FindNamedChild<controls::ListView>(stack, L"DesktopsList");
+        if (!list || list.Items().Size() == 0) return;
+        int count = static_cast<int>(list.Items().Size());
+        int index = list.SelectedIndex();
+        int next = index < 0 ? (direction < 0 ? count - 1 : 0) : (index + direction + count) % count;
+        list.SelectedIndex(next);
+        list.ScrollIntoView(list.Items().GetAt(next));
+        if (auto container = list.ContainerFromIndex(next).try_as<controls::Control>())
+            container.Focus(xaml::FocusState::Keyboard);
+        Wh_SetIntValue(L"lastTabDesktop", next);
+    }
+    winrt::event_token keyToken{};
+    winrt::event_token outsideClickToken{};
+    SavedProperty originalInputBackground;
+    bool inputBackgroundApplied = false;
+    struct ModeElement {
+        winrt::weak_ref<xaml::FrameworkElement> element;
+        SavedProperty opacity;
+        SavedProperty hitTest;
+    };
+    std::vector<ModeElement> modeElements;
     std::vector<std::shared_ptr<ScrollMotion>> scrollMotions;
     DWORD threadId;
     winrt::weak_ref<xaml::FrameworkElement> root;
@@ -281,7 +361,8 @@ struct LayoutState {
         auto button = newDesktopButton.get();
         if (!scroll || !stack || !host || !button || host.ActualWidth() <= 0) return;
         auto buttonMargin = button.Margin();
-        double reservedRight = button.ActualWidth() + buttonMargin.Left + buttonMargin.Right;
+        double reservedRight = button.Visibility() == xaml::Visibility::Collapsed ? 0 :
+            button.ActualWidth() + buttonMargin.Left + buttonMargin.Right;
         double free = host.ActualWidth() - reservedRight - originalScrollMargin.Left -
                       originalScrollMargin.Right - stack.DesiredSize().Width;
         // Balance the fixed button's space on the left when the list fits.
@@ -335,7 +416,8 @@ struct LayoutState {
         for (auto const& property : {xaml::FrameworkElement::MarginProperty(),
                                     xaml::FrameworkElement::HeightProperty(),
                                     xaml::FrameworkElement::WidthProperty(),
-                                    xaml::FrameworkElement::VerticalAlignmentProperty()})
+                                    xaml::FrameworkElement::VerticalAlignmentProperty(),
+                                    xaml::UIElement::VisibilityProperty()})
             buttonProperties.emplace_back(button, property);
         originalButtonMargin = button.Margin();
         originalScrollMargin = scroll.Margin();
@@ -383,6 +465,27 @@ struct LayoutState {
 
         auto layoutGrid = grid.get();
         if (!layoutGrid) return;
+        int mode = g_viewMode.load();
+        // A transparent background receives clicks in the empty part of this
+        // XAML surface without changing the underlying desktop's appearance.
+        if (mode && !inputBackgroundApplied) {
+            layoutGrid.Background(media::SolidColorBrush(winrt::Windows::UI::Color{0, 0, 0, 0}));
+            inputBackgroundApplied = true;
+        } else if (!mode && inputBackgroundApplied) {
+            originalInputBackground.Restore(layoutGrid);
+            inputBackgroundApplied = false;
+        }
+        for (auto const& saved : modeElements) {
+            if (auto element = saved.element.get()) {
+                if (mode) {
+                    if (element.Opacity() != 0) element.Opacity(0);
+                    if (element.IsHitTestVisible()) element.IsHitTestVisible(false);
+                } else if (element.Opacity() == 0) {
+                    saved.opacity.Restore(element);
+                    saved.hitTest.Restore(element);
+                }
+            }
+        }
         if (!applied) {
             controls::RowDefinition desktopRow;
             controls::RowDefinition windowRow;
@@ -395,11 +498,13 @@ struct LayoutState {
             Wh_Log(L"Applied Task View desktop row 0 and window row 1");
         }
         if (controls::Grid::GetRow(desktopElement) != 0) controls::Grid::SetRow(desktopElement, 0);
-        if (controls::Grid::GetRowSpan(desktopElement) != 1) controls::Grid::SetRowSpan(desktopElement, 1);
+        int desktopSpan = mode == 1 ? 2 : 1;
+        if (controls::Grid::GetRowSpan(desktopElement) != desktopSpan) controls::Grid::SetRowSpan(desktopElement, desktopSpan);
         if (controls::Grid::GetRow(windowElement) != 1) controls::Grid::SetRow(windowElement, 1);
         if (controls::Grid::GetRowSpan(windowElement) != 1) controls::Grid::SetRowSpan(windowElement, 1);
-        if (desktopElement.VerticalAlignment() != xaml::VerticalAlignment::Top) {
-            desktopElement.VerticalAlignment(xaml::VerticalAlignment::Top);
+        auto alignment = mode == 1 ? xaml::VerticalAlignment::Center : xaml::VerticalAlignment::Top;
+        if (desktopElement.VerticalAlignment() != alignment) {
+            desktopElement.VerticalAlignment(alignment);
         }
         if (windowElement.VerticalAlignment() != xaml::VerticalAlignment::Stretch)
             windowElement.VerticalAlignment(xaml::VerticalAlignment::Stretch);
@@ -408,27 +513,61 @@ struct LayoutState {
         xaml::Thickness zero{};
         double frameMargin = g_desktopFrameMargin.load();
         xaml::Thickness desktopMargin{frameMargin, 32 + frameMargin, frameMargin, frameMargin};
+        if (mode == 1) desktopMargin.Top = frameMargin;
         if (!SameMargin(desktopElement.Margin(), desktopMargin)) desktopElement.Margin(desktopMargin);
         if (!SameMargin(windowElement.Margin(), zero)) windowElement.Margin(zero);
         PinNewDesktopButton(desktopElement);
         if (buttonPinned) {
-            if (desktopElement.HorizontalAlignment() != xaml::HorizontalAlignment::Stretch)
-                desktopElement.HorizontalAlignment(xaml::HorizontalAlignment::Stretch);
-            if (!std::isnan(desktopElement.Width())) desktopElement.Width(NAN);
+            auto button = newDesktopButton.get();
+            if (button) {
+                auto visibility = g_hideNewDesktop ? xaml::Visibility::Collapsed : xaml::Visibility::Visible;
+                if (button.Visibility() != visibility) button.Visibility(visibility);
+            }
+            int widthMode = g_frameWidthMode.load();
+            auto horizontal = widthMode ? xaml::HorizontalAlignment::Center : xaml::HorizontalAlignment::Stretch;
+            if (desktopElement.HorizontalAlignment() != horizontal)
+                desktopElement.HorizontalAlignment(horizontal);
+            double width = NAN;
+            double available = (std::max)(0.0, layoutGrid.ActualWidth() - 2 * frameMargin);
+            if (widthMode == 2) width = (std::min)(available, layoutGrid.ActualWidth() * g_framePercent.load() / 100.0);
+            if (widthMode == 1) {
+                auto stack = desktopStack.get();
+                if (stack && stack.DesiredSize().Width > 0) {
+                    double extra = 0;
+                    if (button && !g_hideNewDesktop) {
+                        auto margin = button.Margin();
+                        extra = button.Width() + margin.Left + margin.Right;
+                    }
+                    // Balance the pinned button at the opposite edge as well.
+                    width = (std::min)(available, stack.DesiredSize().Width + 2 * extra + 16);
+                }
+            }
+            if ((std::isnan(width) && !std::isnan(desktopElement.Width())) ||
+                (!std::isnan(width) && desktopElement.Width() != width)) desktopElement.Width(width);
             MatchNewDesktopFrame();
             CenterDesktopList();
+
         }
         applied = true;
     }
 
     void Restore() {
         LayoutGuard guard;
+        media::CompositionTarget::Rendering(releaseToken);
         ClearAnimationTargets();
         for (auto const& motion : scrollMotions) motion->Stop();
         if (auto rootElement = root.get()) {
             rootElement.LayoutUpdated(layoutToken);
+            rootElement.KeyDown(keyToken);
+            rootElement.PointerPressed(outsideClickToken);
         }
         detached = true;
+        for (auto const& saved : modeElements) {
+            if (auto element = saved.element.get()) {
+                saved.opacity.Restore(element);
+                saved.hitTest.Restore(element);
+            }
+        }
         if (buttonPinned) {
             auto host = desktopGrid.get();
             auto stack = desktopStack.get();
@@ -461,6 +600,7 @@ struct LayoutState {
             for (auto const& property : windowProperties) property.Restore(windowElement);
         }
         if (auto layoutGrid = grid.get()) {
+            if (inputBackgroundApplied) originalInputBackground.Restore(layoutGrid);
             layoutGrid.RowDefinitions().Clear();
             for (auto const& row : originalRows) layoutGrid.RowDefinitions().Append(row);
         }
@@ -523,6 +663,64 @@ void ObserveElement(xaml::FrameworkElement const& element, bool walkAncestors = 
     state->desktops = winrt::make_weak(desktops);
     state->windows = winrt::make_weak(windows);
     state->grid = winrt::make_weak(grid);
+    state->originalInputBackground = SavedProperty(grid, controls::Panel::BackgroundProperty());
+    state->releaseToken = media::CompositionTarget::Rendering(
+        [weak = std::weak_ptr(state)](auto const&, auto const&) {
+            auto current = weak.lock();
+            if (!current || current->detached || g_stopping) return;
+            wchar_t name[128]{};
+            HWND foreground = GetForegroundWindow();
+            GetClassNameW(foreground, name, ARRAYSIZE(name));
+            DWORD process = 0;
+            DWORD foregroundThread = GetWindowThreadProcessId(foreground, &process);
+            if (g_viewMode == 0 || !g_closeOnWindowsRelease || process != GetCurrentProcessId() ||
+                foregroundThread != current->threadId ||
+                (wcscmp(name, L"XamlExplorerHostIslandWindow") != 0 &&
+                 wcscmp(name, L"MultitaskingViewFrame") != 0)) {
+                current->windowsHeld = false;
+                return;
+            }
+            bool held = ((GetAsyncKeyState(VK_LWIN) | GetAsyncKeyState(VK_RWIN)) & 0x8000) != 0;
+            if (held) current->windowsHeld = true;
+            else if (current->windowsHeld) {
+                current->windowsHeld = false;
+                if (current->DismissList()) Wh_SetIntValue(L"windowsReleaseDismissed", 1);
+            }
+        });
+    state->outsideClickToken = rootElement.PointerPressed(
+        [weak = std::weak_ptr(state)](auto const&, xaml::Input::PointerRoutedEventArgs const& args) {
+            if (g_stopping || g_viewMode == 0) return;
+            try {
+                auto current = weak.lock();
+                if (!current || current->detached) return;
+                auto desktops = current->desktops.get();
+                if (!desktops) return;
+                auto point = args.GetCurrentPoint(desktops).Position();
+                if (point.X >= 0 && point.X < desktops.ActualWidth() &&
+                    point.Y >= 0 && point.Y < desktops.ActualHeight()) return;
+                if (!current->DismissList()) return;
+                args.Handled(true);
+                Wh_SetIntValue(L"outsideClickDismissed", 1);
+            } catch (...) { Wh_Log(L"Outside-click dismissal failed: %08X", winrt::to_hresult()); }
+        });
+    state->keyToken = rootElement.KeyDown([weak = std::weak_ptr(state)](auto const&, xaml::Input::KeyRoutedEventArgs const& args) {
+        if (g_stopping || g_viewMode == 0 || args.Key() != winrt::Windows::System::VirtualKey::Tab) return;
+        try {
+            auto current = weak.lock();
+            if (!current) return;
+            auto stack = current->desktopStack.get();
+            if (!stack) return;
+            current->Navigate((GetAsyncKeyState(VK_SHIFT) & 0x8000) ? -1 : 1);
+            args.Handled(true);
+        } catch (...) {}
+    });
+    for (auto const* name : {L"SwitchItemListControl", L"BackgroundThumbnailHost", L"BackgroundDimmingLayer"}) {
+        if (auto element = FindNamedChild<xaml::FrameworkElement>(grid, name)) {
+            state->modeElements.push_back({winrt::make_weak(element),
+                SavedProperty(element, xaml::UIElement::OpacityProperty()),
+                SavedProperty(element, xaml::UIElement::IsHitTestVisibleProperty())});
+        }
+    }
     for (auto const& row : grid.RowDefinitions()) state->originalRows.push_back(row);
     for (auto const& property : {controls::Grid::RowProperty(), controls::Grid::RowSpanProperty(),
                                 xaml::FrameworkElement::VerticalAlignmentProperty(),
@@ -674,16 +872,26 @@ void ReverseDesktopSlide(animation::Timeline const& timeline) {
 using StoryboardBegin_t = HRESULT(WINAPI*)(void*);
 StoryboardBegin_t StoryboardBegin_Original;
 HRESULT WINAPI StoryboardBegin_Hook(void* self) {
+    bool skip = false;
     if (!g_stopping && !g_insideLayout) {
         try {
             animation::IStoryboard storyboardInterface{nullptr};
             winrt::copy_from_abi(storyboardInterface, self);
             auto storyboard = storyboardInterface.as<animation::Storyboard>();
+            skip = g_viewMode != 0 && g_disableListAnimations && !g_animationTargets.empty();
             { LayoutGuard guard; ReverseDesktopSlide(storyboard); }
             g_animationTargets.clear();
         } catch (...) {}
     }
-    return StoryboardBegin_Original(self);
+    auto result = StoryboardBegin_Original(self);
+    if (SUCCEEDED(result) && skip) {
+        try {
+            animation::IStoryboard storyboard{nullptr};
+            winrt::copy_from_abi(storyboard, self);
+            storyboard.as<animation::Storyboard>().SkipToFill();
+        } catch (...) {}
+    }
+    return result;
 }
 
 bool IsDesktopScroll(controls::ScrollViewer const& scroll) {
@@ -883,6 +1091,10 @@ HWND WINAPI CreateWindowExW_Hook(DWORD exStyle, LPCWSTR className,
 }  // namespace
 
 BOOL Wh_ModInit() {
+    LoadFrameSettings();
+    const wchar_t* viewMode = Wh_GetStringSetting(L"viewMode");
+    g_viewMode = (std::max)(0, (std::min)(viewMode ? _wtoi(viewMode) : 0, 2));
+    Wh_FreeStringSetting(viewMode);
     g_desktopFrameMargin = (std::max)(0, (std::min)(Wh_GetIntSetting(L"desktopFrameMargin"), 200));
     int speed = Wh_GetIntSetting(L"scrollAnimationSpeed");
     g_scrollSpeed = (std::max)(10, (std::min)(speed > 0 ? speed : 100, 500));
@@ -932,6 +1144,10 @@ void Wh_ModAfterInit() {
 }
 
 void Wh_ModSettingsChanged() {
+    LoadFrameSettings();
+    const wchar_t* viewMode = Wh_GetStringSetting(L"viewMode");
+    g_viewMode = (std::max)(0, (std::min)(viewMode ? _wtoi(viewMode) : 0, 2));
+    Wh_FreeStringSetting(viewMode);
     g_desktopFrameMargin = (std::max)(0, (std::min)(Wh_GetIntSetting(L"desktopFrameMargin"), 200));
     int speed = Wh_GetIntSetting(L"scrollAnimationSpeed");
     g_scrollSpeed = (std::max)(10, (std::min)(speed > 0 ? speed : 100, 500));
