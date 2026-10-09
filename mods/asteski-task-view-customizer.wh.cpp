@@ -2,7 +2,7 @@
 // @id              asteski-task-view-customizer
 // @name            Task View Customizer
 // @description     Customize Windows 11 Task View layouts, backgrounds, colors, desktop highlights and animations
-// @version         0.1.0
+// @version         0.1.1
 // @author          Asteski
 // @github          https://github.com/Asteski
 // @include         explorer.exe
@@ -1408,14 +1408,17 @@ HRESULT WINAPI DiagnosticsLookup_Hook(void* self, unsigned long long handle,
 }
 
 struct AnimationTarget {
-    winrt::weak_ref<animation::Timeline> timeline;
+    // Retain the projected timeline until restoration. The native storyboard
+    // can outlive GetPeer's WinRT wrapper, so a weak wrapper loses its target
+    // before Begin and leaves Windows' bottom-up slide unchanged.
+    animation::Timeline timeline{nullptr};
     winrt::weak_ref<xaml::FrameworkElement> target;
 };
 thread_local std::vector<AnimationTarget> g_animationTargets;
 void ClearAnimationTargets() { g_animationTargets.clear(); }
 bool IsTaskViewAnimation(animation::Timeline const& timeline) {
     for (auto const& tracked : g_animationTargets)
-        if (tracked.timeline.get() == timeline) return true;
+        if (tracked.timeline == timeline) return true;
     if (auto storyboard = timeline.try_as<animation::Storyboard>())
         for (auto const& child : storyboard.Children())
             if (IsTaskViewAnimation(child)) return true;
@@ -1447,11 +1450,11 @@ HRESULT WINAPI CoreSetTarget_Hook(void* self, void* target) {
                 if (!fullTaskView) return result;
                 ObserveElement(element, true);
                 for (auto it = g_animationTargets.begin(); it != g_animationTargets.end();) {
-                    auto existing = it->timeline.get();
+                    auto existing = it->timeline;
                     if (!existing || existing == timeline) it = g_animationTargets.erase(it);
                     else ++it;
                 }
-                g_animationTargets.push_back({winrt::make_weak(timeline), winrt::make_weak(element)});
+                g_animationTargets.push_back({timeline, winrt::make_weak(element)});
             }
         } catch (...) {}
     }
@@ -1467,7 +1470,7 @@ void ReverseDesktopSlide(animation::Timeline const& timeline) {
     auto keyframes = timeline.try_as<animation::DoubleAnimationUsingKeyFrames>();
     if (!keyframes) return;
     for (auto const& tracked : g_animationTargets) {
-        if (tracked.timeline.get() != timeline) continue;
+        if (tracked.timeline != timeline) continue;
         auto target = tracked.target.get();
         if (!target) return;
         std::lock_guard lock(g_statesMutex);
