@@ -21,15 +21,16 @@ without replacing the native controls.
 
 ## Task View modes
 
-- **Windows default**: keeps Windows' original layout with desktops at the
-  bottom and its native slide direction. This is the default mode.
-- **Full Task View with desktops at the top**: moves the desktop list above
+- **0 — Windows default**: shows the window overview above the desktop list
+  at the bottom, with the native slide direction. This is the default mode;
+  the mod's layout and appearance controls still apply.
+- **1 — Full Task View with desktops at the top**: moves the desktop list above
   the window overview, with entrance and exit motion from the top.
-- **No Task View with Desktop list in the top**: shows only the desktop list
+- **2 — No Task View with Desktop list in the top**: shows only the desktop list
   near the top of the screen.
-- **No Task View with Desktop list at the center**: shows only the desktop
+- **3 — No Task View with Desktop list at the center**: shows only the desktop
   list, centered on the screen.
-- **No Task View with Desktop list at the bottom**: shows only the desktop
+- **4 — No Task View with Desktop list at the bottom**: shows only the desktop
   list near the bottom, with entrance and exit motion from the bottom.
 
 The mod does not change Alt+Tab or the desktop preview shown when hovering
@@ -39,26 +40,30 @@ over the taskbar's Task View button.
 
 ### Task View behavior
 
-Choose the mode, hide the New desktop button, or close Task View in any mode when
-the Windows key is released. In list-only modes, Tab navigates desktops and
-clicking outside the list closes it. Key-release closing requires holding
-Windows while using the list, then releasing it.
+Choose the mode or hide the New desktop button in any mode.
+**Close Task View when Windows key is released** also applies to every mode:
+hold Windows while using Task View, then release it to close.
+Opening Task View by clicking its taskbar button keeps it open unless you
+hold and release Windows afterward. In list-only modes, Tab navigates
+desktops and clicking outside the list closes it.
 
 ### Desktop list layout
 
 Choose full width, fit the desktop tiles, or set a percentage of the screen.
-Adjust the frame margin. In customized layouts, the New desktop button stays
+Adjust the frame margin. These controls apply to **all five modes**, including
+Windows default. The New desktop button stays
 on the right while existing desktops scroll in the remaining space.
 The top layout includes 32 pixels of taskbar clearance. Windows default mode
-keeps native geometry instead of applying these sizing controls.
+keeps the desktop list at the bottom while applying these sizing controls.
 
 ### Background materials
 
-Choose **Native**, **Solid color**, **Acrylic**, **Clear**, or experimental
-**Mica**. Solid starts opaque and can be made translucent without blur.
+Choose **Native**, **Solid color**, **Acrylic**, or **Clear**. Solid starts
+opaque and can be made translucent without blur.
 Acrylic uses a live blurred backdrop and tint. Clear removes the material.
-You can also hide the list background in list-only modes or remove its
-outer border without removing desktop selection borders.
+**Disable desktop list background** hides the strip's background in every
+mode. **Remove desktop list background border** removes its outer frame
+without removing desktop selection borders.
 
 Material transparency accepts **0-100**. Zero keeps the material's default
 strength; 100 makes Native, Solid and Acrylic backgrounds clear. Values
@@ -66,13 +71,11 @@ outside that range use default strength; **-1** is the default setting.
 Thumbnails and labels remain visible, and native hover/focus brush alpha is
 preserved rather than turning faint highlights opaque.
 
-Mica uses a panel-local blurred wallpaper brush with color and luminosity
-blends. Its transparency control reduces tint/luminosity while keeping the
-wallpaper layer opaque. This is an experimental approximation of the native
-window material: its appearance can differ from apps using Windows' DWM
-Mica backdrop. It falls back to a solid color when unavailable.
 Windows can also use Acrylic's solid fallback when transparency is disabled.
 Hiding the desktop list background takes priority over material styling.
+The experimental Mica/local-blur option has been removed because it caused
+Explorer crashes. No custom panel-local blur implementation is currently
+provided.
 
 ### Desktop highlights
 
@@ -84,20 +87,22 @@ The highlight background opacity controls the hovered/selected desktop fill.
 Set background and border colors independently for dark and light mode.
 Accepts **native**, **accent**, **#RRGGBB**, or **#AARRGGBB**.
 `accent` follows the current Windows accent color; invalid values preserve
-native colors. Background colors also provide Acrylic/Mica tint and custom
+native colors. Background colors also provide Acrylic tint and custom
 highlight fill. Border colors apply to panel borders and custom highlights.
 
 ### Full-screen backdrop
 
 Keep the native backdrop, clear it, or use Acrylic with adjustable dimming.
-The list-only disable-blur option keeps the wallpaper clear even when
+**Disable full-screen background blur** applies to every mode, even when
 Windows transparency is enabled. It is independent of the desktop strip's
-background. An explicit backdrop choice overrides the disable-blur option.
+background. An explicit **Backdrop Blur** choice overrides this switch;
+choose **Off** to keep the full-screen backdrop clear.
 
 ### Animations and scrolling
 
-Disable entrance/exit animations in list-only modes independently of the
-background material. Adjust desktop reveal scrolling speed from 10-500%:
+**Disable Task View animations** applies to all modes independently of the
+background material. It also makes desktop reveal scrolling immediate.
+With animations enabled, adjust desktop reveal scrolling speed from 10-500%:
 100% uses Windows' current speed, 50% is half speed, and 200% is double speed.
 
 ## Installation and use
@@ -114,8 +119,8 @@ mod's settings. Windhawk downloads Windows debugging symbols when needed.
 ## Compatibility
 
 Designed for Windows 11. Windows builds can change Task View's internal
-control names and layout; unrecognized controls are left alone. Mica remains
-experimental. Mixed-DPI monitors, desktop drag and drop, and interactions
+control names and layout; unrecognized controls are left alone. Mixed-DPI
+monitors, desktop drag and drop, and interactions
 with other shell customization mods can depend on the Windows build.
 */
 // ==/WindhawkModReadme==
@@ -131,7 +136,7 @@ with other shell customization mods can depend on the Windows build.
       - "2": No Task View with Desktop list in the top
       - "3": No Task View with Desktop list at the center
       - "4": No Task View with Desktop list at the bottom
-      $description: "Windows default preserves the native layout and entrance direction; desktop-list sizing applies to other modes. List-only modes hide Task View's window overview and background. Reopen Task View after changing this setting."
+      $description: "Windows default places desktops at the bottom with the native entrance direction. Desktop-list sizing applies to all modes. List-only modes hide Task View's window overview and background. Reopen Task View after changing this setting."
     - hideNewDesktop: false
       $name: Hide New desktop button
     - closeOnWindowsRelease: false
@@ -160,17 +165,16 @@ with other shell customization mods can depend on the Windows build.
       - solid: Solid color (no blur)
       - acrylic: Acrylic
       - clear: Clear (no background)
-      - mica: Mica (wallpaper material, experimental)
-      $description: "Solid starts opaque; the transparency percentage can make it translucent without blur. Acrylic blurs content behind panels. Clear removes the material. Mica uses blurred wallpaper with a theme-colored tint, falling back to solid if unavailable. Disable desktop list background takes priority."
+      $description: "Solid starts opaque; the transparency percentage can make it translucent without blur. Acrylic blurs content behind panels. Clear removes the material. Disable desktop list background takes priority."
     - materialTransparency: -1
       $name: Task View background material transparency (%)
-      $description: "0 = default material strength; 100 = clear for Native, Solid and Acrylic. For Mica, reduces tint/luminosity to reveal more wallpaper while keeping the wallpaper layer opaque. Thumbnails and labels stay solid. Outside 0–100 uses default strength (-1). Hidden strip settings take priority. Reopen Task View after changing."
+      $description: "0 = default material strength; 100 = clear for Native, Solid and Acrylic. Thumbnails and labels stay solid. Outside 0–100 uses default strength (-1). Hidden strip settings take priority. Reopen Task View after changing."
     - removeListBorder: false
       $name: Remove desktop list background border
       $description: "Removes the outer desktop strip frame, without removing desktop selection borders."
     - disableListBackground: true
-      $name: Disable desktop list background in list-only modes
-      $description: "Hide the desktop list's background, including blur when Windows transparency effects are enabled. Does not affect full Task View."
+      $name: Disable desktop list background
+      $description: "Hide the desktop list background in every mode, including its material and blur."
   $name: Background materials
 - Highlights:
     - highlightStyle: native
@@ -187,7 +191,7 @@ with other shell customization mods can depend on the Windows build.
 - Colors:
     - backgroundColorDark: "native"
       $name: Background color (dark mode)
-      $description: "native, accent, #RRGGBB or #AARRGGBB. Solid defaults to #202020. Acrylic/Mica use this as their tint. Reopen Task View after changing colors."
+      $description: "native, accent, #RRGGBB or #AARRGGBB. Solid defaults to #202020. Acrylic use this as their tint. Reopen Task View after changing colors."
     - borderColorDark: "native"
       $name: Border color (dark mode)
       $description: "native, accent, #RRGGBB or #AARRGGBB. Applies to panel borders and custom desktop highlights. Invalid values preserve native colors."
@@ -210,13 +214,13 @@ with other shell customization mods can depend on the Windows build.
       $name: Backdrop Dim Opacity (%)
       $description: "Black tint strength of the Acrylic backdrop, 0–100. Separate from panel transparency."
     - disableFullscreenBlur: true
-      $name: Disable full-screen background blur in list-only modes
-      $description: "Keep the wallpaper clear even when Windows transparency effects are enabled. Independent of the desktop thumbnail strip background. Does not affect full Task View. Reopen Task View after changing this setting."
+      $name: Disable full-screen background blur
+      $description: "Keep the wallpaper clear even when Windows transparency effects are enabled. Independent of the desktop thumbnail strip background. Applies to every Task View mode. Reopen Task View after changing this setting."
   $name: Full-screen backdrop
 - Animations:
     - disableListAnimations: false
-      $name: Disable animations in desktop-list-only modes
-      $description: "Disables entrance and exit motion. Independent of background material and transparency."
+      $name: Disable Task View animations
+      $description: "Disables Task View animations in every mode. Independent of background material and transparency."
     - scrollAnimationSpeed: 100
       $name: Desktop scroll animation speed (%)
       $description: "100 = current Windows speed (default). 50 = half speed. 200 = double speed. Range: 10–500. Applies to horizontal scrolling that reveals a desktop tile."
@@ -239,9 +243,6 @@ with other shell customization mods can depend on the Windows build.
 #include <winrt/Windows.UI.Xaml.Input.h>
 #include <winrt/Windows.System.h>
 #include <winrt/Windows.UI.ViewManagement.h>
-#include <winrt/Windows.UI.Composition.h>
-#include <winrt/Windows.UI.Xaml.Hosting.h>
-#include <winrt/Windows.Graphics.Effects.h>
 
 #include <atomic>
 #include <cmath>
@@ -255,18 +256,6 @@ namespace xaml = winrt::Windows::UI::Xaml;
 namespace controls = winrt::Windows::UI::Xaml::Controls;
 namespace media = winrt::Windows::UI::Xaml::Media;
 namespace animation = winrt::Windows::UI::Xaml::Media::Animation;
-
-// Composition effects interop isn't shipped with Windhawk's SDK headers.
-struct EffectInterop : IUnknown {
-    virtual HRESULT STDMETHODCALLTYPE GetEffectId(GUID*) = 0;
-    virtual HRESULT STDMETHODCALLTYPE GetNamedPropertyMapping(LPCWSTR, UINT*, UINT*) = 0;
-    virtual HRESULT STDMETHODCALLTYPE GetPropertyCount(UINT*) = 0;
-    virtual HRESULT STDMETHODCALLTYPE GetProperty(UINT, winrt::impl::abi_t<wf::IPropertyValue>**) = 0;
-    virtual HRESULT STDMETHODCALLTYPE GetSource(UINT, void**) = 0;
-    virtual HRESULT STDMETHODCALLTYPE GetSourceCount(UINT*) = 0;
-};
-template <> inline constexpr winrt::guid winrt::impl::guid_v<EffectInterop>{
-    0x2FC57384, 0xA068, 0x44D7, {0xA3, 0x31, 0x30, 0x98, 0x2F, 0xCF, 0x71, 0x77}};
 
 namespace {
 std::atomic<bool> g_stopping{false};
@@ -298,7 +287,7 @@ void LoadFrameSettings() {
         Wh_FreeStringSetting(value);
         return result;
     };
-    g_materialStyle = readChoice(L"Materials.materialStyle", {L"native", L"solid", L"acrylic", L"clear", L"mica"});
+    g_materialStyle = readChoice(L"Materials.materialStyle", {L"native", L"solid", L"acrylic", L"clear"});
     g_removeListBorder = Wh_GetIntSetting(L"Materials.removeListBorder") != 0;
     PCWSTR colorKeys[] = {L"Colors.backgroundColorDark", L"Colors.backgroundColorLight", L"Colors.borderColorDark", L"Colors.borderColorLight"};
     { std::lock_guard lock(g_colorMutex);
@@ -399,6 +388,12 @@ struct ScrollMotion : std::enable_shared_from_this<ScrollMotion> {
         auto control = scroll.get();
         if (!control) return false;
         offset = (std::max)(0.0, (std::min)(offset, control.ScrollableWidth()));
+        if (g_disableListAnimations) {
+            CancelRendering();
+            nativeStart = 0;
+            ScrollCallGuard guard;
+            return control.ChangeView(wf::IReference<double>{offset}, nullptr, nullptr, true);
+        }
         if (!observing) {
             viewChangedToken = control.ViewChanged([weak = weak_from_this()](auto const&, auto const& args) {
                 if (auto current = weak.lock(); current && current->nativeStart && !args.IsIntermediate()) {
@@ -495,8 +490,6 @@ struct MaterialState {
 };
 
 using Color = winrt::Windows::UI::Color;
-namespace composition = winrt::Windows::UI::Composition;
-namespace effects = winrt::Windows::Graphics::Effects;
 
 bool DarkTheme(xaml::FrameworkElement const& element) {
     return element.ActualTheme() == xaml::ElementTheme::Dark;
@@ -523,73 +516,6 @@ bool CustomColor(xaml::FrameworkElement const& element, bool border, Color& colo
              static_cast<uint8_t>(number >> 16), static_cast<uint8_t>(number >> 8), static_cast<uint8_t>(number)};
     return true;
 }
-
-struct WallpaperTintEffect : winrt::implements<WallpaperTintEffect,
-    effects::IGraphicsEffect, effects::IGraphicsEffectSource, EffectInterop> {
-    winrt::hstring name;
-    uint32_t mode;
-    effects::IGraphicsEffectSource background{nullptr}, foreground{nullptr};
-    WallpaperTintEffect(uint32_t blendMode, effects::IGraphicsEffectSource const& back,
-                        effects::IGraphicsEffectSource const& front)
-        : mode(blendMode), background(back), foreground(front) {}
-    winrt::hstring Name() { return name; }
-    void Name(winrt::hstring const& value) { name = value; }
-    HRESULT STDMETHODCALLTYPE GetEffectId(GUID* id) noexcept override {
-        // D2D1 Blend: unlike a source-over wash, Color and Luminosity blends
-        // preserve the wallpaper's color variation in the Mica material.
-        *id = {0x81c5b77b, 0x13f8, 0x4cdd, {0xad, 0x20, 0xc8, 0x90, 0x54, 0x7a, 0xc6, 0x5d}};
-        return S_OK;
-    }
-    HRESULT STDMETHODCALLTYPE GetNamedPropertyMapping(LPCWSTR, UINT*, UINT*) noexcept override { return E_INVALIDARG; }
-    HRESULT STDMETHODCALLTYPE GetPropertyCount(UINT* count) noexcept override { *count = 1; return S_OK; }
-    HRESULT STDMETHODCALLTYPE GetProperty(UINT index, winrt::impl::abi_t<wf::IPropertyValue>** value) noexcept override {
-        if (index) return E_INVALIDARG;
-        try { auto property = wf::PropertyValue::CreateUInt32(mode).as<wf::IPropertyValue>();
-            *value = reinterpret_cast<winrt::impl::abi_t<wf::IPropertyValue>*>(winrt::detach_abi(property)); return S_OK; }
-        catch (...) { return winrt::to_hresult(); }
-    }
-    HRESULT STDMETHODCALLTYPE GetSource(UINT index, void** source) noexcept override {
-        if (index > 1) return E_INVALIDARG;
-        try { winrt::copy_to_abi(index ? foreground : background, *source); return S_OK; }
-        catch (...) { return winrt::to_hresult(); }
-    }
-    HRESULT STDMETHODCALLTYPE GetSourceCount(UINT* count) noexcept override { *count = 2; return S_OK; }
-};
-
-struct WallpaperMaterial : media::XamlCompositionBrushBaseT<WallpaperMaterial> {
-    winrt::weak_ref<xaml::FrameworkElement> element;
-    Color tint;
-    double strength;
-    WallpaperMaterial(xaml::FrameworkElement const& target, Color color, double opacity)
-        : element(winrt::make_weak(target)), tint(color), strength(opacity) {
-        auto fallback = color; fallback.A = 255; FallbackColor(fallback);
-    }
-    void OnConnected() {
-        try {
-            auto target = element.get();
-            if (!target) return;
-            auto compositor = xaml::Hosting::ElementCompositionPreview::GetElementVisual(target).Compositor();
-            auto wallpaper = compositor.TryCreateBlurredWallpaperBackdropBrush();
-            if (!wallpaper) { Wh_Log(L"Mica wallpaper brush unavailable; using solid fallback"); return; }
-            auto luminosity = winrt::make<WallpaperTintEffect>(23,
-                composition::CompositionEffectSourceParameter(L"Wallpaper"),
-                composition::CompositionEffectSourceParameter(L"Luminosity"));
-            auto colorBlend = winrt::make<WallpaperTintEffect>(22, luminosity,
-                composition::CompositionEffectSourceParameter(L"Tint"));
-            auto effect = compositor.CreateEffectFactory(colorBlend.as<effects::IGraphicsEffect>()).CreateBrush();
-            effect.SetSourceParameter(L"Wallpaper", wallpaper);
-            auto luminosityColor = tint;
-            luminosityColor.A = static_cast<uint8_t>(255 * strength);
-            auto tintColor = tint;
-            tintColor.A = static_cast<uint8_t>(tintColor.A * strength);
-            effect.SetSourceParameter(L"Luminosity", compositor.CreateColorBrush(luminosityColor));
-            effect.SetSourceParameter(L"Tint", compositor.CreateColorBrush(tintColor));
-            CompositionBrush(effect);
-            Wh_Log(L"Mica wallpaper material connected (tint %u, strength %.2f)", tint.A, strength);
-        } catch (...) { Wh_Log(L"Mica wallpaper material unavailable: %08X; using solid fallback", winrt::to_hresult()); }
-    }
-    void OnDisconnected() { CompositionBrush(nullptr); }
-};
 
 struct BorderState {
     winrt::weak_ref<controls::Border> element;
@@ -670,7 +596,7 @@ void ApplyMaterials(xaml::DependencyObject const& node,
     if (element) {
         auto name = element.Name();
         // These visuals are owned by the independent background-hide options.
-        bool hiddenStrip = IsListOnlyMode() && g_disableListBackground &&
+        bool hiddenStrip = g_disableListBackground &&
             (name == L"VirtualDesktopBarBackground" || name == L"VirtualDesktopSwitcherBackground");
         if (hiddenStrip) return;
         xaml::DependencyProperty property{nullptr};
@@ -740,9 +666,6 @@ void ApplyMaterials(xaml::DependencyObject const& node,
                         if (!custom) color = DarkTheme(element) ? Color{255, 32, 32, 32} : Color{255, 243, 243, 243};
                         color.A = static_cast<uint8_t>(std::lround(color.A * opacity));
                         state->replacement = media::SolidColorBrush(color);
-                    } else if (style == 4 && basePanel) {
-                        if (!custom) color = DarkTheme(element) ? Color{204, 32, 32, 32} : Color{128, 243, 243, 243};
-                        state->replacement = winrt::make<WallpaperMaterial>(element, color, opacity);
                     } else if ((style == 2 && basePanel) || (style == 0 && acrylic)) {
                         auto original = acrylic;
                         media::AcrylicBrush replacement;
@@ -906,6 +829,7 @@ struct LayoutState {
     winrt::event_token layoutToken{};
     bool applied = false;
     bool detached = false;
+    int appliedMode = -1;
     winrt::weak_ref<controls::Grid> desktopGrid;
     winrt::weak_ref<controls::StackPanel> desktopStack;
     winrt::weak_ref<controls::ScrollViewer> desktopScroll;
@@ -926,9 +850,6 @@ struct LayoutState {
     std::vector<SavedProperty> backgroundProperties;
     uint32_t originalButtonIndex = 0;
     bool buttonPinned = false;
-    winrt::weak_ref<xaml::FrameworkElement> nativeButton;
-    SavedProperty nativeButtonVisibility;
-    bool nativeButtonHidden = false;
     xaml::Thickness originalButtonMargin{};
     xaml::Thickness originalScrollMargin{};
 
@@ -1106,7 +1027,7 @@ struct LayoutState {
                 if (fullscreen.Background() != backdropAcrylic) fullscreen.Background(backdropAcrylic);
                 if (fullscreen.Opacity() != 1) fullscreen.Opacity(1);
                 fullscreenBackground.hidden = true;
-            } else if (backdrop == 1 || (listOnly && g_disableFullscreenBlur)) {
+            } else if (backdrop == 1 || g_disableFullscreenBlur) {
                 if (fullscreen.Background() != fullscreenBackground.transparent)
                     fullscreen.Background(fullscreenBackground.transparent);
                 if (fullscreen.Opacity() != 0) fullscreen.Opacity(0);
@@ -1135,7 +1056,7 @@ struct LayoutState {
                 saved.hidden = false;
                 Wh_Log(L"Found desktop list background: %s", backgroundNames[i]);
             }
-            if (listOnly && g_disableListBackground) {
+            if (g_disableListBackground) {
                 if (background.Background() != saved.transparent) background.Background(saved.transparent);
                 if (background.Opacity() != 0) background.Opacity(0);
                 saved.hidden = true;
@@ -1170,56 +1091,25 @@ struct LayoutState {
                 }
             }
         }
-        if (mode == 0) {
-            if (applied) {
-                UnpinNewDesktopButton();
-                for (auto const& property : desktopProperties) property.Restore(desktopElement);
-                for (auto const& property : windowProperties) property.Restore(windowElement);
-                layoutGrid.RowDefinitions().Clear();
-                for (auto const& row : originalRows) layoutGrid.RowDefinitions().Append(row);
-                for (auto const& frames : animationFrames)
-                    for (auto const& saved : frames) saved.frame.Value(saved.original);
-                applied = false;
-            }
-            auto button = nativeButton.get();
-            if (!button) {
-                button = FindNamedChild<xaml::FrameworkElement>(desktopElement, L"NewVirtualDesktopButtonThemed");
-                if (button) {
-                    nativeButton = winrt::make_weak(button);
-                    nativeButtonVisibility = SavedProperty(button, xaml::UIElement::VisibilityProperty());
-                }
-            }
-            if (button) {
-                if (g_hideNewDesktop) {
-                    if (button.Visibility() != xaml::Visibility::Collapsed) button.Visibility(xaml::Visibility::Collapsed);
-                    nativeButtonHidden = true;
-                } else if (nativeButtonHidden) {
-                    nativeButtonVisibility.Restore(button); nativeButtonHidden = false;
-                }
-            }
-            return;
-        }
-        if (nativeButtonHidden) {
-            if (auto button = nativeButton.get()) nativeButtonVisibility.Restore(button);
-            nativeButtonHidden = false;
-        }
-        if (!applied) {
+        if (!applied || appliedMode != mode) {
             controls::RowDefinition desktopRow;
             controls::RowDefinition windowRow;
             desktopRow.Height({1, xaml::GridUnitType::Auto});
             windowRow.Height({1, xaml::GridUnitType::Star});
             layoutGrid.RowDefinitions().Clear();
-            layoutGrid.RowDefinitions().Append(desktopRow);
-            layoutGrid.RowDefinitions().Append(windowRow);
+            layoutGrid.RowDefinitions().Append(mode == 0 ? windowRow : desktopRow);
+            layoutGrid.RowDefinitions().Append(mode == 0 ? desktopRow : windowRow);
             Wh_SetIntValue(L"layoutApplied", 1);
-            Wh_Log(L"Applied Task View desktop row 0 and window row 1");
+            Wh_Log(L"Applied Task View layout mode %d", mode);
         }
-        if (controls::Grid::GetRow(desktopElement) != 0) controls::Grid::SetRow(desktopElement, 0);
+        int desktopRowIndex = mode == 0 ? 1 : 0;
+        int windowRowIndex = mode == 0 ? 0 : 1;
+        if (controls::Grid::GetRow(desktopElement) != desktopRowIndex) controls::Grid::SetRow(desktopElement, desktopRowIndex);
         int desktopSpan = mode == 3 || mode == 4 ? 2 : 1;
         if (controls::Grid::GetRowSpan(desktopElement) != desktopSpan) controls::Grid::SetRowSpan(desktopElement, desktopSpan);
-        if (controls::Grid::GetRow(windowElement) != 1) controls::Grid::SetRow(windowElement, 1);
+        if (controls::Grid::GetRow(windowElement) != windowRowIndex) controls::Grid::SetRow(windowElement, windowRowIndex);
         if (controls::Grid::GetRowSpan(windowElement) != 1) controls::Grid::SetRowSpan(windowElement, 1);
-        auto alignment = mode == 3 ? xaml::VerticalAlignment::Center : mode == 4 ? xaml::VerticalAlignment::Bottom : xaml::VerticalAlignment::Top;
+        auto alignment = mode == 3 ? xaml::VerticalAlignment::Center : mode == 0 || mode == 4 ? xaml::VerticalAlignment::Bottom : xaml::VerticalAlignment::Top;
         if (desktopElement.VerticalAlignment() != alignment) {
             desktopElement.VerticalAlignment(alignment);
         }
@@ -1230,7 +1120,7 @@ struct LayoutState {
         xaml::Thickness zero{};
         double frameMargin = g_desktopFrameMargin.load();
         xaml::Thickness desktopMargin{frameMargin, 32 + frameMargin, frameMargin, frameMargin};
-        if (mode == 3 || mode == 4) desktopMargin.Top = frameMargin;
+        if (mode == 0 || mode == 3 || mode == 4) desktopMargin.Top = frameMargin;
         if (!SameMargin(desktopElement.Margin(), desktopMargin)) desktopElement.Margin(desktopMargin);
         if (!SameMargin(windowElement.Margin(), zero)) windowElement.Margin(zero);
         PinNewDesktopButton(desktopElement);
@@ -1266,6 +1156,7 @@ struct LayoutState {
 
         }
         applied = true;
+        appliedMode = mode;
     }
 
     void Restore() {
@@ -1279,7 +1170,6 @@ struct LayoutState {
             rootElement.PointerPressed(outsideClickToken);
         }
         detached = true;
-        if (nativeButtonHidden) if (auto button = nativeButton.get()) nativeButtonVisibility.Restore(button);
         for (auto const& highlight : highlights) highlight->Stop();
         for (auto& material : materials) material.Restore();
         for (auto& border : borders) border.Restore();
@@ -1518,11 +1408,19 @@ HRESULT WINAPI DiagnosticsLookup_Hook(void* self, unsigned long long handle,
 }
 
 struct AnimationTarget {
-    animation::Timeline timeline{nullptr};
+    winrt::weak_ref<animation::Timeline> timeline;
     winrt::weak_ref<xaml::FrameworkElement> target;
 };
 thread_local std::vector<AnimationTarget> g_animationTargets;
 void ClearAnimationTargets() { g_animationTargets.clear(); }
+bool IsTaskViewAnimation(animation::Timeline const& timeline) {
+    for (auto const& tracked : g_animationTargets)
+        if (tracked.timeline.get() == timeline) return true;
+    if (auto storyboard = timeline.try_as<animation::Storyboard>())
+        for (auto const& child : storyboard.Children())
+            if (IsTaskViewAnimation(child)) return true;
+    return false;
+}
 using GetPeer_t = HRESULT(WINAPI*)(void*, GUID const&, void**);
 GetPeer_t GetPeer;
 using CoreSetTarget_t = HRESULT(WINAPI*)(void*, void*);
@@ -1535,7 +1433,7 @@ HRESULT WINAPI CoreSetTarget_Hook(void* self, void* target) {
             xaml::FrameworkElement element{nullptr};
             HRESULT timelineResult = GetPeer(self, winrt::guid_of<animation::ITimeline>(), winrt::put_abi(timeline));
             HRESULT targetResult = GetPeer(target, winrt::guid_of<xaml::IFrameworkElement>(), winrt::put_abi(element));
-            if (SUCCEEDED(timelineResult) && SUCCEEDED(targetResult) && timeline && element && element.Name() == L"VirtualDesktopBar") {
+            if (SUCCEEDED(timelineResult) && SUCCEEDED(targetResult) && timeline && element) {
                 auto ancestor = element;
                 bool fullTaskView = false;
                 for (int depth = 0; ancestor && depth < 16; depth++) {
@@ -1549,11 +1447,11 @@ HRESULT WINAPI CoreSetTarget_Hook(void* self, void* target) {
                 if (!fullTaskView) return result;
                 ObserveElement(element, true);
                 for (auto it = g_animationTargets.begin(); it != g_animationTargets.end();) {
-                    auto existing = it->timeline;
+                    auto existing = it->timeline.get();
                     if (!existing || existing == timeline) it = g_animationTargets.erase(it);
                     else ++it;
                 }
-                g_animationTargets.push_back({timeline, winrt::make_weak(element)});
+                g_animationTargets.push_back({winrt::make_weak(timeline), winrt::make_weak(element)});
             }
         } catch (...) {}
     }
@@ -1569,7 +1467,7 @@ void ReverseDesktopSlide(animation::Timeline const& timeline) {
     auto keyframes = timeline.try_as<animation::DoubleAnimationUsingKeyFrames>();
     if (!keyframes) return;
     for (auto const& tracked : g_animationTargets) {
-        if (tracked.timeline != timeline) continue;
+        if (tracked.timeline.get() != timeline) continue;
         auto target = tracked.target.get();
         if (!target) return;
         std::lock_guard lock(g_statesMutex);
@@ -1598,9 +1496,8 @@ HRESULT WINAPI StoryboardBegin_Hook(void* self) {
             animation::IStoryboard storyboardInterface{nullptr};
             winrt::copy_from_abi(storyboardInterface, self);
             auto storyboard = storyboardInterface.as<animation::Storyboard>();
-            skip = IsListOnlyMode() && g_disableListAnimations && !g_animationTargets.empty();
+            skip = g_disableListAnimations && IsTaskViewAnimation(storyboard);
             { LayoutGuard guard; ReverseDesktopSlide(storyboard); }
-            g_animationTargets.clear();
         } catch (...) {}
     }
     auto result = StoryboardBegin_Original(self);
