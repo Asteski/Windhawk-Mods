@@ -5,6 +5,7 @@ My collection of Windhawk mods:
 - [Auto Dark Titlebar](https://github.com/Asteski/windhawk-mods/blob/main/mods/asteski-auto-dark-titlebar.wh.cpp)
 - [Force App Window to Corner](https://github.com/Asteski/windhawk-mods/blob/main/mods/asteski-force-app-to-corner.wh.cpp)
 - [Snap Commander](https://github.com/Asteski/windhawk-mods/blob/main/mods/asteski-snap-commander.wh.cpp) (available in Windhawk Store)
+- [SylphyHorn Virtual Desktops](https://github.com/Asteski/windhawk-mods/blob/main/mods/sylphyhorn.wh.cpp)
 - [Sound Output Master Volume](https://github.com/Asteski/windhawk-mods/blob/main/mods/sound-output-master-volume.wh.cpp)
 - [Start Button Actions](https://github.com/Asteski/windhawk-mods/blob/main/mods/asteski-start-button-actions.wh.cpp)
 - [Start Button Replacer - SVG](https://github.com/Asteski/windhawk-mods/blob/main/mods/start-button-replacer-svg.wh.cpp)
