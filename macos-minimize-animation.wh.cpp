@@ -19,12 +19,14 @@ Brings the classic macOS **genie** effect to Windows. When you minimize a window
 it flows into its taskbar button or WinMac Dock icon and flows back out when restored.
 Apps opening and windows closing get a genie too.
 
-Compatible with WinMac Dock. Animations target the matching Dock icon 
-and prefer the Dock on the window's monitor. If no icon is available, the Dock center 
-is used. Without a Dock, animations use the Windows taskbar. 
-Set **Animation end width (pixels)** to 0 for automatic sizing or 1–64 for a fixed width.
-
 Definitely not inspired from MacOS.
+
+## WinMac Dock support
+
+With a compatible WinMac Dock running, animations target the matching Dock icon and prefer 
+the Dock on the window's monitor. If no icon is available, the Dock center is used. 
+Without a Dock, animations use the Windows taskbar. 
+Set **Animation end width (pixels)** to 0 for automatic sizing or 1–64 for a fixed width.
 
 ## Animation style
 There are two genie styles, selectable in the settings (**Animation style**):
@@ -159,10 +161,10 @@ minimize behind it without the system's own animation getting in the way.
   window is on, targeting that monitor's taskbar edge, instead of always the
   primary monitor's. **Experimental and off by default.** (The close genie always
   plays on the window's own monitor.)
-- **Unhide taskbar (for taskbar auto-hide)** - if your taskbar is set to
+- **Unhide taskbar or Dock during animation** - if your taskbar is set to
   auto-hide, briefly reveal it during the minimize so the genie has a visible dock
-  to flow into, then let it slide back once the animation finishes.
-- **Taskbar unhide duration** - how long (ms) to keep the taskbar revealed before
+  to flow into. With WinMac Dock, reveal the target Dock during minimize and restore.
+- **Taskbar or Dock unhide duration** - how long (ms) to keep the taskbar revealed before
   performing the deferred minimize on the auto-hide path.
 - **Animation style** - Classic (this mod's original renderer, default) or
   Modern (Potassiumuncher's Direct2D engine).
@@ -236,15 +238,15 @@ Check out the documentation
     Play the genie on the monitor the window is on and target that monitor's
     taskbar edge, instead of always the primary monitor's.
 - unhide_taskbar: true
-  $name: Unhide taskbar (for taskbar auto-hide)
+  $name: Unhide taskbar or Dock during animation
   $description: >-
     If the taskbar is set to auto-hide, briefly reveal it during the minimize so
-    the genie has a visible dock to flow into, then let it slide back afterwards.
+    the genie has a visible target. When targeting WinMac Dock, reveal the Dock during minimize and restore instead.
 - unhide_duration_ms: 450
-  $name: Taskbar unhide duration (ms)
+  $name: Taskbar or Dock unhide duration (ms)
   $description: >-
     How long to keep the taskbar revealed before performing the deferred minimize
-    on the auto-hide path. Clamped to 0-5000.
+    on the auto-hide path. WinMac Dock stays visible for at least the animation duration. Clamped to 0-5000.
 - engine: classic
   $name: Animation style
   $description: >-
@@ -2190,6 +2192,12 @@ bool StartMacGenieAnim(HWND hWnd, BOOL rising, LONG_PTR originalExStyle,
     // A close doesn't target the taskbar (the render thread picks the edge from the
     // close-direction setting), so it skips the registry, cursor and UIA lookups.
     DockLocation dock = isClosing ? DockLocation{} : GetWinMacDock(hWnd);
+    if (dock.window && g_unhideEnabled.load(std::memory_order_relaxed)) {
+        static const UINT revealDock = RegisterWindowMessageW(L"WinMac.Dock.GenieReveal.v1");
+        int holdMs = std::max(g_durationMs.load(std::memory_order_relaxed),
+                              g_unhideDurationMs.load(std::memory_order_relaxed));
+        if (revealDock) PostMessageW(dock.window, revealDock, (WPARAM)holdMs, 0);
+    }
     int learnedTargetX = dock.window ? dock.point.x : mi.rcMonitor.left + monWidth / 2;
     if (!dock.window && !isClosing) {
         DWORD alignVal = 1, dataSize = sizeof(alignVal);
